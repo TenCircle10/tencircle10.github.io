@@ -1,7 +1,7 @@
 ---
 layout: homepage
 title: 数学分析 by TenCircle10
-permalink: /notes/mathematicalanalysis/
+permalink: /notes/mathematical-analysis-szy/
 ---
 
 
