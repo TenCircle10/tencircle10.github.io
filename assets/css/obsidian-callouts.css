@@ -1,0 +1,30 @@
+/* 基础 Callout 容器样式 */
+.callout {
+  border-left: 4px solid #448aff;
+  background-color: #f5f5f5;
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: 4px;
+}
+
+/* 标题样式 */
+.callout-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 不同 Callout 类型的颜色 */
+.callout[data-callout="info"] { border-left-color: #448aff; }
+.callout[data-callout="tip"] { border-left-color: #00bfa5; }
+.callout[data-callout="warning"] { border-left-color: #ff9100; }
+.callout[data-callout="danger"] { border-left-color: #ff5252; }
+.callout[data-callout="note"] { border-left-color: #448aff; }
+
+/* 折叠 Callout 的样式 */
+.callout-fold {
+  cursor: pointer;
+  user-select: none;
+}
