@@ -1,5 +1,5 @@
 ---
-layout: homepage
+layout: note
 title: 数学分析 by TenCircle10
 permalink: /notes/mathematical-analysis-szy/
 ---
