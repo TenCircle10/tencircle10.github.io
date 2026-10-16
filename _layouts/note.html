@@ -36,24 +36,15 @@
     <link rel="stylesheet" href="/assets/css/publications-no-dark-mode.css">
     {% endif %}
 
-    <!-- ================= 数学公式渲染配置 (MathJax) ================= -->
-    <script>
-      MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']],
-          processEscapes: true
-        },
-        options: {
-          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    <!-- ============================================================== -->
+    <!-- 数学公式渲染配置：见 _includes/mathjax.html（仅笔记页加载，主页不加载 MathJax） -->
+    {% include mathjax.html %}
 
     <!-- 👇 新增：引入 Obsidian Callout 样式 -->
     <link rel="stylesheet" href="/assets/css/obsidian-callouts.css">
+    <!-- 👆 新增结束 -->
+
+    <!-- 👇 新增：引入笔记页专属样式 -->
+    <link rel="stylesheet" href="/assets/css/notes.css">
     <!-- 👆 新增结束 -->
 
   </head>
