@@ -1,8 +1,100 @@
 /* ==========================================================================
    笔记页专属样式 (notes.css)
-   只被 _layouts/note.html 通过 <link> 引入，主页不加载。
+   只被 _layouts/note.html 通过 <link> 引入，主页加载不到这个文件。
    与 assets/css/obsidian-callouts.css 同一模式：独立文件，不改动主题的 _sass。
+
+   注意：主题样式表里有针对 <header>/<section>/.wrapper 的元素/类选择器
+   （header{width:232px;position:fixed}、section{width:650px;float:right} 等），
+   所以笔记布局刻意使用 <nav>/<main> 和下述自有类名，
+   以免继承主题那套"固定左侧边栏"的骨架。
    ========================================================================== */
+
+/* =============================== 页面骨架 ================================ */
+
+/* 顶部导航栏：左侧头像 + 昵称，右侧返回主页 */
+.note-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;            /* 窄屏放不下时自然换行，而不是把内容挤变形 */
+  gap: 8px 12px;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.note-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;               /* 允许昵称收缩，避免把右侧链接挤出屏幕 */
+}
+
+.note-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+}
+
+.note-nav-name {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #043361;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.note-nav-back {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+/* 正文阅读区：水平居中，宽度 860px（落在 800~900px 区间） */
+.note-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+/* 笔记标题（原来是侧边栏布局里的 h2） */
+.note-title {
+  margin-top: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .note-nav {
+    background-color: #20212b;
+    border-bottom-color: #34363f;
+  }
+
+  .note-nav-name {
+    color: rgb(62, 183, 240);
+  }
+}
+
+/* 手机等窄屏：收窄内边距与字号，导航栏保持单行或自然换行 */
+@media screen and (max-width: 600px) {
+  .note-nav {
+    padding: 10px 14px;
+  }
+
+  .note-nav-name {
+    font-size: 1rem;
+  }
+
+  .note-main {
+    padding: 20px 14px 48px;
+  }
+}
 
 /* ------------------------------ MathJax 公式 ------------------------------ */
 
@@ -12,7 +104,7 @@ mjx-container {
   color: inherit;
 }
 
-/* 长公式（例如多列矩阵）在 650px 宽的正文栏里横向滚动，避免溢出或被裁切。
+/* 长公式（例如多列矩阵）在阅读栏内横向滚动，避免溢出或被裁切。
    display="true" 是 MathJax 3 给块级公式容器加的属性。 */
 mjx-container[display="true"] {
   overflow-x: auto;
