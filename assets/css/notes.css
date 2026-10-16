@@ -1,0 +1,31 @@
+/* ==========================================================================
+   笔记页专属样式 (notes.css)
+   只被 _layouts/note.html 通过 <link> 引入，主页不加载。
+   与 assets/css/obsidian-callouts.css 同一模式：独立文件，不改动主题的 _sass。
+   ========================================================================== */
+
+/* ------------------------------ MathJax 公式 ------------------------------ */
+
+/* 公式颜色继承正文颜色。MathJax 3 的 CHTML 输出默认靠继承取色，
+   这里显式写出来，避免将来任何硬编码 color 让暗色模式下的公式不可读。 */
+mjx-container {
+  color: inherit;
+}
+
+/* 长公式（例如多列矩阵）在 650px 宽的正文栏里横向滚动，避免溢出或被裁切。
+   display="true" 是 MathJax 3 给块级公式容器加的属性。 */
+mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 0;
+}
+
+/* ----------------------------- Obsidian Callout --------------------------- */
+
+/* 暗色模式下 callout 背景跟随主题，避免亮色块刺眼。
+   基础样式（边框颜色、图标）见 assets/css/obsidian-callouts.css。 */
+@media (prefers-color-scheme: dark) {
+  .callout {
+    background-color: #2a2b36;
+  }
+}
