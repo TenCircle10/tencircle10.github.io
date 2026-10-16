@@ -9,13 +9,13 @@ permalink: /notes/mathematical-analysis-szy/
 思考：无穷小分析
 
 **集合**：
-*   互异性（可表示为相同元素但不重复计入，e.g.$\{1,2,1,2\}=\{1,2\}$）
+*   互异性（可表示为相同元素但不重复计入，e.g.$\\{1,2,1,2\\}=\\{1,2\\}$）
 *   无序性
 *   确定性
 
 **例子**：
-*   $1 \in \{1\}$
-*   $1 \neq \{1\}$
+*   $1 \in \\{1\\}$
+*   $1 \neq \\{1\\}$
 *   $\varnothing \subset A$ (A可以为空)
 
 **性质**：
@@ -25,7 +25,7 @@ permalink: /notes/mathematical-analysis-szy/
 **集合运算**：
 *   $A \cap B$ 交
 *   $A \cup B$ 并
-*   $A \setminus B$ 差 $\{x | x \in A \text{ 且 } x \notin B\}$
+*   $A \setminus B$ 差 $\\{x \mid x \in A \text{ 且 } x \notin B\\}$
 *   $A^c$ 补 (相对于全集 $X$)
 
 **运算律**：
@@ -38,7 +38,7 @@ permalink: /notes/mathematical-analysis-szy/
 *   $(A \cap B)^c = A^c \cup B^c$
 
 **笛卡尔积 (Descartes)**：
-*   $A \times B = \{(x, y) | x \in A, y \in B\}$
+*   $A \times B = \\{(x, y) \mid x \in A, y \in B\\}$
 
 ---
 
@@ -58,15 +58,15 @@ $\Rightarrow$ 数域
 *   有大小关系，加法可传递 / 乘法 $\Rightarrow$ 有序域
 
 **可列集定义**：
-若一个无限集中元素可以按某种规律排成一个序列，即这个集合可表为 $\{a_1, a_2, \dots, a_n, \dots\}$
+若一个无限集中元素可以按某种规律排成一个序列，即这个集合可表为 $\\{a_1, a_2, \dots, a_n, \dots\\}$
 
 > [!note] 定理 1.0.1
 >  可列个可列集之并也是可列集。
 ^f0fbb3
 
 **证明思路（记）**：
-记 $A_n = \{a_{n1}, a_{n2}, \dots, a_{nk}, \dots\}$
-$\displaystyle \bigcup_{n=1}^{\infty} A_n = \{a_{11}, a_{21}, a_{12}, a_{31}, a_{22}, a_{13}, \dots\}$
+记 $A_n = \\{a_{n1}, a_{n2}, \dots, a_{nk}, \dots\\}$
+$\displaystyle \bigcup_{n=1}^{\infty} A_n = \\{a_{11}, a_{21}, a_{12}, a_{31}, a_{22}, a_{13}, \dots\\}$
 沿对角线方向取
 $$
 \begin{matrix}
@@ -85,7 +85,7 @@ $$
 **$\mathbb{Q}$ 为可列集**：
 
 记 $A_n = [n, n+1] \cap \mathbb{Q}, n \in \mathbb{Z}$，则 $$\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$$由[[#^f0fbb3|定理1.0.1]]，只需证 $A_0$ 可列。
-$A_0 = \{0, 1, \frac{1}{2}, \frac{1}{3}, \frac{2}{3}, \frac{1}{4}, \dots, \frac{k-1}{k}, \dots\}$
+$A_0 = \\{0, 1, \frac{1}{2}, \frac{1}{3}, \frac{2}{3}, \frac{1}{4}, \dots, \frac{k-1}{k}, \dots\\}$
 $\Rightarrow \mathbb{Q}$ 可列。
 
 **注意点**：
@@ -114,9 +114,9 @@ $f: A \to B$，A, B 有限集
 
 *   数列是可列有序数组。
 *   单调增：$x_n \le x_{n+1}$
-*   $\{x_n\}$ 有上界、下界 $\Leftrightarrow$ $\{x_n\}$ 有界
+*   $\\{x_n\\}$ 有上界、下界 $\Leftrightarrow$ $\\{x_n\\}$ 有界
 
 **证明（单调有界定理相关证明思路）**：
 设 $x_n$ 的小数...
 $x_n = m_n + 0.a_1^{(n)}a_2^{(n)}\dots$
-当上一位不再变化，下一位必从 $\{0, 1, \dots, 9\}$ 中取。
+当上一位不再变化，下一位必从 $\\{0, 1, \dots, 9\\}$ 中取。
