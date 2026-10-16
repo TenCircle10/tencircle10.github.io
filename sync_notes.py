@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Obsidian -> Jekyll 笔记同步脚本。
+r"""Obsidian -> Jekyll 笔记同步脚本。
 
 把 ``origin/`` 里的原始 Obsidian 笔记转换成 Jekyll + kramdown 能正确渲染的
 Markdown，输出到 ``notes/``。
@@ -8,12 +8,16 @@ Markdown，输出到 ``notes/``。
 处理的语法：
 
 1. **Obsidian Callout**：``> [!note] 标题`` + 后续引用行
-   -> ``<details class="callout note" markdown="block">`` +
-   ``<summary>`` + ``<div class="callout-content" markdown="block">``。
+   -> ``<details class="callout note" data-callout="note" markdown="block">`` +
+   ``<summary class="callout-title">`` + ``<div class="callout-content" markdown="block">``。
+   ``data-callout`` 和 ``callout-title`` 是为了直接复用
+   assets/css/obsidian-callouts.css 里已有的图标与边框样式。
    ``[!note]+`` 加 ``open`` 属性（默认展开），``[!note]-`` 默认折叠。
-2. **数学公式转义**：``$...$`` / ``$$...$$`` 里的 ``\\{`` ``\\}`` -> ``\\\\{`` ``\\\\}``，
-   ``|`` -> ``\\mid``，避免被 kramdown 先吃掉（kramdown 只把 ``$$`` 当数学，
+2. **数学公式转义（只处理行内 ``$...$``）**：公式里的 ``\{`` ``\}`` -> ``\\{`` ``\\}``，
+   ``|`` -> ``\mid``，避免被 kramdown 先吃掉（kramdown 只把 ``$$`` 当数学，
    单 ``$`` 的公式内容会先走 Markdown 解析）。已转义过的写法不会重复转义。
+   ``$$...$$`` 块级公式**不做任何转义**：kramdown 的数学引擎会把块内容原样透传给
+   MathJax，在块内再加反斜杠反而会让公式渲染出错。
 3. **Obsidian 内部链接**：
    ``[[笔记]]`` -> ``[笔记](/notes/笔记/)``；
    ``[[笔记|文本]]`` -> ``[文本](/notes/笔记/)``；
@@ -126,9 +130,10 @@ def convert_callouts(text: str, counts: dict[str, int]) -> str:
         open_attr = " open" if fold == "+" else ""
         counts["callout"] += 1
         output.append(
-            '<details class="callout %s" markdown="block"%s>' % (callout_type, open_attr)
+            '<details class="callout %s" data-callout="%s" markdown="block"%s>'
+            % (callout_type, callout_type, open_attr)
         )
-        output.append("<summary>%s</summary>" % title)
+        output.append('<summary class="callout-title">%s</summary>' % title)
         output.append('<div class="callout-content" markdown="block">')
         output.append("")
         output.extend(body)
@@ -143,17 +148,19 @@ def convert_callouts(text: str, counts: dict[str, int]) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 2. 数学公式转义
+# 2. 数学公式转义（只处理行内 $...$，$$...$$ 块保持原样）
 # --------------------------------------------------------------------------- #
-_DISPLAY_MATH_RE = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
-_INLINE_MATH_RE = re.compile(r"(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)", re.DOTALL)
+# 定界符前面不能是反斜杠或 $：排除 $ 是为了跳过 $$ 块，排除反斜杠是为了
+# 避免 $$ 块里的 \$（例如 \$100）被当成行内公式的定界符——那会让正则跨过
+# 整个 $$ 块去和后面正文里的 $ 配对，把真正的行内公式吃掉。
+_INLINE_MATH_RE = re.compile(r"(?<![\\$])\$(?!\$)(.+?)(?<![\\$])\$(?!\$)", re.DOTALL)
 _UNESCAPED_OPEN_BRACE_RE = re.compile(r"(?<!\\)\\\{")
 _UNESCAPED_CLOSE_BRACE_RE = re.compile(r"(?<!\\)\\\}")
 _UNESCAPED_PIPE_RE = re.compile(r"(?<!\\)\|")
 
 
 def escape_math_body(body: str) -> str:
-    """转义单条公式内部的 kramdown 雷区字符（对已转义的内容幂等）。"""
+    """转义单条行内公式内部的 kramdown 雷区字符（对已转义的内容幂等）。"""
     body = _UNESCAPED_OPEN_BRACE_RE.sub(r"\\\\{", body)
     body = _UNESCAPED_CLOSE_BRACE_RE.sub(r"\\\\}", body)
     body = _UNESCAPED_PIPE_RE.sub(r"\\mid", body)
@@ -161,17 +168,16 @@ def escape_math_body(body: str) -> str:
 
 
 def escape_math(text: str, counts: dict[str, int]) -> str:
-    """转义 ``$$...$$`` 和 ``$...$`` 内部的 kramdown 雷区字符。"""
+    """只转义行内 ``$...$`` 内部的 kramdown 雷区字符。
 
-    def display(match: re.Match[str]) -> str:
-        counts["math"] += 1
-        return "$$" + escape_math_body(match.group(1)) + "$$"
+    ``$$...$$`` 块级公式不做任何处理：kramdown 的数学引擎会把整段块内容原样交给
+    MathJax，块内再补反斜杠会让 MathJax 收到 ``\\{`` 这类错误的转义序列。
+    """
 
     def inline(match: re.Match[str]) -> str:
         counts["math"] += 1
         return "$" + escape_math_body(match.group(1)) + "$"
 
-    text = _DISPLAY_MATH_RE.sub(display, text)
     text = _INLINE_MATH_RE.sub(inline, text)
     return text
 
