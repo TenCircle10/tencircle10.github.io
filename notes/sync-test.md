@@ -1,6 +1,7 @@
 ---
 layout: note
 title: "sync-test"
+permalink: "/notes/sync-test/"
 ---
 
 这是用来验证 sync_notes.py 的测试笔记，覆盖 Callout、公式、Wikilink、图片与代码块。

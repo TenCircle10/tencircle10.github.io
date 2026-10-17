@@ -26,6 +26,12 @@ Markdown，输出到 ``notes/``。
 4. **图片嵌入**：``![[图片.png]]`` -> ``![图片.png](/assets/img/obsidian/图片.png)``。
 5. **Front Matter**：文件头没有 ``---`` 包裹的 YAML 时，自动补
    ``layout: note`` 和 ``title``（取文件名）。
+6. **slug 映射（决定输出文件名与 URL）**：源笔记 front matter 里写
+   ``slug: math-analysis-szy`` 时，输出文件为 ``notes/math-analysis-szy.md``，
+   并写入 ``permalink: /notes/math-analysis-szy/``（源文件里已有的 permalink 会被覆盖）。
+   没写 ``slug`` 时回退用源文件名。正文里的 ``[[中文笔记名]]`` 会按
+   「源文件名 / front matter title -> slug」的映射重写成 slug URL，
+   显示文本仍保留原来的中文名；找不到对应笔记时保持原样。
 
 ````` 围起来的代码块（``` 或 ~~~）整体跳过，不做任何替换。
 
@@ -192,7 +198,12 @@ _PLAIN_LINK_RE = re.compile(r"\[\[([^\]\|#^]+)\]\]")
 _BLOCK_ID_RE = re.compile(r"^[ \t]*\^([A-Za-z0-9-]{4,})[ \t]*$", re.MULTILINE)
 
 
-def convert_links(text: str, counts: dict[str, int]) -> str:
+def convert_links(
+    text: str,
+    counts: dict[str, int],
+    slug_map: dict[str, str],
+    url_prefix: str,
+) -> str:
     """转换图片嵌入、wikilink 和块 ID。图片必须先处理，否则会被 wikilink 规则吃掉。"""
 
     def embed(match: re.Match[str]) -> str:
@@ -207,15 +218,18 @@ def convert_links(text: str, counts: dict[str, int]) -> str:
         return "[%s](#%s)" % (label, block_id)
 
     def alias_link(match: re.Match[str]) -> str:
-        target = match.group(1).strip()
+        raw_target = match.group(1).strip()
+        target = resolve_note_target(raw_target, slug_map)
         label = match.group(2).strip()
         counts["wikilink"] += 1
-        return "[%s](/notes/%s/)" % (label, target)
+        return "[%s](%s%s/)" % (label, url_prefix, target)
 
     def plain_link(match: re.Match[str]) -> str:
-        target = match.group(1).strip()
+        # 显示文本保留 Obsidian 里的原名（中文），只把 URL 换成 slug
+        raw_target = match.group(1).strip()
+        target = resolve_note_target(raw_target, slug_map)
         counts["wikilink"] += 1
-        return "[%s](/notes/%s/)" % (target, target)
+        return "[%s](%s%s/)" % (raw_target, url_prefix, target)
 
     def block_id(match: re.Match[str]) -> str:
         counts["block_id"] += 1
@@ -230,9 +244,11 @@ def convert_links(text: str, counts: dict[str, int]) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 5. Front Matter
+# 5. Front Matter、slug 与 permalink
 # --------------------------------------------------------------------------- #
 _FRONT_MATTER_RE = re.compile(r"\A---[ \t]*\r?\n.*?\r?\n---[ \t]*(?:\r?\n|\Z)", re.DOTALL)
+_FM_FIELD_RE = re.compile(r"^([A-Za-z0-9_-]+)[ \t]*:[ \t]*(.*)$")
+_PERMALINK_LINE_RE = re.compile(r"^[ \t]*permalink[ \t]*:.*$", re.MULTILINE)
 
 
 def split_front_matter(text: str) -> tuple[str | None, str]:
@@ -243,16 +259,86 @@ def split_front_matter(text: str) -> tuple[str | None, str]:
     return match.group(0), text[match.end():]
 
 
+def _unquote(value: str) -> str:
+    """去掉 YAML 标量两侧的一层引号（只处理最简单的情形）。"""
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+        return value[1:-1]
+    return value
+
+
+def read_front_matter_fields(front_matter: str | None) -> dict[str, str]:
+    """读取 front matter 的顶层单行标量字段（title / slug / permalink 等）。"""
+    fields: dict[str, str] = {}
+    if not front_matter:
+        return fields
+    for line in front_matter.split("\n"):
+        match = _FM_FIELD_RE.match(line)
+        if match:
+            fields[match.group(1)] = _unquote(match.group(2))
+    return fields
+
+
 def build_front_matter(title: str) -> str:
     """生成默认 front matter。"""
     safe_title = title.replace("\\", "\\\\").replace('"', '\\"')
     return '---\nlayout: note\ntitle: "%s"\n---\n\n' % safe_title
 
 
+def apply_permalink(front_matter: str, permalink: str) -> str:
+    """在 front matter 里写入 permalink；已存在则覆盖，并保证后面留一个空行。"""
+    line = 'permalink: "%s"' % permalink
+    if _PERMALINK_LINE_RE.search(front_matter):
+        updated = _PERMALINK_LINE_RE.sub(lambda _match: line, front_matter, count=1)
+    else:
+        stripped = front_matter.rstrip("\n")
+        if not stripped.endswith("---"):
+            return front_matter
+        head = stripped[:-3].rstrip("\n")
+        updated = head + "\n" + line + "\n---\n"
+    # front matter 与正文之间统一保留一个空行
+    return updated.rstrip("\n") + "\n\n"
+
+
+def build_slug_map(sources: list[Path]) -> dict[str, str]:
+    """建立「源文件名 / front matter title -> slug」的映射，用于重写 wikilink。"""
+    mapping: dict[str, str] = {}
+    for path in sources:
+        front_matter, _ = split_front_matter(path.read_text(encoding="utf-8"))
+        fields = read_front_matter_fields(front_matter)
+        slug = fields.get("slug", "").strip()
+        if not slug:
+            continue  # 没有 slug 的笔记 URL 就是文件名本身，不需要映射
+        for key in (path.stem, fields.get("title", "").strip()):
+            if key:
+                mapping.setdefault(key, slug)
+    return mapping
+
+
+def resolve_note_target(target: str, slug_map: dict[str, str]) -> str:
+    """把 Obsidian 里的笔记名解析成 slug；找不到对应笔记时原样返回。"""
+    candidates = [target]
+    if target.endswith(".md"):
+        candidates.append(target[:-3])
+    if "/" in target:
+        candidates.append(target.rsplit("/", 1)[-1])
+    for candidate in candidates:
+        candidate = candidate.strip()
+        if candidate and candidate in slug_map:
+            return slug_map[candidate]
+    return target
+
+
 # --------------------------------------------------------------------------- #
 # 主流程
 # --------------------------------------------------------------------------- #
-def convert_document(text: str, stem: str) -> tuple[str, dict[str, int], bool]:
+def convert_document(
+    text: str,
+    stem: str,
+    permalink: str,
+    slug_map: dict[str, str],
+    url_prefix: str,
+) -> tuple[str, dict[str, int], bool]:
     """转换单个笔记，返回 (结果文本, 各类替换计数, 是否新插入 front matter)。"""
     counts = {
         "callout": 0,
@@ -266,13 +352,15 @@ def convert_document(text: str, stem: str) -> tuple[str, dict[str, int], bool]:
     body, code_blocks = protect_code_blocks(body)
     body = convert_callouts(body, counts)
     body = escape_math(body, counts)
-    body = convert_links(body, counts)
+    body = convert_links(body, counts, slug_map, url_prefix)
     body = restore_code_blocks(body, code_blocks)
 
     added_front_matter = front_matter is None
     if added_front_matter:
         front_matter = build_front_matter(stem)
-    return front_matter + body, counts, added_front_matter
+    front_matter = apply_permalink(front_matter, permalink)
+    # permalink 已经保证 front matter 后面带一个空行，正文开头的空行去掉避免重复
+    return front_matter + body.lstrip("\n"), counts, added_front_matter
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -295,20 +383,48 @@ def main(argv: list[str] | None = None) -> int:
     if not sources:
         print("[warn] %s 下没有找到 .md 文件" % src)
 
+    # 第一遍：收集 slug 映射，供第二遍重写 wikilink 时使用
+    slug_map = build_slug_map(sources)
+
+    # permalink 前缀跟随输出目录在仓库里的位置（默认 dest 是仓库根的 notes/ -> /notes/）
+    try:
+        url_prefix = "/" + dest.relative_to(ROOT).as_posix().strip("/") + "/"
+    except ValueError:
+        url_prefix = "/" + dest.name + "/"
+
+    used_slugs: dict[str, Path] = {}
     for path in sources:
         relative = path.relative_to(src)
-        target = dest / relative
+        text = path.read_text(encoding="utf-8")
+        front_matter, _ = split_front_matter(text)
+        fields = read_front_matter_fields(front_matter)
+
+        slug = fields.get("slug", "").strip() or path.stem
+
+        if slug in used_slugs:
+            print(
+                "[warn] slug 重复：%s 和 %s 都使用 %s，后写入的会覆盖前者"
+                % (used_slugs[slug], relative, slug),
+                file=sys.stderr,
+            )
+        used_slugs.setdefault(slug, relative)
+
+        parent = "" if relative.parent == Path(".") else relative.parent.as_posix() + "/"
+        permalink = url_prefix + parent + slug + "/"
+        target = dest / relative.parent / (slug + ".md")
         target.parent.mkdir(parents=True, exist_ok=True)
 
         converted, counts, added = convert_document(
-            path.read_text(encoding="utf-8"), path.stem
+            text, path.stem, permalink, slug_map, url_prefix
         )
         target.write_text(converted, encoding="utf-8", newline="\n")
         print(
-            "[ok] %s -> %s  (callout=%d, math=%d, wikilink=%d, block_link=%d, block_id=%d, image=%d, front_matter=%s)"
+            "[ok] %s -> %s  (slug=%s, permalink=%s, callout=%d, math=%d, wikilink=%d, block_link=%d, block_id=%d, image=%d, front_matter=%s)"
             % (
                 relative,
-                target,
+                target.name,
+                slug,
+                permalink,
                 counts["callout"],
                 counts["math"],
                 counts["wikilink"],
