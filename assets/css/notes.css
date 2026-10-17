@@ -147,8 +147,20 @@ mjx-container[display="true"] {
 /* ------------------------------ 锚点跳转偏移 ------------------------------ */
 
 /* 锚点跳转时留出 sticky 顶部导航栏的高度，避免目标内容被顶栏遮住。
-   callout 的块 ID 直接绑在 <details> 上，所以这里一并覆盖。 */
+   覆盖三类目标：callout 的块 ID（绑在 <details> 上）、<a id="..."> 锚点、
+   以及 kramdown 为标题生成的 <h1 id="...">~<h6 id="...">。
+   顶栏桌面端实际高度约 65px（上下 12px 内边距 + 40px 头像 + 1px 边框），取 88px 留余量。 */
 details.callout,
-[id] {
-  scroll-margin-top: 80px;
+[id],
+h1, h2, h3, h4, h5, h6 {
+  scroll-margin-top: 88px;
+}
+
+/* 窄屏下顶栏可能换行（中间标题挤到第二行），高度变大，偏移同步加大 */
+@media screen and (max-width: 600px) {
+  details.callout,
+  [id],
+  h1, h2, h3, h4, h5, h6 {
+    scroll-margin-top: 112px;
+  }
 }
