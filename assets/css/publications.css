@@ -100,3 +100,34 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
     border-bottom-color: #34363f !important;
   }
 }
+
+/* ------------------------- 每日一言（Daily Quote） ------------------------- */
+
+.daily-quote {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+  font-style: italic;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.daily-quote .quote-mark {
+  font-family: serif;
+  font-size: 1.5rem;
+  color: #999;
+  margin: 0 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .daily-quote {
+    background: #2a2b36;
+    color: #bbb;
+  }
+
+  .daily-quote .quote-mark {
+    color: #666;
+  }
+}
