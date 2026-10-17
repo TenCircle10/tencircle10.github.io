@@ -36,11 +36,13 @@ Markdown，输出到 ``notes/``。
    「源文件名 / front matter title -> slug」的映射重写成 slug URL，
    显示文本仍保留原来的中文名；找不到对应笔记时保持原样。
 7. **Obsidian 扩展语法**：``%%隐藏注释%%`` 整段删除；``==高亮==`` -> ``<mark>``；
-   ``- [ ]`` / ``- [x]`` -> ``- ☐`` / ``- ☑``；``#标签`` ->
-   ``<a href="/tags/标签/">#标签</a>``；``:smile:`` 这类 emoji 短码换成字符；
+   ``- [ ]`` / ``- [x]`` -> ``- ☐`` / ``- ☑``；``#标签`` **原样保留**（不做标签系统）；
+   ``:smile:`` 这类 emoji 短码换成字符；
    ``![[图片.png|300]]`` -> ``<img width="300">``（``|200x150`` 时同时给 height）；
    ``![[笔记]]``（非图片扩展名）-> ``*(嵌入笔记：笔记)*``；
    ``[[笔记#标题]]`` -> ``[笔记#标题](/notes/slug/#标题)``。
+   块 ID 支持两种写法：独占一行的 ``^abc123``、以及行尾的 ``内容 ^abc123``
+   （含 callout 标题里的 ``> [!note] 标题 ^abc123``），都转成 ``<a id="abc123"></a>``。
    ```dataview 查询块整块删除、```mermaid 块包成 ``<div class="mermaid">``，
    这两者与 ``` 代码块一样在「代码块保护」阶段处理，块内内容不会被其它规则改写。
 
@@ -171,13 +173,24 @@ def convert_callouts(text: str, counts: dict[str, int]) -> str:
         if not title:
             title = callout_type.capitalize()
 
+        # callout 标题里也可能带块 ID（> [!note] 标题 ^abc123），先剥出来，
+        # 否则它会被包进 <summary> 里显示成纯文本
+        title_anchor = ""
+        title_block_id = _BLOCK_ID_TAIL_RE.search(title)
+        if title_block_id:
+            title = title[: title_block_id.start()].strip()
+            title_anchor = ' <a id="%s"></a>' % title_block_id.group(1)
+            counts["block_id"] += 1
+
         open_attr = " open" if fold == "+" else ""
         counts["callout"] += 1
         output.append(
             '<details class="callout %s" data-callout="%s" markdown="block"%s>'
             % (callout_type, callout_type, open_attr)
         )
-        output.append('<summary class="callout-title">%s</summary>' % title)
+        output.append(
+            '<summary class="callout-title">%s%s</summary>' % (title, title_anchor)
+        )
         output.append('<div class="callout-content" markdown="block">')
         output.append("")
         output.extend(body)
@@ -192,15 +205,15 @@ def convert_callouts(text: str, counts: dict[str, int]) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 2. Obsidian 扩展语法（%%注释%%、==高亮==、待办、标签、emoji、嵌入、标题链接）
+# 2. Obsidian 扩展语法（%%注释%%、==高亮==、待办、emoji、嵌入、标题链接、块 ID）
 # --------------------------------------------------------------------------- #
 _COMMENT_RE = re.compile(r"%%[\s\S]*?%%")
 _HIGHLIGHT_RE = re.compile(r"==([^=\n]+?)==")
 _TASK_EMPTY_RE = re.compile(r"^- \[ \] ", re.MULTILINE)
 _TASK_DONE_RE = re.compile(r"^- \[[xX]\] ", re.MULTILINE)
-# 标签前面不能是字母数字、/、&、#、反斜杠或左圆括号：
-# 排除 ( 是为了不把 [文本](#锚点) 里的锚点当成标签；排除 \ 是为了放过 \# 转义
-_HASHTAG_RE = re.compile(r"(?<![\w/&#\\(])#([A-Za-z0-9_\u4e00-\u9fa5]+)")
+# 行尾块 ID（Obsidian 块引用写法）："内容 ^abc123"。要求 ^ 前有空白、id 至少 4 位，
+# 避免误伤公式里的上标（如 $x^2$）和 kramdown 的 ^上标^ 语法
+_BLOCK_ID_TAIL_RE = re.compile(r"[ \t]+\^([A-Za-z0-9-]{4,})[ \t]*$", re.MULTILINE)
 _BLOCK_HEADING_RE = re.compile(r"\[\[([^\]\|#]+)#([^\]\|]+)\]\]")
 _EMBED_SIZED_RE = re.compile(r"!\[\[([^\]\|]+)\|(\d+)(?:x(\d+))?\]\]")
 _EMBED_ANY_RE = re.compile(r"!\[\[([^\]]+?)\]\]")
@@ -248,13 +261,6 @@ def convert_tasks(text: str, counts: dict[str, int]) -> str:
     text, empty = _TASK_EMPTY_RE.subn("- ☐ ", text)
     text, done = _TASK_DONE_RE.subn("- ☑ ", text)
     counts["extra"] += empty + done
-    return text
-
-
-def convert_tags(text: str, counts: dict[str, int]) -> str:
-    """#标签 -> <a href="/tags/标签/">#标签</a>。"""
-    text, replaced = _HASHTAG_RE.subn(r'<a href="/tags/\1/">#\1</a>', text)
-    counts["extra"] += replaced
     return text
 
 
@@ -387,9 +393,15 @@ def convert_links(
         counts["block_id"] += 1
         return '<a id="%s"></a>' % match.group(1)
 
+    def block_id_tail(match: re.Match[str]) -> str:
+        counts["block_id"] += 1
+        return ' <a id="%s"></a>' % match.group(1)
+
     text = _BLOCK_LINK_RE.sub(block_link, text)
     text = _ALIAS_LINK_RE.sub(alias_link, text)
     text = _PLAIN_LINK_RE.sub(plain_link, text)
+    # 先处理行尾块 ID（"内容 ^abc123"），再处理独占一行的块 ID
+    text = _BLOCK_ID_TAIL_RE.sub(block_id_tail, text)
     text = _BLOCK_ID_RE.sub(block_id, text)
     return text
 
@@ -529,7 +541,6 @@ def convert_document(
     body = convert_embeds(body, counts)
     body = convert_block_heading_links(body, counts, slug_map, url_prefix)
     body = convert_tasks(body, counts)
-    body = convert_tags(body, counts)
     body = convert_emoji(body, counts)
     body = escape_math(body, counts)
     body = convert_links(body, counts, slug_map, url_prefix)

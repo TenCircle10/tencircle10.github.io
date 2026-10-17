@@ -1,10 +1,9 @@
 ---
 layout: note
-title: 数学分析 by TenCircle10
-permalink: /notes/mathematical-analysis-szy/
+title: "数学分析 by TenCircle10"
+slug: "mathematical-analysis-szy"
+permalink: "/notes/mathematical-analysis-szy/"
 ---
-
-
 
 思考：无穷小分析
 
@@ -60,9 +59,16 @@ $\Rightarrow$ 数域
 **可列集定义**：
 若一个无限集中元素可以按某种规律排成一个序列，即这个集合可表为 $\\{a_1, a_2, \dots, a_n, \dots\\}$
 
-> [!note] 定理 1.0.1
->  可列个可列集之并也是可列集。
-^f0fbb3
+<details class="callout note" data-callout="note" markdown="block">
+<summary class="callout-title">定理 1.0.1</summary>
+<div class="callout-content" markdown="block">
+
+ 可列个可列集之并也是可列集。
+
+</div>
+</details>
+
+<a id="f0fbb3"></a>
 
 **证明思路（记）**：
 记 $A_n = \\{a_{n1}, a_{n2}, \dots, a_{nk}, \dots\\}$
@@ -79,20 +85,19 @@ $$
 \end{matrix}
 $$
 
-
 ---
 
 **$\mathbb{Q}$ 为可列集**：
 
-记 $A_n = [n, n+1] \cap \mathbb{Q}, n \in \mathbb{Z}$，则 $$\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$$由[[#^f0fbb3|定理1.0.1]]，只需证 $A_0$ 可列。
+记 $A_n = [n, n+1] \cap \mathbb{Q}, n \in \mathbb{Z}$，则 $$\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$$由[定理1.0.1](#f0fbb3)，只需证 $A_0$ 可列。
 $A_0 = \\{0, 1, \frac{1}{2}, \frac{1}{3}, \frac{2}{3}, \frac{1}{4}, \dots, \frac{k-1}{k}, \dots\\}$
 $\Rightarrow \mathbb{Q}$ 可列。
 
 **注意点**：
-*   所有可列集的元素个数相同，见[[无限可列集等势证明]]
+*   所有可列集的元素个数相同，见[无限可列集等势证明](/notes/无限可列集等势证明/)
 *   有理数集与无理数集均具有稠密性
 $f: A \to B$，A, B 有限集
-*  无理数为何不可列?见[[实数集与无理数集不可列证明]]
+*  无理数为何不可列?见[实数集与无理数集不可列证明](/notes/实数集与无理数集不可列证明/)
 **完备性**：
 *   完备：对极限封闭。
 
