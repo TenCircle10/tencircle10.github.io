@@ -92,10 +92,10 @@ $A_0 = \\{0, 1, \frac{1}{2}, \frac{1}{3}, \frac{2}{3}, \frac{1}{4}, \dots, \frac
 $\Rightarrow \mathbb{Q}$ 可列。
 
 **注意点**：
-*   所有可列集的元素个数相同，见[无限可列集等势证明](/notes/无限可列集等势证明/)
+*   所有可列集的元素个数相同，见[无限可列集等势证明](/notes/infinite-countable-equivalence/)
 *   有理数集与无理数集均具有稠密性
 $f: A \to B$，A, B 有限集
-*  无理数为何不可列?见[实数集与无理数集不可列证明](/notes/实数集与无理数集不可列证明/)
+*  无理数为何不可列?见[实数集与无理数集不可列证明](/notes/real-irrational-uncountable/)
 **完备性**：
 *   完备：对极限封闭。
 
