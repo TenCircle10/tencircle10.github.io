@@ -1,4 +1,5 @@
 ---
+layout: note
 slug: math-learn-attention
 title: 数学学习漫谈——Attention is all you need
 permalink: "/notes/math-learn-attention/"

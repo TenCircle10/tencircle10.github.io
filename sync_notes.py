@@ -24,8 +24,11 @@ Markdown，输出到 ``notes/``。
    ``[[#^块ID|文本]]`` -> ``[文本](#块ID)``；
    单独成行的块 ID ``^块ID`` -> ``<a id="块ID"></a>``。
 4. **图片嵌入**：``![[图片.png]]`` -> ``![图片.png](/assets/img/obsidian/图片.png)``。
-5. **Front Matter**：文件头没有 ``---`` 包裹的 YAML 时，自动补
-   ``layout: note`` 和 ``title``（取文件名）。
+5. **Front Matter（layout 强制注入）**：输出文件的 front matter 一定包含
+   ``layout: note``。源文件没有 front matter 时自动生成 ``layout`` + ``title``
+   （取文件名）；源文件已有 front matter 时，缺 ``layout`` 就补上、写错了就覆盖。
+   ``layout`` 决定页面套用 _layouts/note.html，缺了它 MathJax 和笔记专属样式
+   都不会加载（公式会变成源码）。
 6. **slug 映射（决定输出文件名与 URL）**：源笔记 front matter 里写
    ``slug: math-analysis-szy`` 时，输出文件为 ``notes/math-analysis-szy.md``，
    并写入 ``permalink: /notes/math-analysis-szy/``（源文件里已有的 permalink 会被覆盖）。
@@ -300,6 +303,24 @@ def apply_permalink(front_matter: str, permalink: str) -> str:
     return updated.rstrip("\n") + "\n\n"
 
 
+_LAYOUT_LINE_RE = re.compile(r"^[ \t]*layout[ \t]*:.*$", re.MULTILINE)
+
+
+def apply_layout(front_matter: str, layout: str) -> str:
+    """强制注入或覆盖 layout 字段；已有则替换，没有则插到 front matter 第一行。"""
+    line = "layout: %s" % layout
+    if _LAYOUT_LINE_RE.search(front_matter):
+        updated = _LAYOUT_LINE_RE.sub(lambda _match: line, front_matter, count=1)
+    else:
+        stripped = front_matter.rstrip("\n")
+        if not stripped.startswith("---"):
+            return front_matter
+        body = stripped[3:]  # 形如 "\nslug: xxx\n---"
+        updated = "---\n" + line + body
+    # front matter 与正文之间统一保留一个空行
+    return updated.rstrip("\n") + "\n\n"
+
+
 def build_slug_map(sources: list[Path]) -> dict[str, str]:
     """建立「源文件名 / front matter title -> slug」的映射，用于重写 wikilink。"""
     mapping: dict[str, str] = {}
@@ -358,6 +379,8 @@ def convert_document(
     added_front_matter = front_matter is None
     if added_front_matter:
         front_matter = build_front_matter(stem)
+    # layout 必须存在：缺了它页面不会套用 _layouts/note.html，MathJax 就不会加载
+    front_matter = apply_layout(front_matter, "note")
     front_matter = apply_permalink(front_matter, permalink)
     # permalink 已经保证 front matter 后面带一个空行，正文开头的空行去掉避免重复
     return front_matter + body.lstrip("\n"), counts, added_front_matter
