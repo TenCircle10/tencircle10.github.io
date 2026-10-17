@@ -1,4 +1,8 @@
-﻿# 1. 运行 Python 转换脚本
+﻿# 让 Python 的中文输出不乱码（Windows 控制台默认是 GBK）
+$env:PYTHONIOENCODING = 'utf-8'
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# 1. 运行 Python 转换脚本
 Write-Host "🚀 正在转换 Obsidian 笔记..." -ForegroundColor Cyan
 python sync_notes.py
 
@@ -17,13 +21,15 @@ if ([string]::IsNullOrWhiteSpace($gitStatus)) {
 
 # 3. 提交并推送
 Write-Host "📦 正在提交并推送到 GitHub..." -ForegroundColor Cyan
-git add .
+# 2>&1 | Out-Host 让 git 的 warning / 进度以普通文本显示，
+# 而不是被 PowerShell 当成红色错误信息抛出来
+git add . 2>&1 | Out-Host
 $commitMsg = "auto: sync notes and deploy $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
-git commit -m $commitMsg
+git commit -m $commitMsg 2>&1 | Out-Host
 
 # 4. 处理 Push（考虑网络问题）
 Write-Host "☁️ 正在推送到线上..." -ForegroundColor Cyan
-git push origin main
+git push origin main 2>&1 | Out-Host
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "🎉 发布成功！请稍等 1 分钟去网页查看。" -ForegroundColor Green
