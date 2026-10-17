@@ -58,3 +58,172 @@
   cursor: pointer;
   user-select: none;
 }
+
+/* ==========================================================================
+   Callout Studio 同步（数据来源：Obsidian 插件 callout-studio/data.json）
+   下面的规则会覆盖本文件上半部分的同名类型，颜色与图标统一对齐 Obsidian 里的配置。
+   - 颜色：colorLight 用于亮色模式，colorDark 用于暗色模式
+   - 背景：同色低透明度叠加（亮 7~10% / 暗 14~16%），深浅主题下都不会刺眼
+   - 图标：Obsidian 用的是 Lucide，这里映射到最接近的 Font Awesome 6 Unicode 码
+   ========================================================================== */
+
+/* ---------- <details>/<summary> 结构适配（构建时生成的 callout 用 details）---------- */
+
+/* 去掉 <summary> 的原生三角，否则会和 Font Awesome 图标并排出现两个标记 */
+.callout > summary.callout-title {
+  list-style: none;
+  cursor: pointer;
+}
+
+.callout > summary.callout-title::-webkit-details-marker {
+  display: none;
+}
+
+/* 右侧折叠指示器，替代被去掉的原生三角 */
+.callout > summary.callout-title::after {
+  content: "\f078"; /* fa-chevron-down */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 0.75em;
+  margin-left: auto;
+  opacity: 0.55;
+}
+
+.callout:not([open]) > summary.callout-title::after {
+  content: "\f054"; /* fa-chevron-right */
+}
+
+/* ---------- 数学类（你在 Callout Studio 里自定义的）---------- */
+
+/* theorem 定理 / 原理 —— lucide-function-square → fa-square-root-variable */
+.callout[data-callout="theorem"] { border-left-color: #086ddd; background-color: rgba(8, 109, 221, 0.07); }
+.callout[data-callout="theorem"] .callout-title::before { content: "\f698"; color: #086ddd; }
+
+/* definition 定义 —— lucide-book-a → fa-book */
+.callout[data-callout="definition"] { border-left-color: #086ddd; background-color: rgba(8, 109, 221, 0.07); }
+.callout[data-callout="definition"] .callout-title::before { content: "\f02d"; color: #086ddd; }
+
+/* idea 想法 —— lucide-lightbulb → fa-lightbulb */
+.callout[data-callout="idea"] { border-left-color: #afb42b; background-color: rgba(175, 180, 43, 0.10); }
+.callout[data-callout="idea"] .callout-title::before { content: "\f0eb"; color: #afb42b; }
+
+/* motivation 动机 —— lucide-sparkles → fa-wand-magic-sparkles */
+.callout[data-callout="motivation"] { border-left-color: #ec7500; background-color: rgba(236, 117, 0, 0.07); }
+.callout[data-callout="motivation"] .callout-title::before { content: "\f72b"; color: #ec7500; }
+
+/* key point 重点 —— lucide-key-round → fa-key */
+.callout[data-callout="key point"] { border-left-color: #ff5722; background-color: rgba(255, 87, 34, 0.07); }
+.callout[data-callout="key point"] .callout-title::before { content: "\f084"; color: #ff5722; }
+
+/* context 背景 / 上下文 —— lucide-map-pin → fa-map-pin */
+.callout[data-callout="context"] { border-left-color: #00bfbc; background-color: rgba(0, 191, 188, 0.07); }
+.callout[data-callout="context"] .callout-title::before { content: "\f276"; color: #00bfbc; }
+
+/* formula 公式 —— lucide-pencil → fa-pencil */
+.callout[data-callout="formula"] { border-left-color: #086ddd; background-color: rgba(8, 109, 221, 0.07); }
+.callout[data-callout="formula"] .callout-title::before { content: "\f303"; color: #086ddd; }
+
+/* ---------- 内置类型（颜色/图标按 Callout Studio 的配置更新）---------- */
+
+/* info —— lucide-info → fa-circle-info */
+.callout[data-callout="info"] { border-left-color: #086ddd; background-color: rgba(8, 109, 221, 0.07); }
+.callout[data-callout="info"] .callout-title::before { content: "\f05a"; color: #086ddd; }
+
+/* note —— lucide-pencil → fa-pencil */
+.callout[data-callout="note"] { border-left-color: #086ddd; background-color: rgba(8, 109, 221, 0.07); }
+.callout[data-callout="note"] .callout-title::before { content: "\f303"; color: #086ddd; }
+
+/* tip —— lucide-flame → fa-fire */
+.callout[data-callout="tip"] { border-left-color: #00bfbc; background-color: rgba(0, 191, 188, 0.07); }
+.callout[data-callout="tip"] .callout-title::before { content: "\f06d"; color: #00bfbc; }
+
+/* warning —— lucide-alert-triangle → fa-triangle-exclamation */
+.callout[data-callout="warning"] { border-left-color: #ec7500; background-color: rgba(236, 117, 0, 0.07); }
+.callout[data-callout="warning"] .callout-title::before { content: "\f071"; color: #ec7500; }
+
+/* danger —— lucide-zap → fa-bolt */
+.callout[data-callout="danger"] { border-left-color: #e93147; background-color: rgba(233, 49, 71, 0.07); }
+.callout[data-callout="danger"] .callout-title::before { content: "\f0e7"; color: #e93147; }
+
+/* quote —— lucide-quote → fa-quote-left */
+.callout[data-callout="quote"] { border-left-color: #9e9e9e; background-color: rgba(158, 158, 158, 0.08); }
+.callout[data-callout="quote"] .callout-title::before { content: "\f10d"; color: #9e9e9e; }
+
+/* example —— lucide-list → fa-list */
+.callout[data-callout="example"] { border-left-color: #7852ee; background-color: rgba(120, 82, 238, 0.07); }
+.callout[data-callout="example"] .callout-title::before { content: "\f03a"; color: #7852ee; }
+
+/* success —— lucide-check → fa-check */
+.callout[data-callout="success"] { border-left-color: #08b94e; background-color: rgba(8, 185, 78, 0.08); }
+.callout[data-callout="success"] .callout-title::before { content: "\f00c"; color: #08b94e; }
+
+/* failure —— lucide-x → fa-xmark */
+.callout[data-callout="failure"] { border-left-color: #e93147; background-color: rgba(233, 49, 71, 0.07); }
+.callout[data-callout="failure"] .callout-title::before { content: "\f00d"; color: #e93147; }
+
+/* question —— lucide-help-circle → fa-circle-question */
+.callout[data-callout="question"] { border-left-color: #ec7500; background-color: rgba(236, 117, 0, 0.07); }
+.callout[data-callout="question"] .callout-title::before { content: "\f059"; color: #ec7500; }
+
+/* todo —— lucide-check-circle-2 → fa-circle-check */
+.callout[data-callout="todo"] { border-left-color: #086ddd; background-color: rgba(8, 109, 221, 0.07); }
+.callout[data-callout="todo"] .callout-title::before { content: "\f058"; color: #086ddd; }
+
+/* abstract —— lucide-clipboard-list → fa-clipboard-list */
+.callout[data-callout="abstract"] { border-left-color: #00bfa5; background-color: rgba(0, 191, 165, 0.08); }
+.callout[data-callout="abstract"] .callout-title::before { content: "\f46d"; color: #00bfa5; }
+
+/* ---------- 暗色模式：换用 colorDark 系列颜色，并加深背景 ---------- */
+@media (prefers-color-scheme: dark) {
+  .callout[data-callout="theorem"],
+  .callout[data-callout="definition"],
+  .callout[data-callout="info"],
+  .callout[data-callout="note"],
+  .callout[data-callout="todo"],
+  .callout[data-callout="formula"] { border-left-color: #027aff; background-color: rgba(2, 122, 255, 0.16); }
+
+  .callout[data-callout="theorem"] .callout-title::before,
+  .callout[data-callout="definition"] .callout-title::before,
+  .callout[data-callout="info"] .callout-title::before,
+  .callout[data-callout="note"] .callout-title::before,
+  .callout[data-callout="todo"] .callout-title::before,
+  .callout[data-callout="formula"] .callout-title::before { color: #027aff; }
+
+  .callout[data-callout="tip"],
+  .callout[data-callout="context"] { border-left-color: #53dfdd; background-color: rgba(83, 223, 221, 0.14); }
+
+  .callout[data-callout="tip"] .callout-title::before,
+  .callout[data-callout="context"] .callout-title::before { color: #53dfdd; }
+
+  .callout[data-callout="warning"],
+  .callout[data-callout="question"],
+  .callout[data-callout="motivation"] { border-left-color: #e9973f; background-color: rgba(233, 151, 63, 0.15); }
+
+  .callout[data-callout="warning"] .callout-title::before,
+  .callout[data-callout="question"] .callout-title::before,
+  .callout[data-callout="motivation"] .callout-title::before { color: #e9973f; }
+
+  .callout[data-callout="danger"],
+  .callout[data-callout="failure"] { border-left-color: #fb464c; background-color: rgba(251, 70, 76, 0.15); }
+
+  .callout[data-callout="danger"] .callout-title::before,
+  .callout[data-callout="failure"] .callout-title::before { color: #fb464c; }
+
+  .callout[data-callout="example"] { border-left-color: #a882ff; background-color: rgba(168, 130, 255, 0.15); }
+  .callout[data-callout="example"] .callout-title::before { color: #a882ff; }
+
+  .callout[data-callout="success"] { border-left-color: #44cf6e; background-color: rgba(68, 207, 110, 0.15); }
+  .callout[data-callout="success"] .callout-title::before { color: #44cf6e; }
+
+  .callout[data-callout="idea"] { border-left-color: #dce775; background-color: rgba(220, 231, 117, 0.14); }
+  .callout[data-callout="idea"] .callout-title::before { color: #dce775; }
+
+  .callout[data-callout="key point"] { border-left-color: #ff8a65; background-color: rgba(255, 138, 101, 0.15); }
+  .callout[data-callout="key point"] .callout-title::before { color: #ff8a65; }
+
+  .callout[data-callout="abstract"] { border-left-color: #00bfa5; background-color: rgba(0, 191, 165, 0.15); }
+  .callout[data-callout="abstract"] .callout-title::before { color: #00bfa5; }
+
+  .callout[data-callout="quote"] { border-left-color: #9e9e9e; background-color: rgba(158, 158, 158, 0.14); }
+  .callout[data-callout="quote"] .callout-title::before { color: #9e9e9e; }
+}
