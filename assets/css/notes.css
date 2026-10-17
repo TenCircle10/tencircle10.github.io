@@ -35,6 +35,22 @@
   min-width: 0;               /* 允许昵称收缩，避免把右侧链接挤出屏幕 */
 }
 
+/* 中间标题：占据剩余空间但最多一半宽度，超长用省略号，避免挤掉左右两侧 */
+.note-nav-title {
+  flex: 0 1 auto;
+  max-width: 50%;
+  text-align: center;
+  font-weight: 500;
+  color: #043361;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-nav-right {
+  flex: 0 0 auto;             /* 返回链接永远不被压缩 */
+}
+
 .note-avatar {
   width: 40px;
   height: 40px;
@@ -76,7 +92,8 @@
     border-bottom-color: #34363f;
   }
 
-  .note-nav-name {
+  .note-nav-name,
+  .note-nav-title {
     color: rgb(62, 183, 240);
   }
 }
@@ -89,6 +106,11 @@
 
   .note-nav-name {
     font-size: 1rem;
+  }
+
+  .note-nav-title {
+    font-size: 0.95rem;
+    max-width: 45%;
   }
 
   .note-main {

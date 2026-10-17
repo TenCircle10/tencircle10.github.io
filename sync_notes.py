@@ -35,6 +35,14 @@ Markdown，输出到 ``notes/``。
    没写 ``slug`` 时回退用源文件名。正文里的 ``[[中文笔记名]]`` 会按
    「源文件名 / front matter title -> slug」的映射重写成 slug URL，
    显示文本仍保留原来的中文名；找不到对应笔记时保持原样。
+7. **Obsidian 扩展语法**：``%%隐藏注释%%`` 整段删除；``==高亮==`` -> ``<mark>``；
+   ``- [ ]`` / ``- [x]`` -> ``- ☐`` / ``- ☑``；``#标签`` ->
+   ``<a href="/tags/标签/">#标签</a>``；``:smile:`` 这类 emoji 短码换成字符；
+   ``![[图片.png|300]]`` -> ``<img width="300">``（``|200x150`` 时同时给 height）；
+   ``![[笔记]]``（非图片扩展名）-> ``*(嵌入笔记：笔记)*``；
+   ``[[笔记#标题]]`` -> ``[笔记#标题](/notes/slug/#标题)``。
+   ```dataview 查询块整块删除、```mermaid 块包成 ``<div class="mermaid">``，
+   这两者与 ``` 代码块一样在「代码块保护」阶段处理，块内内容不会被其它规则改写。
 
 ````` 围起来的代码块（``` 或 ~~~）整体跳过，不做任何替换。
 
@@ -57,17 +65,24 @@ DEFAULT_DEST = ROOT / "notes"
 
 
 # --------------------------------------------------------------------------- #
-# 代码块保护：先整段抽出来，最后再原样放回，保证代码块里不做任何替换
+# 代码块保护：先整段抽出来，最后再原样放回，保证代码块里不做任何替换。
+# dataview 查询块在 Obsidian 里也是代码块，直接整块删掉；mermaid 代码块转成
+# <div class="mermaid"> 但同样走占位符，块内内容不会被后续规则改写。
 # --------------------------------------------------------------------------- #
 _CODE_PLACEHOLDER = "\x00SYNC_CODE_BLOCK_{}\x00"
+_MERMAID_PLACEHOLDER = "\x00SYNC_MERMAID_{}\x00"
 _FENCE_OPEN_RE = re.compile(r"^[ \t]*(`{3,}|~{3,})")
+_DATAVIEW_SKIPPED = "<!-- Dataview query skipped -->"
 
 
-def protect_code_blocks(text: str) -> tuple[str, list[str]]:
-    """把 fenced code block 换成占位符，返回 (处理后的文本, 被抽出的代码块)。"""
+def protect_code_blocks(
+    text: str, counts: dict[str, int]
+) -> tuple[str, list[str], list[str]]:
+    """抽出 fenced code block，返回 (处理后的文本, 普通代码块, mermaid 代码块)。"""
     lines = text.split("\n")
     output: list[str] = []
     blocks: list[str] = []
+    mermaid_blocks: list[str] = []
     index = 0
     while index < len(lines):
         match = _FENCE_OPEN_RE.match(lines[index])
@@ -76,6 +91,7 @@ def protect_code_blocks(text: str) -> tuple[str, list[str]]:
             index += 1
             continue
         fence = match.group(1)
+        info = lines[index][match.end():].strip().lower()
         close_re = re.compile(
             r"^[ \t]*" + re.escape(fence[0]) + "{%d,}[ \t]*$" % len(fence)
         )
@@ -83,17 +99,36 @@ def protect_code_blocks(text: str) -> tuple[str, list[str]]:
         index += 1
         while index < len(lines) and not close_re.match(lines[index]):
             index += 1
+        body_lines = lines[start + 1:index]
+        if body_lines and close_re.match(body_lines[-1]):
+            body_lines = body_lines[:-1]
         if index < len(lines):  # 吃掉结束 fence
             index += 1
-        blocks.append("\n".join(lines[start:index]))
-        output.append(_CODE_PLACEHOLDER.format(len(blocks) - 1))
-    return "\n".join(output), blocks
+
+        if info.startswith("dataview"):
+            output.append(_DATAVIEW_SKIPPED)
+            counts["extra"] += 1
+        elif info.startswith("mermaid"):
+            mermaid_blocks.append("\n".join(body_lines))
+            output.append(_MERMAID_PLACEHOLDER.format(len(mermaid_blocks) - 1))
+            counts["extra"] += 1
+        else:
+            blocks.append("\n".join(lines[start:index]))
+            output.append(_CODE_PLACEHOLDER.format(len(blocks) - 1))
+    return "\n".join(output), blocks, mermaid_blocks
 
 
-def restore_code_blocks(text: str, blocks: list[str]) -> str:
-    """把占位符还原成原始代码块。"""
+def restore_code_blocks(
+    text: str, blocks: list[str], mermaid_blocks: list[str]
+) -> str:
+    """把占位符还原成原始代码块 / mermaid div。"""
     for position, block in enumerate(blocks):
         text = text.replace(_CODE_PLACEHOLDER.format(position), block)
+    for position, block in enumerate(mermaid_blocks):
+        text = text.replace(
+            _MERMAID_PLACEHOLDER.format(position),
+            '<div class="mermaid">\n%s\n</div>' % block,
+        )
     return text
 
 
@@ -157,7 +192,127 @@ def convert_callouts(text: str, counts: dict[str, int]) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 2. 数学公式转义（只处理行内 $...$，$$...$$ 块保持原样）
+# 2. Obsidian 扩展语法（%%注释%%、==高亮==、待办、标签、emoji、嵌入、标题链接）
+# --------------------------------------------------------------------------- #
+_COMMENT_RE = re.compile(r"%%[\s\S]*?%%")
+_HIGHLIGHT_RE = re.compile(r"==([^=\n]+?)==")
+_TASK_EMPTY_RE = re.compile(r"^- \[ \] ", re.MULTILINE)
+_TASK_DONE_RE = re.compile(r"^- \[[xX]\] ", re.MULTILINE)
+# 标签前面不能是字母数字、/、&、#、反斜杠或左圆括号：
+# 排除 ( 是为了不把 [文本](#锚点) 里的锚点当成标签；排除 \ 是为了放过 \# 转义
+_HASHTAG_RE = re.compile(r"(?<![\w/&#\\(])#([A-Za-z0-9_\u4e00-\u9fa5]+)")
+_BLOCK_HEADING_RE = re.compile(r"\[\[([^\]\|#]+)#([^\]\|]+)\]\]")
+_EMBED_SIZED_RE = re.compile(r"!\[\[([^\]\|]+)\|(\d+)(?:x(\d+))?\]\]")
+_EMBED_ANY_RE = re.compile(r"!\[\[([^\]]+?)\]\]")
+_IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".bmp", ".avif")
+_EMOJI_MAP = {
+    ":smile:": "😄",
+    ":laughing:": "😆",
+    ":joy:": "😂",
+    ":heart:": "❤️",
+    ":+1:": "👍",
+    ":-1:": "👎",
+    ":thumbsup:": "👍",
+    ":rocket:": "🚀",
+    ":warning:": "⚠️",
+    ":bulb:": "💡",
+    ":fire:": "🔥",
+    ":star:": "⭐",
+    ":check:": "✅",
+    ":x:": "❌",
+    ":tada:": "🎉",
+    ":book:": "📖",
+    ":pencil:": "📝",
+    ":bug:": "🐛",
+    ":eyes:": "👀",
+    ":coffee:": "☕",
+}
+
+
+def strip_obsidian_comments(text: str, counts: dict[str, int]) -> str:
+    """删除 Obsidian 的 %%隐藏注释%%（可跨行）。"""
+    text, replaced = _COMMENT_RE.subn("", text)
+    counts["extra"] += replaced
+    return text
+
+
+def convert_highlights(text: str, counts: dict[str, int]) -> str:
+    """==高亮== -> <mark>高亮</mark>。"""
+    text, replaced = _HIGHLIGHT_RE.subn(r"<mark>\1</mark>", text)
+    counts["extra"] += replaced
+    return text
+
+
+def convert_tasks(text: str, counts: dict[str, int]) -> str:
+    """- [ ] / - [x] -> - ☐ / - ☑。"""
+    text, empty = _TASK_EMPTY_RE.subn("- ☐ ", text)
+    text, done = _TASK_DONE_RE.subn("- ☑ ", text)
+    counts["extra"] += empty + done
+    return text
+
+
+def convert_tags(text: str, counts: dict[str, int]) -> str:
+    """#标签 -> <a href="/tags/标签/">#标签</a>。"""
+    text, replaced = _HASHTAG_RE.subn(r'<a href="/tags/\1/">#\1</a>', text)
+    counts["extra"] += replaced
+    return text
+
+
+def convert_emoji(text: str, counts: dict[str, int]) -> str:
+    """把 :smile: 这类常见 emoji 短码替换成字符。"""
+    for token, emoji in _EMOJI_MAP.items():
+        if token in text:
+            counts["extra"] += text.count(token)
+            text = text.replace(token, emoji)
+    return text
+
+
+def convert_block_heading_links(
+    text: str, counts: dict[str, int], slug_map: dict[str, str], url_prefix: str
+) -> str:
+    """[[笔记#标题]] -> [笔记#标题](/notes/slug/#标题)。"""
+
+    def replace(match: re.Match[str]) -> str:
+        raw_target = match.group(1).strip()
+        heading = match.group(2).strip()
+        target = resolve_note_target(raw_target, slug_map)
+        counts["extra"] += 1
+        return "[%s#%s](%s%s/#%s)" % (raw_target, heading, url_prefix, target, heading)
+
+    return _BLOCK_HEADING_RE.sub(replace, text)
+
+
+def convert_embeds(text: str, counts: dict[str, int]) -> str:
+    """处理 ![[...]]：带尺寸的图片 -> <img>，图片扩展名 -> Markdown 图片，其余当笔记嵌入。"""
+
+    def sized(match: re.Match[str]) -> str:
+        name = match.group(1).strip()
+        width = match.group(2)
+        height = match.group(3)
+        counts["image"] += 1
+        height_attr = ' height="%s"' % height if height else ""
+        return '<img src="/assets/img/obsidian/%s" width="%s"%s />' % (
+            name,
+            width,
+            height_attr,
+        )
+
+    def plain(match: re.Match[str]) -> str:
+        target = match.group(1).strip()
+        name = target.split("|", 1)[0].strip()
+        if name.lower().endswith(_IMAGE_EXTS):
+            counts["image"] += 1
+            return "![%s](/assets/img/obsidian/%s)" % (name, name)
+        counts["extra"] += 1
+        return "*(嵌入笔记：%s)*" % name
+
+    text = _EMBED_SIZED_RE.sub(sized, text)
+    text = _EMBED_ANY_RE.sub(plain, text)
+    return text
+
+
+# --------------------------------------------------------------------------- #
+# 3. 数学公式转义（只处理行内 $...$，$$...$$ 块保持原样）
 # --------------------------------------------------------------------------- #
 # 定界符前面不能是反斜杠或 $：排除 $ 是为了跳过 $$ 块，排除反斜杠是为了
 # 避免 $$ 块里的 \$（例如 \$100）被当成行内公式的定界符——那会让正则跨过
@@ -192,9 +347,8 @@ def escape_math(text: str, counts: dict[str, int]) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 3. Wikilink / 块 ID / 4. 图片
+# 4. Wikilink 与块 ID（图片 / 笔记嵌入已由 convert_embeds 处理完）
 # --------------------------------------------------------------------------- #
-_EMBED_RE = re.compile(r"!\[\[([^\]\|]+?)(?:\|[^\]]*)?\]\]")
 _BLOCK_LINK_RE = re.compile(r"\[\[#\^([A-Za-z0-9-]+)(?:\|([^\]]+))?\]\]")
 _ALIAS_LINK_RE = re.compile(r"\[\[([^\]\|#^]+)\|([^\]]+)\]\]")
 _PLAIN_LINK_RE = re.compile(r"\[\[([^\]\|#^]+)\]\]")
@@ -207,12 +361,7 @@ def convert_links(
     slug_map: dict[str, str],
     url_prefix: str,
 ) -> str:
-    """转换图片嵌入、wikilink 和块 ID。图片必须先处理，否则会被 wikilink 规则吃掉。"""
-
-    def embed(match: re.Match[str]) -> str:
-        name = match.group(1).strip()
-        counts["image"] += 1
-        return "![%s](/assets/img/obsidian/%s)" % (name, name)
+    """转换 wikilink 与块 ID（![[...]] 形式的图片与嵌入由 convert_embeds 处理）。"""
 
     def block_link(match: re.Match[str]) -> str:
         block_id = match.group(1)
@@ -238,7 +387,6 @@ def convert_links(
         counts["block_id"] += 1
         return '<a id="%s"></a>' % match.group(1)
 
-    text = _EMBED_RE.sub(embed, text)
     text = _BLOCK_LINK_RE.sub(block_link, text)
     text = _ALIAS_LINK_RE.sub(alias_link, text)
     text = _PLAIN_LINK_RE.sub(plain_link, text)
@@ -368,13 +516,26 @@ def convert_document(
         "block_link": 0,
         "block_id": 0,
         "image": 0,
+        "extra": 0,
     }
     front_matter, body = split_front_matter(text)
-    body, code_blocks = protect_code_blocks(body)
+
+    # 顺序很重要：代码块（含 dataview / mermaid）先抽成占位符，之后所有替换
+    # 都在占位符之外进行，块内内容不会被误伤。
+    body, code_blocks, mermaid_blocks = protect_code_blocks(body, counts)
     body = convert_callouts(body, counts)
+    body = strip_obsidian_comments(body, counts)
+    body = convert_highlights(body, counts)
+    body = convert_embeds(body, counts)
+    body = convert_block_heading_links(body, counts, slug_map, url_prefix)
+    body = convert_tasks(body, counts)
+    body = convert_tags(body, counts)
+    body = convert_emoji(body, counts)
     body = escape_math(body, counts)
     body = convert_links(body, counts, slug_map, url_prefix)
-    body = restore_code_blocks(body, code_blocks)
+    # %% 注释整段删除后会留下多个连续空行，压缩成一个（Markdown 语义不变）
+    body = re.sub(r"\n{3,}", "\n\n", body)
+    body = restore_code_blocks(body, code_blocks, mermaid_blocks)
 
     added_front_matter = front_matter is None
     if added_front_matter:
@@ -442,7 +603,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         target.write_text(converted, encoding="utf-8", newline="\n")
         print(
-            "[ok] %s -> %s  (slug=%s, permalink=%s, callout=%d, math=%d, wikilink=%d, block_link=%d, block_id=%d, image=%d, front_matter=%s)"
+            "[ok] %s -> %s  (slug=%s, permalink=%s, callout=%d, math=%d, wikilink=%d, block_link=%d, block_id=%d, image=%d, obsidian=%d, front_matter=%s)"
             % (
                 relative,
                 target.name,
@@ -454,6 +615,7 @@ def main(argv: list[str] | None = None) -> int:
                 counts["block_link"],
                 counts["block_id"],
                 counts["image"],
+                counts["extra"],
                 "generated" if added else "kept",
             )
         )

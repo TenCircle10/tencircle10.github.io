@@ -61,6 +61,7 @@
         <!-- 昵称：目前写死为 TenCircle10；若要跟随 _config.yml 里的 title，请自行修改这一行 -->
         <span class="note-nav-name">TenCircle10</span>
       </div>
+      <div class="note-nav-title">{{ page.title }}</div>
       <div class="note-nav-right">
         <a class="note-nav-back" href="{{ '/' | relative_url }}">← 返回主页</a>
       </div>
@@ -70,12 +71,7 @@
     <!-- ================= 笔记正文阅读区（居中，无侧边栏） ================= -->
     <main class="note-main">
 
-      <!-- 显示这篇笔记的标题（如果你在 MD 文件里写了 title） -->
-      {% if page.title %}
-      <h2 class="note-title">{{ page.title }}</h2>
-      <br>
-      {% endif %}
-
+      <!-- 标题已移到顶部导航栏中间，正文里不再重复渲染 -->
       {{ content }}
 
       <br>
