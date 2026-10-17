@@ -8,12 +8,6 @@ I am a student at Beijing Institute of Technology (BIT). Welcome to my homepage!
 
 我是一位北京理工大学的学生。欢迎来到我的主页！
 
-<div class="daily-quote">
-  <span class="quote-mark">“</span>
-  <span id="quote-content">加载中...</span>
-  <span class="quote-mark">”</span>
-</div>
-
 ## Research Interests / 研究兴趣
 
 暂无
