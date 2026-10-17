@@ -92,6 +92,8 @@ DEFAULT_DEST = ROOT / "notes"
 _CODE_PLACEHOLDER = "\x00SYNC_CODE_BLOCK_{}\x00"
 _MERMAID_PLACEHOLDER = "\x00SYNC_MERMAID_{}\x00"
 _FENCE_OPEN_RE = re.compile(r"^[ \t]*(`{3,}|~{3,})")
+# 行内代码：`code` 或 ``co`de``（反引号数量必须配对，且不跨行）
+_INLINE_CODE_RE = re.compile(r"(`+)([^\n]+?)\1")
 _DATAVIEW_SKIPPED = "<!-- Dataview query skipped -->"
 
 
@@ -135,7 +137,16 @@ def protect_code_blocks(
         else:
             blocks.append("\n".join(lines[start:index]))
             output.append(_CODE_PLACEHOLDER.format(len(blocks) - 1))
-    return "\n".join(output), blocks, mermaid_blocks
+
+    text = "\n".join(output)
+
+    # 行内代码（`code` / ``code``）也一并保护起来，内部绝不执行任何替换
+    def stash_inline_code(match: re.Match[str]) -> str:
+        blocks.append(match.group(0))
+        return _CODE_PLACEHOLDER.format(len(blocks) - 1)
+
+    text = _INLINE_CODE_RE.sub(stash_inline_code, text)
+    return text, blocks, mermaid_blocks
 
 
 def restore_code_blocks(
@@ -354,7 +365,9 @@ def convert_embeds(text: str, counts: dict[str, int]) -> str:
 #    思路和代码块一致：先把公式抽成占位符，避免后续 Markdown 规则误伤公式内容；
 #    只对**行内**公式内容做转义（$$ 块原样保留，原因见上）。
 # --------------------------------------------------------------------------- #
-# \[...\] 和 $$...$$ 都是块级公式定界符，统一成 $$（MathJax 对 $$ 支持更好、居中更稳）
+# 数学定界符统一：\(...\) -> $...$、\[...\] -> $$...$$
+# （kramdown 会把 \( 和 \[ 当成转义符吃掉，所以必须先归一化）
+_PAREN_INLINE_RE = re.compile(r"\\\((.+?)\\\)", re.DOTALL)
 _BRACKET_DISPLAY_RE = re.compile(r"\\\[(.+?)\\\]", re.DOTALL)
 _DISPLAY_MATH_RE = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
 # 定界符前面不能是反斜杠或 $：排除 $ 是为了跳过 $$ 块，排除反斜杠是为了
@@ -390,9 +403,17 @@ def escape_math_body(body: str) -> str:
     return body
 
 
-def normalize_display_delimiters(text: str) -> str:
-    """把 ``\\[...\\]`` 统一替换成 ``$$...$$``。"""
-    return _BRACKET_DISPLAY_RE.sub(lambda match: "$$" + match.group(1) + "$$", text)
+def normalize_math_delimiters(text: str) -> str:
+    """统一数学定界符：``\\(...\\)`` -> ``$...$``，``\\[...\\]`` -> 多行 ``$$...$$``。
+
+    注意两点：
+    - 行内公式要去掉内容两端的空格，否则 MathJax 不认 ``$ ... $`` 这种紧贴空格的定界符。
+    - 块级公式展开成「$$ / 内容 / $$」三行，kramdown 才把它当 math block（单行 $$a=b$$ 会被当行内）。
+    """
+    text = _PAREN_INLINE_RE.sub(lambda match: "$" + match.group(1).strip() + "$", text)
+    return _BRACKET_DISPLAY_RE.sub(
+        lambda match: "$$\n" + match.group(1).strip() + "\n$$", text
+    )
 
 
 def is_block_math(text: str, match: re.Match[str]) -> bool:
@@ -418,7 +439,7 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
     - ``$...$`` 行内：抽出前先做全量转义，因为 kramdown 会先按 Markdown 解析它。
     """
     formulas: list[str] = []
-    text = normalize_display_delimiters(text)
+    text = normalize_math_delimiters(text)
 
     def stash(raw: str) -> str:
         formulas.append(raw)
@@ -446,6 +467,43 @@ def restore_math(text: str, formulas: list[str]) -> str:
     for position, formula in enumerate(formulas):
         text = text.replace(_MATH_PLACEHOLDER.format(position), formula)
     return text
+
+
+# --------------------------------------------------------------------------- #
+# 4. 排版清洗（引用/标题防粘连、链接文字清洗）
+# --------------------------------------------------------------------------- #
+_HEADING_LINE_RE = re.compile(r"^[ \t]{0,3}#{1,6}[ \t]")
+_QUOTE_LINE_START_RE = re.compile(r"^[ \t]*>")
+_LINK_TEXT_RE = re.compile(r"\[([^\]\n]*)\]\(([^)\n]*)\)")
+
+
+def separate_blocks(text: str) -> str:
+    """给紧贴正文的引用块 / 标题上方补一个空行，避免 kramdown 把它们并进段落。
+
+    - 标题：``# xxx`` ~ ``###### xxx``（``#`` 后必须有空格，所以 ``#标签`` 不受影响）
+    - 引用块：只在"新引用块的起始行"补，引用块内部的连续 > 行不补
+    """
+    lines = text.split("\n")
+    output: list[str] = []
+    for line in lines:
+        is_heading = bool(_HEADING_LINE_RE.match(line))
+        is_quote_start = bool(_QUOTE_LINE_START_RE.match(line)) and not (
+            output and _QUOTE_LINE_START_RE.match(output[-1])
+        )
+        if (is_heading or is_quote_start) and output and output[-1].strip() != "":
+            output.append("")
+        output.append(line)
+    return "\n".join(output)
+
+
+def clean_link_text(text: str) -> str:
+    """把 Markdown 链接/图片文字里的全角空格和制表符换成半角空格。"""
+
+    def fix(match: re.Match[str]) -> str:
+        label = match.group(1).replace("\u3000", " ").replace("\t", " ")
+        return "[%s](%s)" % (label, match.group(2))
+
+    return _LINK_TEXT_RE.sub(fix, text)
 
 
 # --------------------------------------------------------------------------- #
@@ -697,6 +755,9 @@ def convert_document(
     body = convert_tasks(body, counts)
     body = convert_emoji(body, counts)
     body = convert_links(body, counts, slug_map, url_prefix)
+    # 第四级：排版清洗（此时公式和代码块还都是占位符，不会被误伤）
+    body = separate_blocks(body)
+    body = clean_link_text(body)
     # %% 注释整段删除后会留下多个连续空行，压缩成一个（此时公式还是占位符，
     # 所以不会影响 $$ 块内部原有的空行）
     body = re.sub(r"\n{3,}", "\n\n", body)
