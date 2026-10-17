@@ -173,24 +173,38 @@ def convert_callouts(text: str, counts: dict[str, int]) -> str:
         if not title:
             title = callout_type.capitalize()
 
-        # callout 标题里也可能带块 ID（> [!note] 标题 ^abc123），先剥出来，
-        # 否则它会被包进 <summary> 里显示成纯文本
-        title_anchor = ""
+        # 块 ID 优先绑定到 <details> 本身，这样锚点跳转能精确落在 callout 上，
+        # 也才能被 CSS 的 scroll-margin-top 保护。来源有三种：标题行尾的 ID、
+        # 正文行尾的 ID、以及紧跟 callout 之后独占一行的 ID（Obsidian 导出时最常见）。
+        callout_id = ""
         title_block_id = _BLOCK_ID_TAIL_RE.search(title)
         if title_block_id:
+            callout_id = title_block_id.group(1)
             title = title[: title_block_id.start()].strip()
-            title_anchor = ' <a id="%s"></a>' % title_block_id.group(1)
+        if not callout_id:
+            for position, line in enumerate(body):
+                body_block_id = _BLOCK_ID_TAIL_RE.search(line)
+                if body_block_id:
+                    callout_id = body_block_id.group(1)
+                    body[position] = line[: body_block_id.start()].rstrip()
+                    break
+        if not callout_id and index < len(lines):
+            following_block_id = _BLOCK_ID_RE.match(lines[index])
+            if following_block_id:
+                callout_id = following_block_id.group(1)
+                index += 1  # 吞掉这一行，避免再输出一个多余的 <a id>
+        if callout_id:
             counts["block_id"] += 1
+        id_attr = ' id="%s"' % callout_id if callout_id else ""
 
-        open_attr = " open" if fold == "+" else ""
+        # Obsidian 里 [!note] 和 [!note]+ 都默认展开，只有 [!note]- 才是折叠
+        open_attr = "" if fold == "-" else " open"
         counts["callout"] += 1
         output.append(
-            '<details class="callout %s" data-callout="%s" markdown="block"%s>'
-            % (callout_type, callout_type, open_attr)
+            '<details class="callout %s"%s data-callout="%s" markdown="block"%s>'
+            % (callout_type, id_attr, callout_type, open_attr)
         )
-        output.append(
-            '<summary class="callout-title">%s%s</summary>' % (title, title_anchor)
-        )
+        output.append('<summary class="callout-title">%s</summary>' % title)
         output.append('<div class="callout-content" markdown="block">')
         output.append("")
         output.extend(body)

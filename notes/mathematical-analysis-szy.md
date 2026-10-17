@@ -59,7 +59,7 @@ $\Rightarrow$ 数域
 **可列集定义**：
 若一个无限集中元素可以按某种规律排成一个序列，即这个集合可表为 $\\{a_1, a_2, \dots, a_n, \dots\\}$
 
-<details class="callout note" data-callout="note" markdown="block">
+<details class="callout note" id="f0fbb3" data-callout="note" markdown="block" open>
 <summary class="callout-title">定理 1.0.1</summary>
 <div class="callout-content" markdown="block">
 
@@ -67,8 +67,6 @@ $\Rightarrow$ 数域
 
 </div>
 </details>
-
-<a id="f0fbb3"></a>
 
 **证明思路（记）**：
 记 $A_n = \\{a_{n1}, a_{n2}, \dots, a_{nk}, \dots\\}$

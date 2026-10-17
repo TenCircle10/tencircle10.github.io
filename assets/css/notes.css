@@ -143,3 +143,12 @@ mjx-container[display="true"] {
     background-color: #2a2b36;
   }
 }
+
+/* ------------------------------ 锚点跳转偏移 ------------------------------ */
+
+/* 锚点跳转时留出 sticky 顶部导航栏的高度，避免目标内容被顶栏遮住。
+   callout 的块 ID 直接绑在 <details> 上，所以这里一并覆盖。 */
+details.callout,
+[id] {
+  scroll-margin-top: 80px;
+}
