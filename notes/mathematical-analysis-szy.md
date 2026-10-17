@@ -72,6 +72,7 @@ $\Rightarrow$ 数域
 记 $A\_n = \\{a\_{n1}, a\_{n2}, \dots, a\_{nk}, \dots\\}$
 $\displaystyle \bigcup\_{n=1}^{\infty} A\_n = \\{a\_{11}, a\_{21}, a\_{12}, a\_{31}, a\_{22}, a\_{13}, \dots\\}$
 沿对角线方向取
+
 $$
 \begin{matrix}
  & 1 & 2 & 3 & 4 & \cdots \\

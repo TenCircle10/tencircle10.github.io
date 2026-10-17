@@ -23,6 +23,9 @@ Markdown，输出到 ``notes/``。
    ``a*b`` 会变强调、``\{`` 会丢反斜杠、``<b>`` 会被当 HTML 标签。
    ``$$...$$`` 块级公式**保持原样不做任何转义**：kramdown 的数学引擎会把整段内容透传给
    MathJax，而块内 ``&`` 是矩阵对齐符、``_`` 是下标，加转义反而会把矩阵和下标记号弄坏。
+   另外两点块级处理：``\[...\]`` 会先统一替换成 ``$$...$$``；块级公式（独占整行或内容跨行）
+   **前后各强制补一个换行**，否则 kramdown 会把它和上下段落合进同一个段落，
+   导致公式错位、不居中（多余的空行稍后会被压缩成一个）。
 3. **Obsidian 内部链接**：
    ``[[笔记]]`` -> ``[笔记](/notes/笔记/)``；
    ``[[笔记|文本]]`` -> ``[文本](/notes/笔记/)``；
@@ -351,6 +354,8 @@ def convert_embeds(text: str, counts: dict[str, int]) -> str:
 #    思路和代码块一致：先把公式抽成占位符，避免后续 Markdown 规则误伤公式内容；
 #    只对**行内**公式内容做转义（$$ 块原样保留，原因见上）。
 # --------------------------------------------------------------------------- #
+# \[...\] 和 $$...$$ 都是块级公式定界符，统一成 $$（MathJax 对 $$ 支持更好、居中更稳）
+_BRACKET_DISPLAY_RE = re.compile(r"\\\[(.+?)\\\]", re.DOTALL)
 _DISPLAY_MATH_RE = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
 # 定界符前面不能是反斜杠或 $：排除 $ 是为了跳过 $$ 块，排除反斜杠是为了
 # 避免 $$ 块里的 \$（例如 \$100）被当成行内公式的定界符——那会让正则跨过
@@ -385,14 +390,35 @@ def escape_math_body(body: str) -> str:
     return body
 
 
+def normalize_display_delimiters(text: str) -> str:
+    """把 ``\\[...\\]`` 统一替换成 ``$$...$$``。"""
+    return _BRACKET_DISPLAY_RE.sub(lambda match: "$$" + match.group(1) + "$$", text)
+
+
+def is_block_math(text: str, match: re.Match[str]) -> bool:
+    """判断某个 $$...$$ 是不是块级公式：内容跨行，或者整行只有这个公式。"""
+    if "\n" in match.group(0):
+        return True
+    start, end = match.span()
+    line_start = text.rfind("\n", 0, start) + 1
+    line_end = text.find("\n", end)
+    if line_end == -1:
+        line_end = len(text)
+    return text[line_start:start].strip() == "" and text[end:line_end].strip() == ""
+
+
 def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
     """抽出数学公式，返回 (处理后的文本, 公式列表)。
 
-    - ``$$...$$`` 块：原样抽出。kramdown 的 math engine 会把整段内容透传给 MathJax，
+    - ``\\[...\\]`` 先统一替换成 ``$$...$$``。
+    - 块级公式（独占整行或内容跨行）在占位符前后各补一个换行，保证 kramdown 把它
+      识别成独立的 math block，而不是和上下段落粘成一段（多余空行后续会被压缩成一个）。
+    - ``$$...$$`` 内容原样抽出。kramdown 的 math engine 会把整段内容透传给 MathJax，
       块内的 ``&`` 是矩阵对齐符、``_`` 是下标，加转义会破坏它们。
     - ``$...$`` 行内：抽出前先做全量转义，因为 kramdown 会先按 Markdown 解析它。
     """
     formulas: list[str] = []
+    text = normalize_display_delimiters(text)
 
     def stash(raw: str) -> str:
         formulas.append(raw)
@@ -400,7 +426,11 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
 
     def display(match: re.Match[str]) -> str:
         counts["math"] += 1
-        return stash("$$" + match.group(1) + "$$")
+        placeholder = stash("$$" + match.group(1) + "$$")
+        if is_block_math(text, match):
+            # 前后各补一个换行，让 kramdown 把它当成独立的公式块
+            return "\n" + placeholder + "\n"
+        return placeholder
 
     def inline(match: re.Match[str]) -> str:
         counts["math"] += 1
