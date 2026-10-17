@@ -21,15 +21,15 @@ if ([string]::IsNullOrWhiteSpace($gitStatus)) {
 
 # 3. 提交并推送
 Write-Host "📦 正在提交并推送到 GitHub..." -ForegroundColor Cyan
-# 2>&1 | Out-Host 让 git 的 warning / 进度以普通文本显示，
-# 而不是被 PowerShell 当成红色错误信息抛出来
-git add . 2>&1 | Out-Host
+# 2>&1 | Write-Host 是为了把 git 的 warning / 进度信息转成普通文本输出，
+# 否则 PowerShell 会把 stderr 当成红色错误抛出来（其实并不是失败）
+git add . 2>&1 | Write-Host
 $commitMsg = "auto: sync notes and deploy $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
-git commit -m $commitMsg 2>&1 | Out-Host
+git commit -m $commitMsg 2>&1 | Write-Host
 
 # 4. 处理 Push（考虑网络问题）
 Write-Host "☁️ 正在推送到线上..." -ForegroundColor Cyan
-git push origin main 2>&1 | Out-Host
+git push origin main 2>&1 | Write-Host
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "🎉 发布成功！请稍等 1 分钟去网页查看。" -ForegroundColor Green
