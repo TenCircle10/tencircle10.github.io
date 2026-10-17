@@ -57,7 +57,7 @@ $\Rightarrow$ 数域
 *   有大小关系，加法可传递 / 乘法 $\Rightarrow$ 有序域
 
 **可列集定义**：
-若一个无限集中元素可以按某种规律排成一个序列，即这个集合可表为 $\\{a_1, a_2, \dots, a_n, \dots\\}$
+若一个无限集中元素可以按某种规律排成一个序列，即这个集合可表为 $\\{a\_1, a\_2, \dots, a\_n, \dots\\}$
 
 <details class="callout note" id="f0fbb3" data-callout="note" markdown="block" open>
 <summary class="callout-title">定理 1.0.1</summary>
@@ -69,8 +69,8 @@ $\Rightarrow$ 数域
 </details>
 
 **证明思路（记）**：
-记 $A_n = \\{a_{n1}, a_{n2}, \dots, a_{nk}, \dots\\}$
-$\displaystyle \bigcup_{n=1}^{\infty} A_n = \\{a_{11}, a_{21}, a_{12}, a_{31}, a_{22}, a_{13}, \dots\\}$
+记 $A\_n = \\{a\_{n1}, a\_{n2}, \dots, a\_{nk}, \dots\\}$
+$\displaystyle \bigcup\_{n=1}^{\infty} A\_n = \\{a\_{11}, a\_{21}, a\_{12}, a\_{31}, a\_{22}, a\_{13}, \dots\\}$
 沿对角线方向取
 $$
 \begin{matrix}
@@ -87,8 +87,8 @@ $$
 
 **$\mathbb{Q}$ 为可列集**：
 
-记 $A_n = [n, n+1] \cap \mathbb{Q}, n \in \mathbb{Z}$，则 $$\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$$由[定理1.0.1](#f0fbb3)，只需证 $A_0$ 可列。
-$A_0 = \\{0, 1, \frac{1}{2}, \frac{1}{3}, \frac{2}{3}, \frac{1}{4}, \dots, \frac{k-1}{k}, \dots\\}$
+记 $A\_n = [n, n+1] \cap \mathbb{Q}, n \in \mathbb{Z}$，则 $$\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$$由[定理1.0.1](#f0fbb3)，只需证 $A\_0$ 可列。
+$A\_0 = \\{0, 1, \frac{1}{2}, \frac{1}{3}, \frac{2}{3}, \frac{1}{4}, \dots, \frac{k-1}{k}, \dots\\}$
 $\Rightarrow \mathbb{Q}$ 可列。
 
 **注意点**：
@@ -100,15 +100,15 @@ $f: A \to B$，A, B 有限集
 *   完备：对极限封闭。
 
 **实数与极限**：
-*   $x_n = m + 0.a_1a_2\dots a_n$
-*   $0 \le x - x_n < \frac{1}{10^n}$
+*   $x\_n = m + 0.a\_1a\_2\dots a\_n$
+*   $0 \le x - x\_n \lt  \frac{1}{10^n}$
 *   任何一个无理数是一个有理数列的极限。
 *   $\sqrt{2} = 1.4\dots$
 
 **上下界**：
 *   有上界就有无限上界
 *   上确界（最小上界）：
-    $\alpha$ 是 $S$ 的上界；若 $\beta < \alpha$，则 $\beta$ 不为 $S$ 的上界。
+    $\alpha$ 是 $S$ 的上界；若 $\beta \lt  \alpha$，则 $\beta$ 不为 $S$ 的上界。
     记为 $\alpha = \sup S$
 *   下确界（最大下界）：
     记为 $\beta = \inf S$
@@ -116,10 +116,10 @@ $f: A \to B$，A, B 有限集
 ---
 
 *   数列是可列有序数组。
-*   单调增：$x_n \le x_{n+1}$
-*   $\\{x_n\\}$ 有上界、下界 $\Leftrightarrow$ $\\{x_n\\}$ 有界
+*   单调增：$x\_n \le x\_{n+1}$
+*   $\\{x\_n\\}$ 有上界、下界 $\Leftrightarrow$ $\\{x\_n\\}$ 有界
 
 **证明（单调有界定理相关证明思路）**：
-设 $x_n$ 的小数...
-$x_n = m_n + 0.a_1^{(n)}a_2^{(n)}\dots$
+设 $x\_n$ 的小数...
+$x\_n = m\_n + 0.a\_1^{(n)}a\_2^{(n)}\dots$
 当上一位不再变化，下一位必从 $\\{0, 1, \dots, 9\\}$ 中取。

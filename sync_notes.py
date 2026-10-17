@@ -13,11 +13,16 @@ Markdown，输出到 ``notes/``。
    ``data-callout`` 和 ``callout-title`` 是为了直接复用
    assets/css/obsidian-callouts.css 里已有的图标与边框样式。
    ``[!note]+`` 加 ``open`` 属性（默认展开），``[!note]-`` 默认折叠。
-2. **数学公式转义（只处理行内 ``$...$``）**：公式里的 ``\{`` ``\}`` -> ``\\{`` ``\\}``，
-   ``|`` -> ``\mid``，避免被 kramdown 先吃掉（kramdown 只把 ``$$`` 当数学，
-   单 ``$`` 的公式内容会先走 Markdown 解析）。已转义过的写法不会重复转义。
-   ``$$...$$`` 块级公式**不做任何转义**：kramdown 的数学引擎会把块内容原样透传给
-   MathJax，在块内再加反斜杠反而会让公式渲染出错。
+2. **数学公式全量转义（只对行内 ``$...$``）**：先把公式整体抽成占位符（避免后续
+   Markdown 规则误伤公式内容），再对**行内公式**的内容做转义，最后放回。转义表
+   （都用负向断言 ``(?<!\\)`` 实现幂等，已经转义过的不会重复转义）：
+   ``#`` -> ``\#``、``_`` -> ``\_``、``*`` -> ``\*``、``\{`` -> ``\\{``、``\}`` -> ``\\}``、
+   ``|`` -> ``\mid``、``<`` -> ``\lt``、``>`` -> ``\gt``、``&`` -> ``\&``、``%`` -> ``\%``、
+   ``~`` -> ``\sim``。
+   原因：kramdown 只把 ``$$`` 当数学，单 ``$`` 的内容会**先按 Markdown 解析**，所以
+   ``a*b`` 会变强调、``\{`` 会丢反斜杠、``<b>`` 会被当 HTML 标签。
+   ``$$...$$`` 块级公式**保持原样不做任何转义**：kramdown 的数学引擎会把整段内容透传给
+   MathJax，而块内 ``&`` 是矩阵对齐符、``_`` 是下标，加转义反而会把矩阵和下标记号弄坏。
 3. **Obsidian 内部链接**：
    ``[[笔记]]`` -> ``[笔记](/notes/笔记/)``；
    ``[[笔记|文本]]`` -> ``[文本](/notes/笔记/)``；
@@ -332,37 +337,74 @@ def convert_embeds(text: str, counts: dict[str, int]) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 3. 数学公式转义（只处理行内 $...$，$$...$$ 块保持原样）
+# 3. 数学公式保护 + 全量转义
+#    思路和代码块一致：先把公式抽成占位符，避免后续 Markdown 规则误伤公式内容；
+#    只对**行内**公式内容做转义（$$ 块原样保留，原因见上）。
 # --------------------------------------------------------------------------- #
+_DISPLAY_MATH_RE = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
 # 定界符前面不能是反斜杠或 $：排除 $ 是为了跳过 $$ 块，排除反斜杠是为了
 # 避免 $$ 块里的 \$（例如 \$100）被当成行内公式的定界符——那会让正则跨过
 # 整个 $$ 块去和后面正文里的 $ 配对，把真正的行内公式吃掉。
 _INLINE_MATH_RE = re.compile(r"(?<![\\$])\$(?!\$)(.+?)(?<![\\$])\$(?!\$)", re.DOTALL)
-_UNESCAPED_OPEN_BRACE_RE = re.compile(r"(?<!\\)\\\{")
-_UNESCAPED_CLOSE_BRACE_RE = re.compile(r"(?<!\\)\\\}")
-_UNESCAPED_PIPE_RE = re.compile(r"(?<!\\)\|")
+_MATH_PLACEHOLDER = "\x00SYNC_MATH_{}\x00"
+
+# 行内公式里会被 kramdown 抢先解释的字符 -> LaTeX 转义写法。
+# 每条都用 (?<!\\) 做负向断言，保证对已经转义过的内容幂等。
+_MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"(?<!\\)#"), r"\\#"),
+    (re.compile(r"(?<!\\)_"), r"\\_"),
+    (re.compile(r"(?<!\\)\*"), r"\\*"),
+    (re.compile(r"(?<!\\)\\\{"), r"\\\\{"),
+    (re.compile(r"(?<!\\)\\\}"), r"\\\\}"),
+    # 下面四条会替换成字母命令（\mid \lt \gt \sim），必须补一个尾随空格；
+    # 否则紧跟字母/数字时 TeX 会把它合并成 \midb、\ltc、\gtd 这类未定义命令。
+    # 数学模式下空格本身被忽略，所以不会影响渲染间距。
+    (re.compile(r"(?<!\\)\|"), r"\\mid "),
+    (re.compile(r"(?<!\\)<"), r"\\lt "),
+    (re.compile(r"(?<!\\)>"), r"\\gt "),
+    (re.compile(r"(?<!\\)&"), r"\\&"),
+    (re.compile(r"(?<!\\)%"), r"\\%"),
+    (re.compile(r"(?<!\\)~"), r"\\sim "),
+]
 
 
 def escape_math_body(body: str) -> str:
     """转义单条行内公式内部的 kramdown 雷区字符（对已转义的内容幂等）。"""
-    body = _UNESCAPED_OPEN_BRACE_RE.sub(r"\\\\{", body)
-    body = _UNESCAPED_CLOSE_BRACE_RE.sub(r"\\\\}", body)
-    body = _UNESCAPED_PIPE_RE.sub(r"\\mid", body)
+    for pattern, replacement in _MATH_ESCAPE_RULES:
+        body = pattern.sub(replacement, body)
     return body
 
 
-def escape_math(text: str, counts: dict[str, int]) -> str:
-    """只转义行内 ``$...$`` 内部的 kramdown 雷区字符。
+def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
+    """抽出数学公式，返回 (处理后的文本, 公式列表)。
 
-    ``$$...$$`` 块级公式不做任何处理：kramdown 的数学引擎会把整段块内容原样交给
-    MathJax，块内再补反斜杠会让 MathJax 收到 ``\\{`` 这类错误的转义序列。
+    - ``$$...$$`` 块：原样抽出。kramdown 的 math engine 会把整段内容透传给 MathJax，
+      块内的 ``&`` 是矩阵对齐符、``_`` 是下标，加转义会破坏它们。
+    - ``$...$`` 行内：抽出前先做全量转义，因为 kramdown 会先按 Markdown 解析它。
     """
+    formulas: list[str] = []
+
+    def stash(raw: str) -> str:
+        formulas.append(raw)
+        return _MATH_PLACEHOLDER.format(len(formulas) - 1)
+
+    def display(match: re.Match[str]) -> str:
+        counts["math"] += 1
+        return stash("$$" + match.group(1) + "$$")
 
     def inline(match: re.Match[str]) -> str:
         counts["math"] += 1
-        return "$" + escape_math_body(match.group(1)) + "$"
+        return stash("$" + escape_math_body(match.group(1)) + "$")
 
+    text = _DISPLAY_MATH_RE.sub(display, text)
     text = _INLINE_MATH_RE.sub(inline, text)
+    return text, formulas
+
+
+def restore_math(text: str, formulas: list[str]) -> str:
+    """把公式占位符还原成公式原文。"""
+    for position, formula in enumerate(formulas):
+        text = text.replace(_MATH_PLACEHOLDER.format(position), formula)
     return text
 
 
@@ -546,9 +588,13 @@ def convert_document(
     }
     front_matter, body = split_front_matter(text)
 
-    # 顺序很重要：代码块（含 dataview / mermaid）先抽成占位符，之后所有替换
-    # 都在占位符之外进行，块内内容不会被误伤。
+    # 流水线顺序（保护优先，替换其次）：
+    #   1. 代码块（含 dataview / mermaid）抽成占位符 —— 最高优先级
+    #   2. 数学公式抽成占位符（行内公式在抽取时同时完成全量转义）
+    #   3. 其余 Obsidian / Markdown 语法都在占位符之外处理
+    #   4. 还原公式 -> 压缩空行 -> 还原代码块
     body, code_blocks, mermaid_blocks = protect_code_blocks(body, counts)
+    body, formulas = protect_math(body, counts)
     body = convert_callouts(body, counts)
     body = strip_obsidian_comments(body, counts)
     body = convert_highlights(body, counts)
@@ -556,10 +602,11 @@ def convert_document(
     body = convert_block_heading_links(body, counts, slug_map, url_prefix)
     body = convert_tasks(body, counts)
     body = convert_emoji(body, counts)
-    body = escape_math(body, counts)
     body = convert_links(body, counts, slug_map, url_prefix)
-    # %% 注释整段删除后会留下多个连续空行，压缩成一个（Markdown 语义不变）
+    # %% 注释整段删除后会留下多个连续空行，压缩成一个（此时公式还是占位符，
+    # 所以不会影响 $$ 块内部原有的空行）
     body = re.sub(r"\n{3,}", "\n\n", body)
+    body = restore_math(body, formulas)
     body = restore_code_blocks(body, code_blocks, mermaid_blocks)
 
     added_front_matter = front_matter is None

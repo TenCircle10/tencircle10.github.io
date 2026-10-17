@@ -27,15 +27,15 @@ permalink: "/notes/real-irrational-uncountable/"
 由可列集性质，$(0, 1) \subset \mathbb{R}$
 则 $(0, 1)$ 也为可列集。
 
-假设可列为 $\\{a_1, a_2, \dots, a_n, \dots\\}$
+假设可列为 $\\{a\_1, a\_2, \dots, a\_n, \dots\\}$
 设
-$a_1 = 0.x_{11} x_{12} x_{13} \dots x_{1n} \dots$
-$a_2 = 0.x_{21} x_{22} x_{23} \dots x_{2n} \dots$
-$x_{ij}$ 为 $a_i$ 的第 $j$ 位小数，且不允许 $a_i$ 的最后无限位均为9。
+$a\_1 = 0.x\_{11} x\_{12} x\_{13} \dots x\_{1n} \dots$
+$a\_2 = 0.x\_{21} x\_{22} x\_{23} \dots x\_{2n} \dots$
+$x\_{ij}$ 为 $a\_i$ 的第 $j$ 位小数，且不允许 $a\_i$ 的最后无限位均为9。
 
-给出一个构造：定义数 $b = 0.y_1 y_2 y_3 \dots y_n \dots$
-其中 $y_i \neq x_{ii}, \forall i \in \mathbb{N}^*$,且$y_i \in \\{1,2,3,4,5,6,7,8\\}$
-这使得 $\forall i \in \mathbb{N}^*, b \neq a_i$  #skill
+给出一个构造：定义数 $b = 0.y\_1 y\_2 y\_3 \dots y\_n \dots$
+其中 $y\_i \neq x\_{ii}, \forall i \in \mathbb{N}^\*$,且$y\_i \in \\{1,2,3,4,5,6,7,8\\}$
+这使得 $\forall i \in \mathbb{N}^\*, b \neq a\_i$  #skill
 这与 $(0, 1)$ 为可列集矛盾！
 故$\mathbb{R}$ **不可列**
 
