@@ -80,3 +80,23 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 .publications ol.bibliography li div.abstract.hidden.open { border-color: var(--global-text-color); }
 
 .publications ol.bibliography li .teaser { border-radius: 8px; box-shadow: 3px 3px 6px #888; height: 123px; width: 270px; margin-top: 5px; margin-left: 5px; margin-bottom: 5px; object-fit: cover; }
+
+/* ------------------------- 主页留言板（Giscus） ------------------------- */
+/* 注意：notes.css 只在笔记页加载，主页拿不到，所以主页专属样式放这里 */
+
+.homepage-guestbook {
+  margin-top: 3rem;
+}
+
+/* 留言板里的 giscus 容器不需要分隔线（标题本身已有下划线） */
+.homepage-guestbook .giscus-container {
+  margin-top: 1rem;
+  padding-top: 0;
+  border-top: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .homepage-guestbook h2 {
+    border-bottom-color: #34363f !important;
+  }
+}

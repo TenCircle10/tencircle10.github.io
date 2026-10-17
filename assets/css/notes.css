@@ -164,3 +164,18 @@ h1, h2, h3, h4, h5, h6 {
     scroll-margin-top: 112px;
   }
 }
+
+/* ------------------------------ Giscus 评论区 ------------------------------ */
+
+/* 文章底部评论区：与正文之间用一条分隔线隔开 */
+.giscus-container {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eaeaea;
+}
+
+@media (prefers-color-scheme: dark) {
+  .giscus-container {
+    border-top-color: #34363f;
+  }
+}
