@@ -34,12 +34,16 @@ Markdown，输出到 ``notes/``。
    （取文件名）；源文件已有 front matter 时，缺 ``layout`` 就补上、写错了就覆盖。
    ``layout`` 决定页面套用 _layouts/note.html，缺了它 MathJax 和笔记专属样式
    都不会加载（公式会变成源码）。
-6. **slug 映射（决定输出文件名与 URL）**：源笔记 front matter 里写
-   ``slug: math-analysis-szy`` 时，输出文件为 ``notes/math-analysis-szy.md``，
-   并写入 ``permalink: /notes/math-analysis-szy/``（源文件里已有的 permalink 会被覆盖）。
-   没写 ``slug`` 时回退用源文件名。正文里的 ``[[中文笔记名]]`` 会按
-   「源文件名 / front matter title -> slug」的映射重写成 slug URL，
-   显示文本仍保留原来的中文名；找不到对应笔记时保持原样。
+6. **slug 自动生成与映射（决定输出文件名与 URL）**：front matter 里写了
+   ``slug: math-analysis-szy`` 就直接用；没写的话把文件名用 ``pypinyin`` 转成拼音
+   （``数学学习漫谈——Attention`` -> ``shu-xue-xue-xi-man-tan-attention``），
+   非字母数字统一压成 ``-`` 并转小写；连拼音都为空（文件名全是 emoji）时，
+   用正文 MD5 的前 6 位兜底。输出文件为 ``notes/<slug>.md``，并写入
+   ``permalink: /notes/<slug>/``（源文件里已有的 permalink 会被覆盖）。
+   front matter 里没有 ``title`` 时，自动用原文件名（中文）作为标题。
+   正文里的 ``[[中文笔记名]]`` 会按「源文件名 / title -> slug」的映射重写成 slug URL，
+   **自动生成的 slug 同样参与映射**，所以中文互链能正确指向 ``/notes/<拼音>/``；
+   找不到对应笔记时保持原样，显示文本始终保留中文原名。
 7. **Obsidian 扩展语法**：``%%隐藏注释%%`` 整段删除；``==高亮==`` -> ``<mark>``；
    ``- [ ]`` / ``- [x]`` -> ``- ☐`` / ``- ☑``；``#标签`` **原样保留**（不做标签系统）；
    ``:smile:`` 这类 emoji 短码换成字符；
@@ -62,9 +66,15 @@ Markdown，输出到 ``notes/``。
 from __future__ import annotations
 
 import argparse
+import hashlib
 import re
 import sys
 from pathlib import Path
+
+try:
+    from pypinyin import lazy_pinyin
+except ImportError:  # 没装 pypinyin 时降级为「保留原文件名」，不中断同步
+    lazy_pinyin = None
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SRC = ROOT / "origin"
@@ -537,15 +547,68 @@ def apply_layout(front_matter: str, layout: str) -> str:
     return updated.rstrip("\n") + "\n\n"
 
 
+_TITLE_LINE_RE = re.compile(r"^[ \t]*title[ \t]*:.*$", re.MULTILINE)
+_SLUG_LINE_RE = re.compile(r"^[ \t]*slug[ \t]*:.*$", re.MULTILINE)
+
+
+def make_slug(stem: str, content: str = "") -> str:
+    """把（中文）文件名转成 URL 友好的 slug。
+
+    例：``数学学习漫谈——Attention is all you need`` ->
+    ``shu-xue-xue-xi-man-tan-attention-is-all-you-need``。
+    转换后若为空（文件名全是 emoji / 符号），用正文 MD5 前 6 位兜底。
+    """
+    if lazy_pinyin is not None:
+        candidate = "-".join(lazy_pinyin(stem))
+    else:
+        candidate = stem
+    # 统一：所有非 a-z0-9 的字符（中文残留、空格、破折号、标点）压成一个 -
+    slug = re.sub(r"[^a-z0-9]+", "-", candidate.lower()).strip("-")
+    if not slug:
+        digest = hashlib.md5(content.encode("utf-8")).hexdigest()
+        slug = "note-" + digest[:6]
+    return slug
+
+
+def apply_title(front_matter: str, title: str) -> str:
+    """front matter 里没有 title 时补一个（已有 title 则原样保留）。"""
+    if _TITLE_LINE_RE.search(front_matter):
+        return front_matter
+    safe_title = title.replace("\\", "\\\\").replace('"', '\\"')
+    stripped = front_matter.rstrip("\n")
+    if not stripped.endswith("---"):
+        return front_matter
+    head = stripped[:-3].rstrip("\n")
+    updated = head + '\ntitle: "%s"\n---\n' % safe_title
+    # front matter 与正文之间统一保留一个空行
+    return updated.rstrip("\n") + "\n\n"
+
+
+def apply_slug(front_matter: str, slug: str) -> str:
+    """front matter 里没有 slug 时把（自动生成的）slug 写进去；已有则保留原值。"""
+    if _SLUG_LINE_RE.search(front_matter):
+        return front_matter
+    stripped = front_matter.rstrip("\n")
+    if not stripped.endswith("---"):
+        return front_matter
+    head = stripped[:-3].rstrip("\n")
+    updated = head + '\nslug: "%s"\n---\n' % slug
+    # front matter 与正文之间统一保留一个空行
+    return updated.rstrip("\n") + "\n\n"
+
+
 def build_slug_map(sources: list[Path]) -> dict[str, str]:
-    """建立「源文件名 / front matter title -> slug」的映射，用于重写 wikilink。"""
+    """建立「源文件名 / front matter title -> slug」的映射，用于重写 wikilink。
+
+    没有显式 slug 的笔记也会用 make_slug() 自动生成一个，所以中文互链
+    （``[[中文笔记名]]``）能正确指向 ``/notes/<拼音>/``。
+    """
     mapping: dict[str, str] = {}
     for path in sources:
-        front_matter, _ = split_front_matter(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+        front_matter, _ = split_front_matter(text)
         fields = read_front_matter_fields(front_matter)
-        slug = fields.get("slug", "").strip()
-        if not slug:
-            continue  # 没有 slug 的笔记 URL 就是文件名本身，不需要映射
+        slug = fields.get("slug", "").strip() or make_slug(path.stem, text)
         for key in (path.stem, fields.get("title", "").strip()):
             if key:
                 mapping.setdefault(key, slug)
@@ -572,6 +635,7 @@ def resolve_note_target(target: str, slug_map: dict[str, str]) -> str:
 def convert_document(
     text: str,
     stem: str,
+    slug: str,
     permalink: str,
     slug_map: dict[str, str],
     url_prefix: str,
@@ -614,6 +678,10 @@ def convert_document(
         front_matter = build_front_matter(stem)
     # layout 必须存在：缺了它页面不会套用 _layouts/note.html，MathJax 就不会加载
     front_matter = apply_layout(front_matter, "note")
+    # front matter 里没有 title 时，用原文件名（中文）当标题
+    front_matter = apply_title(front_matter, stem)
+    # front matter 里没有 slug 时，把自动生成的（拼音）slug 写进去
+    front_matter = apply_slug(front_matter, slug)
     front_matter = apply_permalink(front_matter, permalink)
     # permalink 已经保证 front matter 后面带一个空行，正文开头的空行去掉避免重复
     return front_matter + body.lstrip("\n"), counts, added_front_matter
@@ -655,7 +723,8 @@ def main(argv: list[str] | None = None) -> int:
         front_matter, _ = split_front_matter(text)
         fields = read_front_matter_fields(front_matter)
 
-        slug = fields.get("slug", "").strip() or path.stem
+        # 没写 slug 时自动用拼音生成（中文文件名 -> shu-xue-...）
+        slug = fields.get("slug", "").strip() or make_slug(path.stem, text)
 
         if slug in used_slugs:
             print(
@@ -671,7 +740,7 @@ def main(argv: list[str] | None = None) -> int:
         target.parent.mkdir(parents=True, exist_ok=True)
 
         converted, counts, added = convert_document(
-            text, path.stem, permalink, slug_map, url_prefix
+            text, path.stem, slug, permalink, slug_map, url_prefix
         )
         target.write_text(converted, encoding="utf-8", newline="\n")
         print(
