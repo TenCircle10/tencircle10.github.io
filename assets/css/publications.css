@@ -1,3 +1,7 @@
+/* 霞鹜文楷 Web Font。
+   注意：@import 必须放在 CSS 文件最顶部（@charset 之后），放在中间会被浏览器直接忽略 */
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.6.0/style.css');
+
 .badge {
     display: inline-block;
     padding: 0.25em 0.4em;
@@ -104,18 +108,20 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 /* ------------------ 每日一言（左侧边栏底部，霞鹜文楷） ------------------ */
 
 .daily-quote {
-  margin-top: 2rem;
-  font-family: "LXGW WenKai", "Georgia", "KaiTi", serif;
-  font-size: 0.95rem;
+  /* 强制使用霞鹜文楷，回退到楷体 / 宋体 */
+  font-family: "LXGW WenKai", "KaiTi", "楷体", serif !important;
+  font-style: normal !important; /* 强制取消斜体 */
+  font-size: 0.95rem !important;
   letter-spacing: 1.5px;
-  line-height: 1.6;
   color: #555;
   text-align: center;
-  /* 侧边栏很窄：不加背景 / 圆角 / 引号 / 斜体（文楷自带笔触，斜体会破坏字形） */
+  margin-top: 2rem;
+  line-height: 1.6;
 }
 
+/* 暗色模式适配 */
 @media (prefers-color-scheme: dark) {
   .daily-quote {
-    color: #bbb;
+    color: #bbb !important;
   }
 }
