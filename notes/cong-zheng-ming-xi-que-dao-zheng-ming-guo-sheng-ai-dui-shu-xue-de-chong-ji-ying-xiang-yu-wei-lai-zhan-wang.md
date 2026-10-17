@@ -63,7 +63,7 @@ OpenAI正式宣布，其内部通用推理模型自主推翻了一个悬置近80
 
 证明的关键在于，模型将**代数数论**中的深层工具应用到了一个看似初等的离散几何问题上。这是一般数学家几乎不会尝试的连接方向。菲尔兹奖得主Timothy Gowers在配套论文中将此评价为“AI数学中的重要里程碑”，并判断其质量“达到了最强数学期刊所期望的标准”。证明由外部数学家小组（包括Noga Alon和Tim Gowers）进行了独立验证、简化和背景阐释。OpenAI同步公开了形式化证明全文、外部数学家配套论文和模型思维链节选。
 
-[OpenAI 模型推翻了离散几何领域的核心猜想 | OpenAI](https://openai.com/zh-Hans-CN/index/model-disproves-discrete-geometry-conjecture/)
+[OpenAI 模型推翻了离散几何领域的核心猜想 ｜ OpenAI](https://openai.com/zh-Hans-CN/index/model-disproves-discrete-geometry-conjecture/)
 
 **2026年6月2日**  
 《Leiden Declaration on Artificial Intelligence and Mathematics（莱顿人工智能与数学宣言）》正式发布，并获得**国际数学联盟（IMU）** 的正式背书。IMU是主办国际数学家大会、监管菲尔兹奖评选的国际组织。
@@ -102,7 +102,7 @@ Astra完成Lean形式化验证。
 **2026年9月8日**  
 OpenAI正式发布声明，同步公开**166页论文**和**Lean验证代码**。证明针对的是千禧年难题官方表述中的**命题C和D方向**：构造有限且处处光滑的外力，使光滑解在有限时间内形成奇点。OpenAI声明不申领100万美元奖金，将成果定位为“AI进步的快照”。
 
-[关于纳维–斯托克斯千禧年大奖难题 | OpenAI](https://openai.com/zh-Hans-CN/index/navier-stokes-solution/)
+[关于纳维–斯托克斯千禧年大奖难题 ｜ OpenAI](https://openai.com/zh-Hans-CN/index/navier-stokes-solution/)
 
 **2026年9月8日—9日**  
 争议爆发。纽约大学数学家**Tristan Buckmaster**公开质疑：他与Anthropic研究员**Levent Alpöge**此前已在相近方向上得到了带光滑外力的欧拉方程有限时间奇点，并完成了Lean验证；由于他曾使用**Codex**处理过相关对话，他质疑OpenAI的模型是否接触了这些会话内容并因此受到了影响。他还称，OpenAI方面曾提议“由他单独发表”。
@@ -122,7 +122,7 @@ TechCrunch发表后续报道，记录争议进一步升级。
 
 声明发布后迅速扩散。据后续报道，全球**7,000余位数学家**开始联署。
 
-[A Severe Misalignment of AI in Mathematics | What's new](https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/)
+[A Severe Misalignment of AI in Mathematics ｜ What's new](https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/)
 
 **2026年9月13日**  
 《莱顿宣言》签名人数达到**4,013人**。
@@ -147,7 +147,7 @@ Deseret News发表分析文章，指出AI在2025年底至2026年间开始系统�
 **2026年10月7日**  
 OpenAI在GitHub公开了一批内部模型产生的数学结果。首版目录有722份手稿，归为372个结果家族。本文10月8日核对的目录中，在列手稿变成719份，家族数仍为372。（手稿地址[openai/math](https://github.com/openai/math)）
 
-OpenAI官方博客公告[分享 AI 在数学领域的进展 | OpenAI](https://openai.com/zh-Hans-CN/index/sharing-ai-progress-in-mathematics/)
+OpenAI官方博客公告[分享 AI 在数学领域的进展 ｜ OpenAI](https://openai.com/zh-Hans-CN/index/sharing-ai-progress-in-mathematics/)
 
 ---
 

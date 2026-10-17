@@ -57,6 +57,13 @@ Markdown，输出到 ``notes/``。
    （含 callout 标题里的 ``> [!note] 标题 ^abc123``），都转成 ``<a id="abc123"></a>``。
    ```dataview 查询块整块删除、```mermaid 块包成 ``<div class="mermaid">``，
    这两者与 ``` 代码块一样在「代码块保护」阶段处理，块内内容不会被其它规则改写。
+8. **排版清洗与容错**：漏打空格的 ``##标题`` 自动补成 ``## 标题``（单个 ``#标签`` 不动，
+   以免把标签变成 H1）；标题 / 引用块 / 列表首项 / 水平线 / 独占整行的链接上方强制留空行；
+   链接文字里的 ``|`` -> ``｜``、``*`` -> ``\*``、``_`` -> ``\_``，``[]()`` 删除、
+   ``[文字]()`` 退化成纯文字；``$ x $`` 去掉两端空格（MathJax 不认紧贴空格的定界符）；
+   ``$$$$`` 归一成空块级公式；公式里的 HTML 实体（&lt; &gt; &amp;）还原成符号；
+   嵌套 callout 只告警、不转换；front matter 没闭合时按正文处理；
+   正文为空或单篇转换抛异常时只跳过该篇并告警，不会拖垮整站。
 
 ````` 围起来的代码块（``` 或 ~~~）整体跳过，不做任何替换。
 
@@ -170,8 +177,20 @@ _CALLOUT_HEAD_RE = re.compile(r"^[ \t]*>[ \t]*\[!([A-Za-z0-9_-]+)\]([+-]?)[ \t]*
 _QUOTE_LINE_RE = re.compile(r"^[ \t]*>(?:[ \t]?(.*))?$")
 
 
+_NESTED_CALLOUT_RE = re.compile(r"^[ \t]*>[ \t]*>[ \t]*\[!", re.MULTILINE)
+
+
 def convert_callouts(text: str, counts: dict[str, int]) -> str:
-    """把 Obsidian callout 引用块转成 <details class="callout ..."> 结构。"""
+    """把 Obsidian callout 引用块转成 <details class="callout ..."> 结构。
+
+    嵌套 callout（``> > [!note]``）暂不支持：只打印警告并保持原样（退化成普通引用块），
+    避免生成未闭合的 ``<details>`` 把整页 DOM 弄坏。
+    """
+    if _NESTED_CALLOUT_RE.search(text):
+        print(
+            "  [warn] 检测到嵌套 callout（> > [!type]），暂不支持，已降级为普通引用块",
+            file=sys.stderr,
+        )
     lines = text.split("\n")
     output: list[str] = []
     index = 0
@@ -404,16 +423,27 @@ def escape_math_body(body: str) -> str:
 
 
 def normalize_math_delimiters(text: str) -> str:
-    """统一数学定界符：``\\(...\\)`` -> ``$...$``，``\\[...\\]`` -> 多行 ``$$...$$``。
+    """统一数学定界符并修掉常见畸形写法。
 
-    注意两点：
-    - 行内公式要去掉内容两端的空格，否则 MathJax 不认 ``$ ... $`` 这种紧贴空格的定界符。
-    - 块级公式展开成「$$ / 内容 / $$」三行，kramdown 才把它当 math block（单行 $$a=b$$ 会被当行内）。
+    - ``\\(...\\)`` -> ``$...$``：行内公式去掉内容两端空格（MathJax 不认 ``$ x $``）
+    - ``\\[...\\]`` -> 「$$ / 内容 / $$」三行块（单行 $$a=b$$ 会被 kramdown 当行内）
+    - ``$$$$`` / ``$$ $$`` -> 规范的空块级公式
     """
     text = _PAREN_INLINE_RE.sub(lambda match: "$" + match.group(1).strip() + "$", text)
-    return _BRACKET_DISPLAY_RE.sub(
+    text = _BRACKET_DISPLAY_RE.sub(
         lambda match: "$$\n" + match.group(1).strip() + "\n$$", text
     )
+    return re.sub(r"\$\$[ \t]*\$\$", "$$\n\n$$", text)
+
+
+_HTML_ENTITY_MAP = (("&lt;", "<"), ("&gt;", ">"), ("&amp;", "&"))
+
+
+def restore_html_entities(text: str) -> str:
+    """把公式里被转义成 HTML 实体的符号还原回原始字符。"""
+    for entity, char in _HTML_ENTITY_MAP:
+        text = text.replace(entity, char)
+    return text
 
 
 def is_block_math(text: str, match: re.Match[str]) -> bool:
@@ -431,12 +461,13 @@ def is_block_math(text: str, match: re.Match[str]) -> bool:
 def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
     """抽出数学公式，返回 (处理后的文本, 公式列表)。
 
-    - ``\\[...\\]`` 先统一替换成 ``$$...$$``。
+    - ``\\[...\\]`` / ``\\(...\\)`` 先统一成 ``$$...$$`` / ``$...$``。
     - 块级公式（独占整行或内容跨行）在占位符前后各补一个换行，保证 kramdown 把它
       识别成独立的 math block，而不是和上下段落粘成一段（多余空行后续会被压缩成一个）。
     - ``$$...$$`` 内容原样抽出。kramdown 的 math engine 会把整段内容透传给 MathJax，
       块内的 ``&`` 是矩阵对齐符、``_`` 是下标，加转义会破坏它们。
-    - ``$...$`` 行内：抽出前先做全量转义，因为 kramdown 会先按 Markdown 解析它。
+    - ``$...$`` 行内：去掉两端空格后做全量转义，因为 kramdown 会先按 Markdown 解析它。
+    - 两种公式都会先把 HTML 实体（&lt; &gt; &amp;）还原成原始符号。
     """
     formulas: list[str] = []
     text = normalize_math_delimiters(text)
@@ -447,7 +478,7 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
 
     def display(match: re.Match[str]) -> str:
         counts["math"] += 1
-        placeholder = stash("$$" + match.group(1) + "$$")
+        placeholder = stash("$$" + restore_html_entities(match.group(1)) + "$$")
         if is_block_math(text, match):
             # 前后各补一个换行，让 kramdown 把它当成独立的公式块
             return "\n" + placeholder + "\n"
@@ -455,7 +486,8 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
 
     def inline(match: re.Match[str]) -> str:
         counts["math"] += 1
-        return stash("$" + escape_math_body(match.group(1)) + "$")
+        body = restore_html_entities(match.group(1).strip())
+        return stash("$" + escape_math_body(body) + "$")
 
     text = _DISPLAY_MATH_RE.sub(display, text)
     text = _INLINE_MATH_RE.sub(inline, text)
@@ -470,38 +502,82 @@ def restore_math(text: str, formulas: list[str]) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 4. 排版清洗（引用/标题防粘连、链接文字清洗）
+# 4. 排版清洗与容错（标题 / 引用 / 列表 / 水平线 / 链接的隔离与清洗）
 # --------------------------------------------------------------------------- #
 _HEADING_LINE_RE = re.compile(r"^[ \t]{0,3}#{1,6}[ \t]")
+# 漏打空格的标题：只认 ## 及以上（单个 # 在 Obsidian 里通常是 #标签，不能动）
+_HEADING_NO_SPACE_RE = re.compile(r"^([ \t]{0,3})(#{2,6})([^#\s])", re.MULTILINE)
 _QUOTE_LINE_START_RE = re.compile(r"^[ \t]*>")
+_LIST_LINE_RE = re.compile(r"^[ \t]*([-*+] |\d+\. )")
+_HR_LINE_RE = re.compile(r"^[ \t]{0,3}(-{3,}|\*{3,}|_{3,})[ \t]*$")
+_LONE_LINK_LINE_RE = re.compile(r"^[ \t]*!?\[[^\]\n]*\]\([^)\n]*\)[ \t]*$")
 _LINK_TEXT_RE = re.compile(r"\[([^\]\n]*)\]\(([^)\n]*)\)")
 
 
-def separate_blocks(text: str) -> str:
-    """给紧贴正文的引用块 / 标题上方补一个空行，避免 kramdown 把它们并进段落。
+def fix_heading_space(text: str) -> str:
+    """把漏打空格的 ``##标题`` 修成 ``## 标题``。
 
-    - 标题：``# xxx`` ~ ``###### xxx``（``#`` 后必须有空格，所以 ``#标签`` 不受影响）
-    - 引用块：只在"新引用块的起始行"补，引用块内部的连续 > 行不补
+    只处理 ``##`` 及以上：单个 ``#`` 紧跟文字在 Obsidian 里通常是 ``#标签``，
+    补空格会把它变成 H1 标题，所以单个 # 一律不动（标签保持纯文本）。
+    """
+
+    def fix(match: re.Match[str]) -> str:
+        return "%s%s %s" % (match.group(1), match.group(2), match.group(3))
+
+    return _HEADING_NO_SPACE_RE.sub(fix, text)
+
+
+def separate_blocks(text: str) -> str:
+    """给紧贴正文的块级元素上方补一个空行，避免 kramdown 把它们并进段落。
+
+    覆盖：标题、引用块起始行、列表首项、水平线、独占整行的链接/图片。
+    引用块与列表内部的连续行不补（否则会把它们拆散）。
     """
     lines = text.split("\n")
     output: list[str] = []
-    for line in lines:
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        previous = output[-1] if output else ""
+        previous_is_quote = bool(_QUOTE_LINE_START_RE.match(previous))
+        previous_is_list = bool(_LIST_LINE_RE.match(previous))
+
         is_heading = bool(_HEADING_LINE_RE.match(line))
-        is_quote_start = bool(_QUOTE_LINE_START_RE.match(line)) and not (
-            output and _QUOTE_LINE_START_RE.match(output[-1])
-        )
-        if (is_heading or is_quote_start) and output and output[-1].strip() != "":
+        is_quote_start = bool(_QUOTE_LINE_START_RE.match(line)) and not previous_is_quote
+        is_list_start = bool(_LIST_LINE_RE.match(line)) and not previous_is_list
+        is_rule = bool(_HR_LINE_RE.match(line))
+        is_lone_link = bool(_LONE_LINK_LINE_RE.match(line))
+
+        needs_gap = is_heading or is_quote_start or is_list_start or is_rule or is_lone_link
+        if needs_gap and previous.strip() != "":
             output.append("")
         output.append(line)
+
+        # 水平线后面也必须补空行，否则 "---" 会被当成上一行的 setext 标题下划线
+        if is_rule and index + 1 < len(lines) and lines[index + 1].strip() != "":
+            output.append("")
+        index += 1
     return "\n".join(output)
 
 
 def clean_link_text(text: str) -> str:
-    """把 Markdown 链接/图片文字里的全角空格和制表符换成半角空格。"""
+    """清洗 Markdown 链接/图片：替换冲突字符、清理空链接。
+
+    - 全角空格 / 制表符 -> 半角空格
+    - ``|`` -> ``｜``（全角竖线，防止和 kramdown 的表格语法冲突导致链接失效）
+    - ``*`` / ``_`` -> ``\\*`` / ``\\_``（防止被当成粗体 / 斜体）
+    - ``[]()`` 整个删掉，``[文字]()`` 退化成纯文字
+    """
 
     def fix(match: re.Match[str]) -> str:
         label = match.group(1).replace("\u3000", " ").replace("\t", " ")
-        return "[%s](%s)" % (label, match.group(2))
+        url = match.group(2).strip()
+        if not label.strip():
+            return ""  # []() -> 什么都不留
+        if not url:
+            return label.strip()  # [文字]() -> 纯文字
+        label = label.replace("|", "｜").replace("*", "\\*").replace("_", "\\_")
+        return "[%s](%s)" % (label, url)
 
     return _LINK_TEXT_RE.sub(fix, text)
 
@@ -568,12 +644,41 @@ _FM_FIELD_RE = re.compile(r"^([A-Za-z0-9_-]+)[ \t]*:[ \t]*(.*)$")
 _PERMALINK_LINE_RE = re.compile(r"^[ \t]*permalink[ \t]*:.*$", re.MULTILINE)
 
 
+def _looks_like_front_matter(block: str) -> bool:
+    """粗略校验 ``--- ... ---`` 中间的内容是否真的是 YAML。
+
+    防止这种情况：正文第一行恰好是水平线 ``---``，后面还有一根水平线，
+    被非贪婪正则误当成 front matter 的闭合符，把一大段正文吞进 YAML。
+    判定标准：除空行 / 注释 / 列表项外，每一行都必须出现半角冒号（``key: value``）。
+    """
+    for line in block.split("\n"):
+        stripped = line.strip()
+        if not stripped or stripped == "---" or stripped.startswith("#"):
+            continue
+        if ":" in line or re.match(r"^[ \t]*-[ \t]", line):
+            continue
+        return False
+    return True
+
+
 def split_front_matter(text: str) -> tuple[str | None, str]:
-    """拆出已有的 front matter（含结尾换行）和正文。"""
+    """拆出已有的 front matter（含结尾换行）和正文。
+
+    容错：开头有 ``---`` 但内容不像 YAML、或始终没有闭合的 ``---``（写坏了）时，
+    把开头标记和后面的 ``key: value`` 行去掉，整篇当正文处理，
+    避免正文被 YAML 解析器吞掉。
+    """
     match = _FRONT_MATTER_RE.match(text)
-    if not match:
-        return None, text
-    return match.group(0), text[match.end():]
+    if match and _looks_like_front_matter(match.group(0)):
+        return match.group(0), text[match.end():]
+    if text.startswith("---"):
+        lines = text.split("\n")
+        index = 1
+        # 顺带跳过后面形如 "key: value" 的行——那就是写坏的 front matter 内容
+        while index < len(lines) and _FM_FIELD_RE.match(lines[index]):
+            index += 1
+        return None, "\n".join(lines[index:]).lstrip("\n")
+    return None, text
 
 
 def _unquote(value: str) -> str:
@@ -739,6 +844,8 @@ def convert_document(
         "extra": 0,
     }
     front_matter, body = split_front_matter(text)
+    if front_matter is None and text.lstrip().startswith("---"):
+        print("  [warn] front matter 缺少闭合的 ---，已按正文处理", file=sys.stderr)
 
     # 流水线顺序（保护优先，替换其次）：
     #   1. 代码块（含 dataview / mermaid）抽成占位符 —— 最高优先级
@@ -756,6 +863,7 @@ def convert_document(
     body = convert_emoji(body, counts)
     body = convert_links(body, counts, slug_map, url_prefix)
     # 第四级：排版清洗（此时公式和代码块还都是占位符，不会被误伤）
+    body = fix_heading_space(body)
     body = separate_blocks(body)
     body = clean_link_text(body)
     # %% 注释整段删除后会留下多个连续空行，压缩成一个（此时公式还是占位符，
@@ -807,7 +915,10 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError:
         url_prefix = "/" + dest.name + "/"
 
-    used_slugs: dict[str, Path] = {}
+    # 第一遍：算出每篇的 slug / permalink，并检查 slug 冲突
+    plans: list[tuple[Path, str, str, str]] = []
+    seen_slugs: dict[str, Path] = {}
+    conflicts: list[str] = []
     for path in sources:
         relative = path.relative_to(src)
         text = path.read_text(encoding="utf-8")
@@ -817,23 +928,50 @@ def main(argv: list[str] | None = None) -> int:
         # 没写 slug 时自动用拼音生成（中文文件名 -> shu-xue-...）
         slug = fields.get("slug", "").strip() or make_slug(path.stem, text)
 
-        if slug in used_slugs:
-            print(
-                "[warn] slug 重复：%s 和 %s 都使用 %s，后写入的会覆盖前者"
-                % (used_slugs[slug], relative, slug),
-                file=sys.stderr,
+        if slug in seen_slugs:
+            conflicts.append(
+                "  %s  与  %s  都会生成 slug: %s" % (seen_slugs[slug], relative, slug)
             )
-        used_slugs.setdefault(slug, relative)
+        else:
+            seen_slugs[slug] = relative
 
         parent = "" if relative.parent == Path(".") else relative.parent.as_posix() + "/"
-        permalink = url_prefix + parent + slug + "/"
-        target = dest / relative.parent / (slug + ".md")
-        target.parent.mkdir(parents=True, exist_ok=True)
+        plans.append((relative, slug, url_prefix + parent + slug + "/", text))
 
-        converted, counts, added = convert_document(
-            text, path.stem, slug, permalink, slug_map, url_prefix
+    if conflicts:
+        print(
+            "[error] 检测到 slug 冲突，已停止生成。"
+            "请在源笔记的 front matter 里手动指定不同的 slug：",
+            file=sys.stderr,
         )
-        target.write_text(converted, encoding="utf-8", newline="\n")
+        for line in conflicts:
+            print(line, file=sys.stderr)
+        return 1
+
+    # 第二遍：逐篇转换。单篇失败只跳过它自己，绝不拖垮整站
+    processed = 0
+    for relative, slug, permalink, text in plans:
+        _, body_only = split_front_matter(text)
+        if not body_only.strip():
+            print("[skip] %s（正文为空）" % relative, file=sys.stderr)
+            continue
+
+        target = dest / relative.parent / (slug + ".md")
+        try:
+            converted, counts, added = convert_document(
+                text, relative.stem, slug, permalink, slug_map, url_prefix
+            )
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(converted, encoding="utf-8", newline="\n")
+        except Exception as error:  # noqa: BLE001 - 一篇烂笔记不能拖垮整站
+            print(
+                "[error] %s 转换失败，已跳过：%s: %s"
+                % (relative, type(error).__name__, error),
+                file=sys.stderr,
+            )
+            continue
+
+        processed += 1
         print(
             "[ok] %s -> %s  (slug=%s, permalink=%s, callout=%d, math=%d, wikilink=%d, block_link=%d, block_id=%d, image=%d, obsidian=%d, front_matter=%s)"
             % (
@@ -852,7 +990,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         )
 
-    print("[done] 共处理 %d 个文件，输出目录：%s" % (len(sources), dest))
+    print("[done] 共处理 %d 个文件，输出目录：%s" % (processed, dest))
     return 0
 
 
