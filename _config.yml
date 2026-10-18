@@ -67,3 +67,4 @@ exclude:
   - "发布博客.bat"
   - .gitignore
   - origin/
+  - TECH_GUIDE.md
