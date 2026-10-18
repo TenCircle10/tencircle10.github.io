@@ -129,7 +129,7 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 /* ------------------- 日夜切换开关（From Uiverse.io by mamyapro123） ------------------- */
 
 .theme-switch {
-  --toggle-size: 24px;
+  --toggle-size: 20px;
   --container-width: 5.625em;
   --container-height: 2.5em;
   --container-radius: 0.38em;
@@ -149,8 +149,21 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   --transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
   --circle-transition: 0.3s cubic-bezier(0, -0.02, 0.35, 1.17);
   display: inline-block;
-  /* 与上方社交图标拉开距离（新增） */
-  margin-top: 1.2rem;
+
+  /* 固定在页面右上角（新增） */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+/* 窄屏（手机 / 窄窗口）：缩小并贴近边缘，避免挡住正文 */
+@media screen and (max-width: 960px) {
+  .theme-switch {
+    --toggle-size: 14px;
+    top: 12px;
+    right: 12px;
+  }
 }
 
 .theme-switch,

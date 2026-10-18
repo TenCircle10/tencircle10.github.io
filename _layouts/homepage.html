@@ -38,6 +38,10 @@
 
   </head>
   <body>
+
+    <!-- 日夜切换开关（固定在右上角，层级最高） -->
+    {% include theme-switch.html %}
+
     <div class="wrapper">
       <header>
         
@@ -93,9 +97,6 @@
         {% endif %}
         </div>
         <br>
-
-        <!-- 日夜切换开关 -->
-        {% include theme-switch.html %}
 
         <!-- ============ 每日一言（侧边栏底部，社交图标下方） ============ -->
         <div class="daily-quote">
