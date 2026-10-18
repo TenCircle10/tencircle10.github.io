@@ -86,6 +86,10 @@
       } catch (error) {
         /* 存不进去也不影响本次切换 */
       }
+      // 同步 Giscus 评论框（它在跨域 iframe 里，只能靠 postMessage）
+      if (typeof window.updateGiscusTheme === "function") {
+        window.updateGiscusTheme(theme);
+      }
     }
 
     // 让开关的初始位置和当前实际主题一致

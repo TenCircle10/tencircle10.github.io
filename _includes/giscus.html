@@ -1,0 +1,52 @@
+<!-- Giscus 评论区（主题跟随站点的手动切换，跨 iframe 用 postMessage 同步）
+     用法：
+       文章评论：{% include giscus.html mapping="pathname" %}
+       主页留言：{% include giscus.html mapping="specific" term="homepage-guestbook" %} -->
+<div class="giscus-container">
+  <div class="giscus-thread"></div>
+</div>
+
+<script>
+  (function () {
+    var container = document.querySelector(".giscus-thread");
+    if (!container || container.dataset.loaded === "1") return;
+    container.dataset.loaded = "1";
+
+    // 当前主题：优先看手动切换写入的 html[data-theme]，没有就跟随系统
+    function resolveTheme() {
+      var attr = document.documentElement.getAttribute("data-theme");
+      if (attr === "dark" || attr === "light") return attr;
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+
+    // Giscus 官方主题名
+    function giscusTheme(theme) {
+      return theme === "dark" ? "dark_dimmed" : "light_high_contrast";
+    }
+
+    var script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.setAttribute("data-repo", "TenCircle10/tencircle10.github.io");
+    script.setAttribute("data-repo-id", "R_kgDOUnlf8Q");
+    script.setAttribute("data-category", "Announcements");
+    script.setAttribute("data-category-id", "DIC_kwDOUnlf8c4DIwnF");
+    script.setAttribute("data-mapping", "{{ include.mapping | default: 'pathname' }}");
+    if ("{{ include.term }}" !== "") {
+      script.setAttribute("data-term", "{{ include.term }}");
+    }
+    script.setAttribute("data-strict", "1");
+    script.setAttribute("data-reactions-enabled", "1");
+    script.setAttribute("data-emit-metadata", "0");
+    script.setAttribute("data-input-position", "top");
+    // 关键：这里不写 preferred_color_scheme，改为按当前站点主题计算
+    script.setAttribute("data-theme", giscusTheme(resolveTheme()));
+    script.setAttribute("data-lang", "zh-CN");
+    script.setAttribute("data-loading", "lazy");
+    script.crossOrigin = "anonymous";
+    script.async = true;
+
+    container.appendChild(script);
+  })();
+</script>

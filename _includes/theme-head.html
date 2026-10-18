@@ -10,5 +10,38 @@
     } catch (error) {
       /* 隐私模式下 localStorage 可能被禁用，忽略即可，回退到跟随系统 */
     }
+
+    // 当前主题：优先手动切换写入的 data-theme，否则跟随系统偏好
+    function currentTheme() {
+      var attr = document.documentElement.getAttribute("data-theme");
+      if (attr === "dark" || attr === "light") return attr;
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+
+    // 把主题推给 Giscus 的 iframe（跨域只能用 postMessage）
+    window.updateGiscusTheme = function (theme) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+      if (!iframe || !iframe.contentWindow) return;
+      iframe.contentWindow.postMessage(
+        {
+          giscus: {
+            setConfig: {
+              theme: theme === "dark" ? "dark_dimmed" : "light_high_contrast"
+            }
+          }
+        },
+        "https://giscus.app"
+      );
+    };
+
+    // Giscus 加载完成会发 discussion 事件；此时补发一次当前主题，
+    // 防止页面初始化时抢在 iframe 就绪之前调用而丢失
+    window.addEventListener("message", function (event) {
+      if (event.origin !== "https://giscus.app") return;
+      if (!event.data || !event.data.giscus || !event.data.giscus.discussion) return;
+      window.updateGiscusTheme(currentTheme());
+    });
   })();
 </script>
