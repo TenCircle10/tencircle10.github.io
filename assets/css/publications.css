@@ -121,53 +121,45 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 
 .social-hover-panel {
   position: relative;
+  width: 100%;
+  max-width: 260px;          /* 侧边栏约 232px，这里适当放宽后居中 */
+  height: 140px;             /* 固定高度，让文字和图标都有舒展空间 */
+  margin: 20px auto;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  width: 8.6em;              /* 2 列 × 60px + 展开后的间距 */
-  min-height: 8.6em;
-  margin: 1.6em auto 0;
   z-index: 1;
 }
 
-/* 背景渐变色块：旋转 90°，悬停时淡出 */
+/* 原组件的粉蓝渐变背景块：按需求彻底隐藏 */
 .social-hover-back {
-  position: absolute;
-  border-radius: 10px;
-  transform: rotate(90deg);
-  width: 7.7em;
-  height: 7.7em;
-  background: linear-gradient(270deg, #03a9f4, #cc39a4, #ffb5d2);
-  z-index: -2;
-  box-shadow: inset 0px 0px 180px 5px #ffffff;
-  opacity: 1;
-  pointer-events: none;
-  transition: opacity 0.4s ease-in-out;
+  display: none;
 }
 
-.social-hover-panel:hover .social-hover-back {
-  opacity: 0;
-}
-
-/* 默认态文字：每日一言（霞鹜文楷），绝对居中叠在卡片之上 */
+/* 默认态文字：每日一言（霞鹜文楷），占据整个 260x140 区域 */
 .social-hover-quote {
   /* 强制使用霞鹜文楷，回退到楷体 / 宋体 */
   font-family: "LXGW WenKai", "KaiTi", "楷体", serif !important;
   font-style: normal !important; /* 强制取消斜体 */
-  font-size: 0.95rem !important;
-  letter-spacing: 1.5px;
+  font-size: 1.1rem !important;
+  letter-spacing: 1px;
   color: #555;
   text-align: center;
-  line-height: 1.6;
+  line-height: 1.8;
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+  padding: 0 14px;
   z-index: 3;
   opacity: 1;
-  transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+  /* 最多 4 行，超出用省略号截断 */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .social-hover-panel:hover .social-hover-quote,
@@ -176,72 +168,62 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   pointer-events: none;
 }
 
-/* 悬停态：2x2 卡片网格 */
+/* 悬停态：2x2 网格，在 260x140 区域内居中铺开 */
 .social-hover-cards {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 0;
+  grid-template-columns: repeat(2, 60px);
+  grid-template-rows: repeat(2, 60px);
+  gap: 8px;
+  place-content: center;
   z-index: 2;
-  transition: gap 0.4s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
 }
 
+.social-hover-panel:hover .social-hover-cards,
+.social-hover-panel:focus-within .social-hover-cards {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 单个卡片：60x60 毛玻璃，悬停时轻微上浮 */
 .social-hover-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.596);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
-  border: 1px solid transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   text-decoration: none;
   cursor: pointer;
-  transition: 0.4s ease-in-out, 0.2s background-color ease-in-out, 0.2s background-image ease-in-out;
+  transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
 }
 
-/* 未展开时 4 个卡片拼成一个圆角方块 */
-.social-hover-card:nth-child(1) { border-top-left-radius: 10px; }
-.social-hover-card:nth-child(2) { border-top-right-radius: 10px; }
-.social-hover-card:nth-child(3) { border-bottom-left-radius: 10px; }
-.social-hover-card:nth-child(4) { border-bottom-right-radius: 10px; }
+.social-hover-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
 
-/* 图标：默认隐藏（opacity 0），展开时浮出 */
+/* 图标：放大到 28px，亮色模式默认用品牌色 */
 .social-hover-icon {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   fill: currentColor;
-  opacity: 0;
+  opacity: 1;
   transition: 0.2s ease-in-out;
 }
 
-/* 亮色模式的默认图标色 = 品牌色 */
 .social-hover-icon--github   { color: #181717; }
 .social-hover-icon--bilibili { color: #FB7299; }
 .social-hover-icon--zhihu    { color: #0084FF; }
 .social-hover-icon--x        { color: #000000; }
-
-/* 展开：卡片之间拉开、统一圆角、加阴影和半透明底色 */
-.social-hover-panel:hover .social-hover-cards,
-.social-hover-panel:focus-within .social-hover-cards {
-  gap: 0.2em;
-}
-
-.social-hover-panel:hover .social-hover-card,
-.social-hover-panel:focus-within .social-hover-card {
-  border-radius: 10px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.social-hover-panel:hover .social-hover-icon,
-.social-hover-panel:focus-within .social-hover-icon {
-  opacity: 1;
-}
 
 /* 单卡片悬停：品牌底色 + 纯白图标 */
 .social-hover-card:nth-child(1):hover { background-color: #181717 !important; }
@@ -299,6 +281,64 @@ html[data-theme="light"] .social-hover-card {
 
 html[data-theme="light"] .social-hover-icon--github { color: #181717; }
 html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
+
+/* ==========================================================================
+   移动端（≤768px）：手机没有 hover，取消悬停切换
+   改为上下排布 —— 上方常驻「每日一言」，下方直接展示 4 个图标（1x4 一排）
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  .social-hover-panel {
+    max-width: 100%;
+    height: auto;
+    flex-direction: column;
+    gap: 14px;
+    margin: 16px auto;
+    padding: 0 4px;
+  }
+
+  /* 一言：脱离绝对定位、常驻显示（覆盖所有 hover / focus 状态） */
+  .social-hover-quote,
+  .social-hover-panel:hover .social-hover-quote,
+  .social-hover-panel:focus-within .social-hover-quote {
+    position: static;
+    transform: none;
+    opacity: 1 !important;
+    pointer-events: auto;
+    padding: 0 8px;
+    font-size: 1rem !important;
+    -webkit-line-clamp: 3;
+  }
+
+  /* 图标：常驻显示，改为 1x4 一排 */
+  .social-hover-cards,
+  .social-hover-panel:hover .social-hover-cards,
+  .social-hover-panel:focus-within .social-hover-cards {
+    position: static;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 8px;
+    place-content: stretch;
+    width: 100%;
+    opacity: 1 !important;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .social-hover-card {
+    width: 100%;
+    height: 56px;
+    transform: none !important;
+    box-shadow: none;
+  }
+
+  .social-hover-icon {
+    width: 26px;
+    height: 26px;
+    opacity: 1 !important;
+  }
+}
 
 /* 暗色模式适配 */
 @media (prefers-color-scheme: dark) {
