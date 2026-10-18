@@ -182,9 +182,17 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ---------------- 返回顶部按钮（From Uiverse.io by vinodjangid07） ---------------- */
 /* 注意：原组件用的是 .button / .svgIcon 这类很通用的类名，
-   这里改成 .back-to-top / .back-to-top__icon，避免和主题/正文里的样式撞车 */
+   这里改成 .back-to-top / .back-to-top__icon，避免和主题/正文里的样式撞车。
+   明暗色用 CSS 变量切换，同时兼容「系统偏好」和「手动切换」两种来源。 */
 
 .back-to-top {
+  /* 亮色（默认）：白底 + 轻阴影 + 深色图标 */
+  --btt-bg: #ffffff;
+  --btt-fg: #333333;
+  --btt-shadow: 0 2px 10px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  --btt-hover-bg: #39c;
+  --btt-hover-fg: #ffffff;
+
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -193,13 +201,14 @@ h1, h2, h3, h4, h5, h6 {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: rgb(20, 20, 20);
+  background-color: var(--btt-bg);
+  color: var(--btt-fg);
   border: none;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253);
+  box-shadow: var(--btt-shadow);
   cursor: pointer;
   overflow: hidden;
 
@@ -208,7 +217,8 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
   transform: translateY(10px);
   transition: opacity 0.25s ease, transform 0.25s ease, width 0.3s ease,
-    border-radius 0.3s ease, background-color 0.3s ease;
+    border-radius 0.3s ease, background-color 0.3s ease, color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .back-to-top.is-visible {
@@ -222,15 +232,17 @@ h1, h2, h3, h4, h5, h6 {
   transition-duration: 0.3s;
 }
 
+/* 图标跟随按钮文字色（原来写死了 fill: white，亮色模式下会看不见） */
 .back-to-top__icon path {
-  fill: white;
+  fill: currentColor;
 }
 
-/* 悬停时横向展开，图标上移，并显示文字 */
+/* 悬停：横向展开 + 换色 */
 .back-to-top:hover {
   width: 140px;
   border-radius: 50px;
-  background-color: rgb(181, 160, 255);
+  background-color: var(--btt-hover-bg);
+  color: var(--btt-hover-fg);
 }
 
 .back-to-top:hover .back-to-top__icon {
@@ -242,7 +254,7 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   bottom: -20px;
   content: "返回顶部";
-  color: white;
+  color: currentColor;
   font-size: 0;
   white-space: nowrap;
 }
@@ -252,4 +264,33 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 1;
   bottom: unset;
   transition-duration: 0.3s;
+}
+
+/* 系统偏好暗色：深底 + 白图标 + 紫色光晕 */
+@media (prefers-color-scheme: dark) {
+  .back-to-top {
+    --btt-bg: rgb(20, 20, 20);
+    --btt-fg: #ffffff;
+    --btt-shadow: 0 0 0 4px rgba(180, 160, 255, 0.253);
+    --btt-hover-bg: rgb(181, 160, 255);
+    --btt-hover-fg: #ffffff;
+  }
+}
+
+/* 手动切到暗色（覆盖系统亮色） */
+html[data-theme="dark"] .back-to-top {
+  --btt-bg: rgb(20, 20, 20);
+  --btt-fg: #ffffff;
+  --btt-shadow: 0 0 0 4px rgba(180, 160, 255, 0.253);
+  --btt-hover-bg: rgb(181, 160, 255);
+  --btt-hover-fg: #ffffff;
+}
+
+/* 手动切到亮色（覆盖系统暗色） */
+html[data-theme="light"] .back-to-top {
+  --btt-bg: #ffffff;
+  --btt-fg: #333333;
+  --btt-shadow: 0 2px 10px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  --btt-hover-bg: #39c;
+  --btt-hover-fg: #ffffff;
 }
