@@ -3,6 +3,7 @@ layout: note
 title: "无限可列集等势证明"
 slug: "infinite-countable-equivalence"
 permalink: "/notes/infinite-countable-equivalence/"
+render_with_liquid: false
 ---
 
 <details class="callout theorem" data-callout="theorem" markdown="block" open>

@@ -582,6 +582,17 @@ def clean_link_text(text: str) -> str:
     return _LINK_TEXT_RE.sub(fix, text)
 
 
+def escape_liquid_delimiters(text: str) -> str:
+    """把会被 Jekyll/Liquid 误当成模板语法的 ``{{`` / ``{%`` 转成 HTML 实体。
+
+    Jekyll 是先执行 Liquid、再跑 Markdown，所以连代码块里的 ``{{`` 也会被解析
+    （这正是构建报错的常见来源）。换成实体后浏览器仍显示成 ``{{``，
+    但 Liquid 不会再把它当模板执行。
+    """
+    text = text.replace("{{", "&#123;&#123;")
+    return text.replace("{%", "&#123;%")
+
+
 # --------------------------------------------------------------------------- #
 # 4. Wikilink 与块 ID（图片 / 笔记嵌入已由 convert_embeds 处理完）
 # --------------------------------------------------------------------------- #
@@ -790,6 +801,28 @@ def apply_slug(front_matter: str, slug: str) -> str:
     return updated.rstrip("\n") + "\n\n"
 
 
+_RENDER_LIQUID_LINE_RE = re.compile(r"^[ \t]*render_with_liquid[ \t]*:.*$", re.MULTILINE)
+
+
+def apply_render_with_liquid(front_matter: str) -> str:
+    """强制写入 render_with_liquid: false。
+
+    作用：让 Jekyll 4+ 不再把正文里的 {{ }} / {% %} 当模板语法执行。
+    注意 GitHub Pages 目前跑的是 Jekyll 3.9，这一项会被忽略（无害），
+    真正兜底的是 escape_liquid_delimiters()。
+    """
+    line = "render_with_liquid: false"
+    if _RENDER_LIQUID_LINE_RE.search(front_matter):
+        updated = _RENDER_LIQUID_LINE_RE.sub(lambda _match: line, front_matter, count=1)
+    else:
+        stripped = front_matter.rstrip("\n")
+        if not stripped.endswith("---"):
+            return front_matter
+        head = stripped[:-3].rstrip("\n")
+        updated = head + "\n" + line + "\n---\n"
+    return updated.rstrip("\n") + "\n\n"
+
+
 def build_slug_map(sources: list[Path]) -> dict[str, str]:
     """建立「源文件名 / front matter title -> slug」的映射，用于重写 wikilink。
 
@@ -871,6 +904,8 @@ def convert_document(
     body = re.sub(r"\n{3,}", "\n\n", body)
     body = restore_math(body, formulas)
     body = restore_code_blocks(body, code_blocks, mermaid_blocks)
+    # 最后一步：转义 {{ / {%，防止 Jekyll 把它们当成 Liquid 模板去执行
+    body = escape_liquid_delimiters(body)
 
     added_front_matter = front_matter is None
     if added_front_matter:
@@ -882,6 +917,8 @@ def convert_document(
     # front matter 里没有 slug 时，把自动生成的（拼音）slug 写进去
     front_matter = apply_slug(front_matter, slug)
     front_matter = apply_permalink(front_matter, permalink)
+    # 强制关闭 Liquid 渲染（Jekyll 4+ 生效；GitHub Pages 的 3.9 会忽略，另有 escape 兜底）
+    front_matter = apply_render_with_liquid(front_matter)
     # permalink 已经保证 front matter 后面带一个空行，正文开头的空行去掉避免重复
     return front_matter + body.lstrip("\n"), counts, added_front_matter
 

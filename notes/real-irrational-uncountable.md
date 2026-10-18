@@ -3,6 +3,7 @@ layout: note
 title: "实数集与无理数集不可列证明"
 slug: "real-irrational-uncountable"
 permalink: "/notes/real-irrational-uncountable/"
+render_with_liquid: false
 ---
 
 <details class="callout theorem" data-callout="theorem" markdown="block" open>

@@ -3,6 +3,7 @@ layout: note
 title: "数学分析 by TenCircle10"
 slug: "mathematical-analysis-szy"
 permalink: "/notes/mathematical-analysis-szy/"
+render_with_liquid: false
 ---
 
 思考：无穷小分析

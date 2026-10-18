@@ -3,6 +3,7 @@ layout: note
 title: "从“证明稀缺”到“证明过剩”：AI对数学的冲击、影响与未来展望"
 slug: "cong-zheng-ming-xi-que-dao-zheng-ming-guo-sheng-ai-dui-shu-xue-de-chong-ji-ying-xiang-yu-wei-lai-zhan-wang"
 permalink: "/notes/cong-zheng-ming-xi-que-dao-zheng-ming-guo-sheng-ai-dui-shu-xue-de-chong-ji-ying-xiang-yu-wei-lai-zhan-wang/"
+render_with_liquid: false
 ---
 
 # 从“证明稀缺”到“证明过剩”：AI对数学的冲击、影响与未来展望
