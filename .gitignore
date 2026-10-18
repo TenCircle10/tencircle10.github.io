@@ -6,3 +6,5 @@ Gemfile.lock
 .jekyll-cache
 git-update.sh
 origin/
+__pycache__/
+*.pyc

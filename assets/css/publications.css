@@ -97,8 +97,6 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   margin-top: 1rem;
   padding-top: 0;
   border-top: none;
-  /* 与笔记页保持一致：整体缩到 80% */
-  zoom: 0.8;
 }
 
 /* iframe：跟随明暗色 + 去掉默认边框 */
@@ -139,7 +137,7 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 /* ------------------- 日夜切换开关（From Uiverse.io by mamyapro123） ------------------- */
 
 .theme-switch {
-  --toggle-size: 20px;
+  --toggle-size: 16px;
   --container-width: 5.625em;
   --container-height: 2.5em;
   --container-radius: 0.38em;

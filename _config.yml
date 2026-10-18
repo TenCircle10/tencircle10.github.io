@@ -65,3 +65,5 @@ exclude:
   - sync_notes.py
   - deploy.ps1
   - "发布博客.bat"
+  - .gitignore
+  - origin/
