@@ -100,7 +100,17 @@
 
         <!-- ============ 每日一言（侧边栏底部，社交图标下方） ============ -->
         <div class="daily-quote">
-          <span id="quote-content">加载中...</span>
+          <div id="quote-content">
+            <!-- 加载动画：三个小球弹跳，取到句子后会被 JS 用 textContent 整体替换掉 -->
+            <div class="loader-balls-wrapper" role="status" aria-label="加载中">
+              <div class="loader-balls-circle"></div>
+              <div class="loader-balls-circle"></div>
+              <div class="loader-balls-circle"></div>
+              <div class="loader-balls-shadow"></div>
+              <div class="loader-balls-shadow"></div>
+              <div class="loader-balls-shadow"></div>
+            </div>
+          </div>
         </div>
 
       </header>

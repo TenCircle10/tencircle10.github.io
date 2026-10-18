@@ -150,19 +150,24 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   --circle-transition: 0.3s cubic-bezier(0, -0.02, 0.35, 1.17);
   display: inline-block;
 
-  /* 固定在页面右上角（新增） */
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
+  /* 强制锁定在浏览器视口右上角：用 !important 压过任何可能的冲突规则，
+     left: auto 明确清掉任何会把它推到左侧的 left 属性 */
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 9999 !important;
+  margin: 0 !important;
 }
 
-/* 窄屏（手机 / 窄窗口）：缩小并贴近边缘，避免挡住正文 */
-@media screen and (max-width: 960px) {
+/* 手机 / 窄屏：缩小并贴右上角，避免挡住正文和社交图标、也不溢出屏幕 */
+@media screen and (max-width: 768px) {
   .theme-switch {
-    --toggle-size: 14px;
-    top: 12px;
-    right: 12px;
+    top: 10px !important;
+    right: 10px !important;
+    transform: scale(0.6);
+    transform-origin: top right;
   }
 }
 
@@ -779,3 +784,121 @@ html[data-theme="light"] .note-nav {
 }
 html[data-theme="light"] .note-nav-name,
 html[data-theme="light"] .note-nav-title { color: #043361 !important; }
+
+/* ------------------ 每日一言的加载动画（三个小球弹跳） ------------------ */
+/* 类名统一加 loader-balls- 前缀，避免和主题的 .wrapper / .circle / .shadow 冲突。
+   尺寸按左侧边栏（232px）缩小过。 */
+
+.loader-balls-wrapper {
+  position: relative;
+  width: 120px;
+  height: 30px;
+  margin: 0 auto;
+}
+
+.loader-balls-circle {
+  position: absolute;
+  top: 0;
+  left: 12%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #555;
+  transform-origin: 50%;
+  animation: loader-balls-bounce 0.5s alternate infinite ease;
+}
+
+.loader-balls-circle:nth-child(2) {
+  left: 45%;
+  animation-delay: 0.2s;
+}
+
+.loader-balls-circle:nth-child(3) {
+  left: auto;
+  right: 12%;
+  animation-delay: 0.3s;
+}
+
+.loader-balls-shadow {
+  position: absolute;
+  top: 24px;
+  left: 12%;
+  width: 14px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6);
+  filter: blur(1px);
+  animation: loader-balls-shadow 0.5s alternate infinite ease;
+}
+
+.loader-balls-shadow:nth-child(5) {
+  left: 45%;
+  animation-delay: 0.2s;
+}
+
+.loader-balls-shadow:nth-child(6) {
+  left: auto;
+  right: 12%;
+  animation-delay: 0.3s;
+}
+
+@keyframes loader-balls-bounce {
+  0% {
+    top: 26px;
+    height: 4px;
+    border-radius: 50px 50px 25px 25px;
+    transform: scaleX(1.6);
+  }
+  40% {
+    height: 14px;
+    border-radius: 50%;
+    transform: scaleX(1);
+  }
+  100% {
+    top: 0;
+    height: 14px;
+  }
+}
+
+@keyframes loader-balls-shadow {
+  0% {
+    transform: scaleX(1.5);
+  }
+  40% {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scaleX(0.2);
+    opacity: 0.4;
+  }
+}
+
+/* 暗色模式：浅灰小球 + 半透明白阴影（纯黑阴影在深色背景上完全看不见） */
+@media (prefers-color-scheme: dark) {
+  .loader-balls-circle {
+    background-color: #e0e0e0;
+  }
+
+  .loader-balls-shadow {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* 手动切暗色 */
+html[data-theme="dark"] .loader-balls-circle {
+  background-color: #e0e0e0;
+}
+
+html[data-theme="dark"] .loader-balls-shadow {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 手动切亮色（覆盖系统暗色） */
+html[data-theme="light"] .loader-balls-circle {
+  background-color: #555;
+}
+
+html[data-theme="light"] .loader-balls-shadow {
+  background-color: rgba(0, 0, 0, 0.6);
+}
