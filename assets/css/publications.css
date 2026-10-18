@@ -97,6 +97,16 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   margin-top: 1rem;
   padding-top: 0;
   border-top: none;
+  /* 与笔记页保持一致：整体缩到 80% */
+  zoom: 0.8;
+}
+
+/* iframe：跟随明暗色 + 去掉默认边框 */
+.homepage-guestbook .giscus-container iframe {
+  width: 100% !important;
+  border: none !important;
+  color-scheme: light dark;
+  display: block;
 }
 
 @media (prefers-color-scheme: dark) {

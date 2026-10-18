@@ -1,4 +1,27 @@
 <!-- 日夜切换开关（From Uiverse.io by mamyapro123，纯 CSS + 原生 JS，无 Tailwind） -->
+<style>
+  /* 定位直接写在这里（而不只放在 publications.css），是为了跟随 HTML 一起更新，
+     不受外部 CSS 的 CDN 缓存影响。!important 压过任何冲突规则。 */
+  .theme-switch {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    bottom: auto !important;
+    left: auto !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    transform-origin: top right;
+  }
+
+  @media screen and (max-width: 768px) {
+    .theme-switch {
+      top: 10px !important;
+      right: 10px !important;
+      transform: scale(0.6);
+    }
+  }
+</style>
+
 <label class="theme-switch" title="切换深色 / 浅色主题">
   <input
     type="checkbox"

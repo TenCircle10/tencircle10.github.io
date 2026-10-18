@@ -172,6 +172,19 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 4rem;
   padding-top: 2rem;
   border-top: 1px solid #eaeaea;
+
+  /* 整体缩到 80%：用 zoom 而不是 transform: scale ——
+     zoom 会真正重算布局，iframe 内部不会出现「按 125% 宽度排版再缩小」导致的
+     头像/文字重叠和横向溢出。 */
+  zoom: 0.8;
+}
+
+/* iframe 本身：让里面的原生控件与滚动条跟随明暗色，并去掉默认边框 */
+.giscus-container iframe {
+  width: 100% !important;
+  border: none !important;
+  color-scheme: light dark;
+  display: block;
 }
 
 @media (prefers-color-scheme: dark) {
