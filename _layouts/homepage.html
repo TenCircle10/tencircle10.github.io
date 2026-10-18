@@ -3,6 +3,8 @@
   <head>
     <title>{{ site.title }} | {{site.affiliation}}</title>
 
+    {% include theme-head.html %}
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -91,6 +93,9 @@
         {% endif %}
         </div>
         <br>
+
+        <!-- 日夜切换开关 -->
+        {% include theme-switch.html %}
 
         <!-- ============ 每日一言（侧边栏底部，社交图标下方） ============ -->
         <div class="daily-quote">

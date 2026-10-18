@@ -4,6 +4,8 @@
     <!-- 网页标题改为：笔记标题 | 你的主页名 -->
     <title>{{ page.title }} | {{ site.title }}</title>
 
+    {% include theme-head.html %}
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -115,6 +117,32 @@
       ga('send', 'pageview');
     </script>
     {% endif %}
+
+    <!-- ============ 返回顶部按钮（滚动超过 300px 才出现） ============ -->
+    <button class="back-to-top" id="back-to-top" type="button" aria-label="返回顶部" title="返回顶部">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+    </button>
+    <script>
+      (function () {
+        var button = document.getElementById("back-to-top");
+        if (!button) return;
+
+        function toggleButton() {
+          if (window.scrollY > 300) {
+            button.classList.add("is-visible");
+          } else {
+            button.classList.remove("is-visible");
+          }
+        }
+
+        window.addEventListener("scroll", toggleButton, { passive: true });
+        toggleButton();
+
+        button.addEventListener("click", function () {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      })();
+    </script>
 
   </body>
 </html>

@@ -1,0 +1,41 @@
+<!-- 日夜切换开关（纯 CSS + 原生 JS，无 Tailwind） -->
+<label class="theme-switch" title="切换深色 / 浅色主题">
+  <input type="checkbox" id="theme-switch-input" aria-label="切换深色 / 浅色主题" />
+  <span class="theme-switch-track">
+    <span class="theme-switch-thumb"></span>
+  </span>
+</label>
+
+<script>
+  (function () {
+    var input = document.getElementById("theme-switch-input");
+    if (!input) return;
+
+    function systemTheme() {
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+
+    function currentTheme() {
+      var attr = document.documentElement.getAttribute("data-theme");
+      return attr === "dark" || attr === "light" ? attr : systemTheme();
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      try {
+        localStorage.setItem("theme", theme);
+      } catch (error) {
+        /* 存不进去也不影响本次切换 */
+      }
+    }
+
+    // 让开关的初始位置和当前实际主题一致
+    input.checked = currentTheme() === "dark";
+
+    input.addEventListener("change", function () {
+      applyTheme(input.checked ? "dark" : "light");
+    });
+  })();
+</script>

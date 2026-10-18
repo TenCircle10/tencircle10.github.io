@@ -1,0 +1,14 @@
+<!-- 主题初始化：必须尽早执行（放在 <head> 里），
+     否则暗色模式下会先闪一下白屏再变暗 -->
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "dark" || saved === "light") {
+        document.documentElement.setAttribute("data-theme", saved);
+      }
+    } catch (error) {
+      /* 隐私模式下 localStorage 可能被禁用，忽略即可，回退到跟随系统 */
+    }
+  })();
+</script>

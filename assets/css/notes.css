@@ -179,3 +179,55 @@ h1, h2, h3, h4, h5, h6 {
     border-top-color: #34363f;
   }
 }
+
+/* ------------------------------ 返回顶部按钮 ------------------------------ */
+
+.back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #043361;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  z-index: 30;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: #39c;
+}
+
+.back-to-top svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+@media (prefers-color-scheme: dark) {
+  .back-to-top {
+    background: #3eb7f0;
+    color: #20212b;
+  }
+
+  .back-to-top:hover {
+    background: #6cc9f5;
+  }
+}

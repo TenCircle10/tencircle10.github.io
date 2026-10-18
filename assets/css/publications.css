@@ -125,3 +125,120 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
     color: #bbb !important;
   }
 }
+
+/* ------------------------------ 日夜切换开关 ------------------------------ */
+
+.theme-switch {
+  --toggle-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 1.2rem;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.theme-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.theme-switch-track {
+  position: relative;
+  display: inline-block;
+  width: calc(var(--toggle-size) * 2.2);
+  height: var(--toggle-size);
+  border-radius: 999px;
+  background: #dbe4f0;
+  transition: background 0.25s ease;
+}
+
+/* 太阳（默认态） */
+.theme-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(var(--toggle-size) - 4px);
+  height: calc(var(--toggle-size) - 4px);
+  border-radius: 50%;
+  background: #ffb703;
+  box-shadow: 0 0 0 2px rgba(255, 183, 3, 0.25);
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.theme-switch input:checked + .theme-switch-track {
+  background: #313543;
+}
+
+/* 月亮（暗色态）：用内阴影挖出月牙 */
+.theme-switch input:checked + .theme-switch-track .theme-switch-thumb {
+  transform: translateX(calc(var(--toggle-size) * 1.2));
+  background: #f4f6fb;
+  box-shadow: inset -3px -1px 0 0 #b9c4d6;
+}
+
+.theme-switch input:focus-visible + .theme-switch-track {
+  outline: 2px solid #39c;
+  outline-offset: 2px;
+}
+
+/* ------------------- 手动主题（html[data-theme]）覆盖 ------------------- */
+/* 主题自带的暗色是用 @media (prefers-color-scheme: dark) 写的，
+   这里用 html[data-theme] + !important 让开关能压过系统设置 */
+
+html[data-theme="dark"] body {
+  background-color: #20212b !important;
+  color: #dadbdf !important;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6 {
+  color: rgb(62, 183, 240) !important;
+}
+
+html[data-theme="dark"] a { color: rgb(62, 183, 240) !important; }
+html[data-theme="dark"] strong { color: #eeeff0 !important; }
+html[data-theme="dark"] autocolor { color: #dadbdf !important; }
+html[data-theme="dark"] .daily-quote { color: #bbb !important; }
+html[data-theme="dark"] .giscus-container { border-top-color: #34363f !important; }
+html[data-theme="dark"] .homepage-guestbook h2 { border-bottom-color: #34363f !important; }
+html[data-theme="dark"] .note-nav {
+  background-color: #20212b !important;
+  border-bottom-color: #34363f !important;
+}
+html[data-theme="dark"] .note-nav-name,
+html[data-theme="dark"] .note-nav-title { color: rgb(62, 183, 240) !important; }
+
+/* 系统本身就是暗色时，也要能手动切回亮色 */
+html[data-theme="light"] body {
+  background-color: #fff !important;
+  color: #595959 !important;
+}
+
+html[data-theme="light"] h1,
+html[data-theme="light"] h2,
+html[data-theme="light"] h3,
+html[data-theme="light"] h4,
+html[data-theme="light"] h5,
+html[data-theme="light"] h6 {
+  color: #043361 !important;
+}
+
+html[data-theme="light"] a { color: #39c !important; }
+html[data-theme="light"] strong { color: #222 !important; }
+html[data-theme="light"] autocolor { color: #595959 !important; }
+html[data-theme="light"] .daily-quote { color: #555 !important; }
+html[data-theme="light"] .giscus-container { border-top-color: #eaeaea !important; }
+html[data-theme="light"] .homepage-guestbook h2 { border-bottom-color: #eaeaea !important; }
+html[data-theme="light"] .note-nav {
+  background-color: #fff !important;
+  border-bottom-color: #e5e5e5 !important;
+}
+html[data-theme="light"] .note-nav-name,
+html[data-theme="light"] .note-nav-title { color: #043361 !important; }
