@@ -1,7 +1,12 @@
 <!-- Giscus 评论区（主题跟随站点的手动切换，跨 iframe 用 postMessage 同步）
-     用法：
-       文章评论：{% include giscus.html mapping="pathname" %}
-       主页留言：{% include giscus.html mapping="specific" term="homepage-guestbook" %} -->
+
+     用法：在布局里 include 本文件
+       · 文章评论：只传 mapping="pathname"
+       · 主页留言：传 mapping="specific" 和 term="homepage-guestbook"
+
+     注意：本文件里绝不能写 Liquid 的 include 标签（连 HTML 注释里也不行），
+     因为 Jekyll 会执行注释里的 Liquid，导致 include 自己、触发
+     "Nesting too deep" 构建失败。 -->
 <div class="giscus-container">
   <div class="giscus-thread"></div>
 </div>
