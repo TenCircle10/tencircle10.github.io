@@ -51,6 +51,14 @@
   flex: 0 0 auto;             /* 返回链接永远不被压缩 */
 }
 
+/* 笔记页的日夜开关固定在最右上角，窄屏下会盖住导航栏右侧，
+   所以给"返回主页"留出避让空间（宽屏时开关在导航栏之外，无需让位） */
+@media screen and (max-width: 900px) {
+  .note-nav-right {
+    padding-right: 60px;
+  }
+}
+
 .note-avatar {
   width: 40px;
   height: 40px;

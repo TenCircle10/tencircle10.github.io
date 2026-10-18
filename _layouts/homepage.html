@@ -39,8 +39,10 @@
   </head>
   <body>
 
-    <!-- 日夜切换开关（固定在右上角，层级最高） -->
-    {% include theme-switch.html %}
+    <!-- 日夜切换开关：内容区顶部右侧，随页面正常滚动（不再固定在视口上） -->
+    <div class="page-topbar">
+      {% include theme-switch.html %}
+    </div>
 
     <div class="wrapper">
       <header>
