@@ -70,7 +70,14 @@
       </div>
       <div class="note-nav-title">{{ page.title }}</div>
       <div class="note-nav-right">
-        <a class="note-nav-back" href="{{ '/' | relative_url }}">← 返回主页</a>
+        <a href="{{ '/' | relative_url }}" class="btn-return-home-wrapper">
+          <button class="btn-return-home" type="button">
+            <span class="btn-return-circle">
+              <span class="btn-return-icon btn-return-arrow"></span>
+            </span>
+            <span class="btn-return-text">返回主页</span>
+          </button>
+        </a>
       </div>
     </nav>
     <!-- ======================================================================= -->

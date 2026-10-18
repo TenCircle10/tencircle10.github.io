@@ -113,9 +113,45 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   }
 }
 
-/* ------------------ 每日一言（左侧边栏底部，霞鹜文楷） ------------------ */
+/* ------------------ 侧边栏社交面板（From Uiverse.io by Praashoo7，精简为 4 图标 2x2） ------------------
+   原组件是 9 个卡片（3x3）+ 背后渐变色块 + 居中文字；
+   这里只保留 4 个（GitHub / 哔哩哔哩 / 知乎 / X），排成 2x2。
+   交互与原设计一致：默认显示每日一言，悬停时文字淡出、色块淡出、卡片展开并浮出图标。
+   ------------------------------------------------------------------------------------------------ */
 
-.daily-quote {
+.social-hover-panel {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 8.6em;              /* 2 列 × 60px + 展开后的间距 */
+  min-height: 8.6em;
+  margin: 1.6em auto 0;
+  z-index: 1;
+}
+
+/* 背景渐变色块：旋转 90°，悬停时淡出 */
+.social-hover-back {
+  position: absolute;
+  border-radius: 10px;
+  transform: rotate(90deg);
+  width: 7.7em;
+  height: 7.7em;
+  background: linear-gradient(270deg, #03a9f4, #cc39a4, #ffb5d2);
+  z-index: -2;
+  box-shadow: inset 0px 0px 180px 5px #ffffff;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.social-hover-panel:hover .social-hover-back {
+  opacity: 0;
+}
+
+/* 默认态文字：每日一言（霞鹜文楷），绝对居中叠在卡片之上 */
+.social-hover-quote {
   /* 强制使用霞鹜文楷，回退到楷体 / 宋体 */
   font-family: "LXGW WenKai", "KaiTi", "楷体", serif !important;
   font-style: normal !important; /* 强制取消斜体 */
@@ -123,13 +159,150 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   letter-spacing: 1.5px;
   color: #555;
   text-align: center;
-  margin-top: 2rem;
   line-height: 1.6;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  opacity: 1;
+  transition: opacity 0.4s ease-in-out;
 }
+
+.social-hover-panel:hover .social-hover-quote,
+.social-hover-panel:focus-within .social-hover-quote {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 悬停态：2x2 卡片网格 */
+.social-hover-cards {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0;
+  z-index: 2;
+  transition: gap 0.4s ease-in-out;
+}
+
+.social-hover-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.596);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.4s ease-in-out, 0.2s background-color ease-in-out, 0.2s background-image ease-in-out;
+}
+
+/* 未展开时 4 个卡片拼成一个圆角方块 */
+.social-hover-card:nth-child(1) { border-top-left-radius: 10px; }
+.social-hover-card:nth-child(2) { border-top-right-radius: 10px; }
+.social-hover-card:nth-child(3) { border-bottom-left-radius: 10px; }
+.social-hover-card:nth-child(4) { border-bottom-right-radius: 10px; }
+
+/* 图标：默认隐藏（opacity 0），展开时浮出 */
+.social-hover-icon {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+  opacity: 0;
+  transition: 0.2s ease-in-out;
+}
+
+/* 亮色模式的默认图标色 = 品牌色 */
+.social-hover-icon--github   { color: #181717; }
+.social-hover-icon--bilibili { color: #FB7299; }
+.social-hover-icon--zhihu    { color: #0084FF; }
+.social-hover-icon--x        { color: #000000; }
+
+/* 展开：卡片之间拉开、统一圆角、加阴影和半透明底色 */
+.social-hover-panel:hover .social-hover-cards,
+.social-hover-panel:focus-within .social-hover-cards {
+  gap: 0.2em;
+}
+
+.social-hover-panel:hover .social-hover-card,
+.social-hover-panel:focus-within .social-hover-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.social-hover-panel:hover .social-hover-icon,
+.social-hover-panel:focus-within .social-hover-icon {
+  opacity: 1;
+}
+
+/* 单卡片悬停：品牌底色 + 纯白图标 */
+.social-hover-card:nth-child(1):hover { background-color: #181717 !important; }
+.social-hover-card:nth-child(1):hover .social-hover-icon { color: #ffffff; }
+
+.social-hover-card:nth-child(2):hover { background-color: #FB7299 !important; }
+.social-hover-card:nth-child(2):hover .social-hover-icon { color: #ffffff; }
+
+.social-hover-card:nth-child(3):hover { background-color: #0084FF !important; }
+.social-hover-card:nth-child(3):hover .social-hover-icon { color: #ffffff; }
+
+.social-hover-card:nth-child(4):hover { background-color: #000000 !important; }
+.social-hover-card:nth-child(4):hover .social-hover-icon { color: #ffffff; }
+
+/* X 暂无链接：不可点击 */
+.social-hover-card--soon {
+  cursor: default;
+}
+
+/* ---- 暗色：卡片深灰半透明；GitHub / X 的黑色图标改浅色，否则在深底上看不见 ---- */
+html[data-theme="dark"] .social-hover-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="dark"] .social-hover-icon--github,
+html[data-theme="dark"] .social-hover-icon--x {
+  color: #f0f0f0;
+}
+
+html[data-theme="dark"] .social-hover-icon--bilibili { color: #FB7299; }
+html[data-theme="dark"] .social-hover-icon--zhihu    { color: #4FA8FF; }
+
+/* ---- 系统暗色（未手动切亮色时同样生效） ---- */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .social-hover-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  html:not([data-theme="light"]) .social-hover-icon--github,
+  html:not([data-theme="light"]) .social-hover-icon--x {
+    color: #f0f0f0;
+  }
+
+  html:not([data-theme="light"]) .social-hover-icon--bilibili { color: #FB7299; }
+  html:not([data-theme="light"]) .social-hover-icon--zhihu    { color: #4FA8FF; }
+}
+
+/* ---- 手动切亮色：强制回到亮色默认态（压过系统暗色） ---- */
+html[data-theme="light"] .social-hover-card {
+  background: rgba(255, 255, 255, 0.596);
+  border-color: transparent;
+}
+
+html[data-theme="light"] .social-hover-icon--github { color: #181717; }
+html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
 
 /* 暗色模式适配 */
 @media (prefers-color-scheme: dark) {
-  .daily-quote {
+  .social-hover-quote {
     color: #bbb !important;
   }
 }
@@ -787,7 +960,7 @@ html[data-theme="dark"] h6 {
 html[data-theme="dark"] a { color: rgb(62, 183, 240) !important; }
 html[data-theme="dark"] strong { color: #eeeff0 !important; }
 html[data-theme="dark"] autocolor { color: #dadbdf !important; }
-html[data-theme="dark"] .daily-quote { color: #bbb !important; }
+html[data-theme="dark"] .social-hover-quote { color: #bbb !important; }
 html[data-theme="dark"] .giscus-container { border-top-color: #34363f !important; }
 html[data-theme="dark"] .homepage-guestbook h2 { border-bottom-color: #34363f !important; }
 html[data-theme="dark"] .note-nav {
@@ -815,7 +988,7 @@ html[data-theme="light"] h6 {
 html[data-theme="light"] a { color: #39c !important; }
 html[data-theme="light"] strong { color: #222 !important; }
 html[data-theme="light"] autocolor { color: #595959 !important; }
-html[data-theme="light"] .daily-quote { color: #555 !important; }
+html[data-theme="light"] .social-hover-quote { color: #555 !important; }
 html[data-theme="light"] .giscus-container { border-top-color: #eaeaea !important; }
 html[data-theme="light"] .homepage-guestbook h2 { border-bottom-color: #eaeaea !important; }
 html[data-theme="light"] .note-nav {

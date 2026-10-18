@@ -76,10 +76,125 @@
   text-overflow: ellipsis;
 }
 
-.note-nav-back {
-  font-size: 0.9rem;
-  white-space: nowrap;
-  flex: 0 0 auto;
+/* ------------------- 顶部导航栏「返回主页」按钮（From Uiverse.io by cssbuttons-io） -------------------
+   原代码用的是全局 button { ... } 以及 .circle / .icon / .arrow / .button-text 这类极通用的选择器，
+   直接复制会污染全站（例如 Giscus 评论区里的按钮会全部错乱）。
+   这里统一改成 .btn-return-* 前缀，作用域完全限制在本组件内。
+   ------------------------------------------------------------------------------------------------ */
+
+.btn-return-home-wrapper {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn-return-home {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  width: 9rem;
+  height: auto;
+}
+
+.btn-return-home .btn-return-circle {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 2.4rem;
+  height: 2.4rem;
+  background: #282936;
+  border-radius: 1.625rem;
+}
+
+.btn-return-home .btn-return-circle .btn-return-icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+}
+
+.btn-return-home .btn-return-circle .btn-return-icon.btn-return-arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.5rem;
+  width: 0.95rem;
+  height: 0.1rem;
+  background: none;
+}
+
+.btn-return-home .btn-return-circle .btn-return-icon.btn-return-arrow::before {
+  position: absolute;
+  content: "";
+  top: -0.2rem;
+  right: 0.0625rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-top: 0.1rem solid #fff;
+  border-right: 0.1rem solid #fff;
+  transform: rotate(45deg);
+}
+
+.btn-return-home .btn-return-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.6rem 0;
+  margin: 0 0 0 1.5rem;
+  color: #282936;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.btn-return-home:hover .btn-return-circle {
+  width: 100%;
+}
+
+.btn-return-home:hover .btn-return-circle .btn-return-icon.btn-return-arrow {
+  background: #fff;
+  transform: translate(0.8rem, 0);
+}
+
+.btn-return-home:hover .btn-return-text {
+  color: #fff;
+}
+
+/* 暗色：圆底调亮一档、文字改浅色，悬停后文字仍为白色 */
+html[data-theme="dark"] .btn-return-home .btn-return-circle {
+  background: #45475a;
+}
+
+html[data-theme="dark"] .btn-return-home .btn-return-text {
+  color: #dadbdf;
+}
+
+html[data-theme="dark"] .btn-return-home:hover .btn-return-text {
+  color: #ffffff;
+}
+
+/* 系统暗色（未手动切亮色） */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .btn-return-home .btn-return-circle {
+    background: #45475a;
+  }
+
+  html:not([data-theme="light"]) .btn-return-home .btn-return-text {
+    color: #dadbdf;
+  }
 }
 
 /* 正文阅读区：水平居中，宽度 860px（落在 800~900px 区间） */
