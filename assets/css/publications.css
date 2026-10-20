@@ -347,21 +347,23 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   }
 }
 
-/* ------------------- 主页顶部横条（承载日夜开关，随页面滚动） ------------------- */
+/* ------------------- 主页日夜开关容器（绝对定位到页面右上角） ------------------- */
 
 .page-topbar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 960px;              /* 与主题 .wrapper 同宽，右边缘对齐内容区 */
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 16px 20px 0;
+  /* 用 absolute 而不是 fixed：它仍属于文档流的一部分，
+     页面向下滚动时跟着一起滚走，不会固定在屏幕上。
+     参照物是 body（body 没有 position 时则相对初始包含块），
+     所以 right: 20px 贴的就是屏幕最右边。 */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
 }
 
+/* 移动端：主页隐藏日夜开关（手机屏幕窄，避免遮挡内容） */
 @media screen and (max-width: 768px) {
   .page-topbar {
-    padding: 12px 16px 0;
+    display: none !important;
   }
 }
 

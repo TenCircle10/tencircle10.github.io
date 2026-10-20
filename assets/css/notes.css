@@ -425,3 +425,37 @@ html[data-theme="light"] .back-to-top {
   --btt-hover-bg: #39c;
   --btt-hover-fg: #ffffff;
 }
+
+/* ==========================================================================
+   移动端（≤768px）：顶部导航栏只保留「头像 + 昵称」和「返回主页」
+   中间的笔记标题、日夜切换开关全部隐藏，两端对齐不折行
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  /* 隐藏日夜切换开关及其容器（开关样式定义在 publications.css） */
+  .theme-switch,
+  .note-topbar {
+    display: none !important;
+  }
+
+  /* 隐藏中间的笔记标题 */
+  .note-nav-title {
+    display: none !important;
+  }
+
+  /* 只剩左右两块：强制两端对齐、禁止折行 */
+  .note-nav {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .note-nav-left,
+  .note-nav-right {
+    flex: 0 0 auto;
+  }
+
+  /* 开关已隐藏，不再需要给"返回主页"留避让空间 */
+  .note-nav-right {
+    padding-right: 0;
+    margin-left: auto;
+  }
+}
