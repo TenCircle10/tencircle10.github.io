@@ -887,12 +887,17 @@ def convert_document(
 
     # 流水线顺序（保护优先，替换其次）：
     #   1. 代码块（含 dataview / mermaid）抽成占位符 —— 最高优先级
-    #   2. 数学公式抽成占位符（行内公式在抽取时同时完成全量转义）
-    #   3. 其余 Obsidian / Markdown 语法都在占位符之外处理
-    #   4. 还原公式 -> 压缩空行 -> 还原代码块
+    #   2. Callout 转换要在数学抽取【之前】：
+    #      protect_math 靠"$$ 是否顶格独占一行"来判断块级公式，
+    #      而 callout 里的公式原文是 "> $$A=B$$"，行首有 ">" 会被误判成行内公式，
+    #      导致块级公式不补前后换行、kramdown 无法识别成 math block。
+    #      先转 callout，把 "> " 去掉，$$ 顶格之后判断才准确。
+    #   3. 数学公式抽成占位符（行内公式在抽取时同时完成全量转义）
+    #   4. 其余 Obsidian / Markdown 语法都在占位符之外处理
+    #   5. 还原公式 -> 压缩空行 -> 还原代码块
     body, code_blocks, mermaid_blocks = protect_code_blocks(body, counts)
-    body, formulas = protect_math(body, counts)
     body = convert_callouts(body, counts)
+    body, formulas = protect_math(body, counts)
     body = strip_obsidian_comments(body, counts)
     body = convert_highlights(body, counts)
     body = convert_embeds(body, counts)

@@ -125,7 +125,9 @@ $$A \times B = \{(x, y) \mid x \in A,\ y \in B\}$$
 <div class="callout-content" markdown="block">
 
 若无限集 $A$ 的元素能按某种规律排成一个序列，即
+
 $$A = \{a_1, a_2, \dots, a_n, \dots\}$$
+
 则称 $A$ 为**可列集**（可数无限集）。
 
 </div>
@@ -231,6 +233,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 <div class="callout-content" markdown="block">
 
 若 $[a\_{n+1}, b\_{n+1}] \subset [a\_n, b\_n]$（$n = 1, 2, \dots$）且 $\lim\limits\_{n \to \infty} (b\_n - a\_n) = 0$，则存在**唯一**的 $c \in \mathbb{R}$ 属于所有 $[a\_n, b\_n]$，且
+
 $$\lim_{n \to \infty} a_n = \lim_{n \to \infty} b_n = c$$
 
 </div>
@@ -306,7 +309,9 @@ $\lim\limits\_{n \to \infty} a\_n = l \iff$ 对 $l$ 的任意 $\varepsilon$ 邻�
 - 反过来，满足这个条件的数列可以完全不收敛（条件不充分）。连无界数列 $n$ 都满足它：取 $l = 1$、$\varepsilon = 1$，则 $n \gt  2$ 的项全在邻域外。
 
 **反例**：$a\_n = (-1)^{n} + \dfrac{1}{n}$，取 $l = 1$，$\varepsilon = \dfrac{1}{2}$。奇数项
+
 $$a_{2n-1} = -1 + \frac{1}{2n-1} \le 1 - \frac{1}{2}$$
+
 全部落在邻域外，有无穷多项；但这个数列根本不收敛：
 
 - $a\_{2n} = 1 + \dfrac{1}{2n} \to 1$；
@@ -322,6 +327,7 @@ $$a_{2n-1} = -1 + \frac{1}{2n-1} \le 1 - \frac{1}{2}$$
 <div class="callout-content" markdown="block">
 
 $$\exists \varepsilon > 0,\ \forall N \in \mathbb{N},\ \exists n > N,\ |a_n - A| \ge \varepsilon$$
+
 判断"不收敛"时不要拿 $(-1)^{n}/n$ 当反例 —— 它是**收敛**的（趋于 $0$）。
 
 </div>
@@ -349,6 +355,7 @@ $$\left| \frac{1}{n} - 0 \right| = \frac{1}{n} < \varepsilon$$
 <div class="callout-content" markdown="block">
 
 $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 1\ (k > 0), \qquad \lim_{n \to \infty} \frac{n^{k}}{2^{n}} = 0$$
+
 直观：$n$ 次根会把幂次压平，而指数增长压过任何多项式。
 
 **思考**：若 $\lim\limits\_{n \to \infty} a\_n = a$，则 $\lim\limits\_{n \to \infty} \dfrac{a\_1 + a\_2 + \cdots + a\_n}{n} = a$ —— 算术平均也收敛到同一个值（注意外层必须写 $\lim$，否则左边是个随 $n$ 变化的量，不能等于常数 $a$）。
@@ -379,9 +386,13 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 设 $\\{a\_n\\}, \\{b\_n\\}$ 收敛，极限分别为 $A, B$。若 $A \gt  B$，则存在 $N$，当 $n \gt  N$ 时 $a\_n \gt  b\_n$。
 
 **证**：取 $\varepsilon = \dfrac{A - B}{2} \gt  0$。由 $a\_n \to A$，存在 $N\_1$，当 $n \gt  N\_1$ 时
+
 $$|a_n - A| < \varepsilon \ \Rightarrow\ a_n > A - \varepsilon = \frac{A + B}{2}$$
+
 由 $b\_n \to B$，存在 $N\_2$，当 $n \gt  N\_2$ 时
+
 $$|b_n - B| < \varepsilon \ \Rightarrow\ b_n < B + \varepsilon = \frac{A + B}{2}$$
+
 取 $N = \max\\{N\_1, N\_2\\}$，当 $n \gt  N$ 时 $b\_n \lt  \dfrac{A+B}{2} \lt  a\_n$，得证。
 
 </div>
@@ -420,7 +431,9 @@ $\lim a\_n = a$ 与 $\lim b\_n = b$ **都存在**时才能拆开运算，而且�
 - $\lim\limits\_{n \to \infty} (k\_1 a\_n + k\_2 b\_n) = k\_1 a + k\_2 b$（线性组合）
 - $\lim\limits\_{n \to \infty} a\_n^{k} = a^{k}$（$k \in \mathbb{N}^{\*}$）
 - $\lim\limits\_{n \to \infty} f(a\_n) = f(a)$，其中 $f$ 为多项式函数（即 $f$ 在 $a$ 处连续）
+
 $$f(x) = b_m x^{m} + b_{m-1} x^{m-1} + \cdots + b_1 x + b_0$$
+
 做法：构造一个新序列 $f(a\_n)$，逐项用四则运算推。
 
 </div>
@@ -438,6 +451,7 @@ $$f(x) = b_m x^{m} + b_{m-1} x^{m-1} + \cdots + b_1 x + b_0$$
 
 - $a = 0$：由 $a\_n \to 0$，$\forall \varepsilon \gt  0$，当 $n$ 充分大时 $0 \le a\_n \lt  \varepsilon^{2}$，于是 $\sqrt{a\_n} \lt  \varepsilon$。
 - $a \gt  0$：$n$ 充分大时 $a\_n \gt  \dfrac{a}{2} \gt  0$，且
+
 $$|\sqrt{a_n} - \sqrt{a}| = \frac{|a_n - a|}{\sqrt{a_n} + \sqrt{a}} \le \frac{|a_n - a|}{\sqrt{a}} \to 0$$
 
 （常见错误：把取完极限的分母提前代入，写成 $\dfrac{0 \cdot \mid a\_n - a\mid }{2\sqrt a}$。正确做法是保留上界 $\dfrac{\mid a\_n - a\mid }{\sqrt a}$，再由 $a\_n \to a$ 得到结论。）
@@ -481,6 +495,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 <div class="callout-content" markdown="block">
 
 单调且有界的数列必有极限。具体地，$\\{x\_n\\}$ 单调增且有上界时
+
 $$\lim_{n \to \infty} x_n = \sup\{x_n\}$$
 
 </div>
@@ -525,7 +540,9 @@ $$a - \varepsilon < x_N \le x_n \le a < a + \varepsilon$$
 
 (1) $0 \lt  x\_{n+1} \lt  x\_n \lt  1$（因 $0 \lt  1 - x\_n \lt  1$），单调减且有下界 $0$，故收敛；设极限为 $a$，则 $a = a(1 - a) \Rightarrow a = 0$。
 (2) 记 $y\_n = \dfrac{1}{x\_n}$，则 $y\_{n+1} = \dfrac{y\_n}{1 - x\_n}$，于是
+
 $$y_{n+1} - y_n = \frac{1}{x_n}\left(\frac{1}{1 - x_n} - 1\right) = \frac{1}{1 - x_n} \longrightarrow 1$$
+
 由 [Stolz 定理](#stolz)，$\dfrac{y\_n}{n} \to 1$，即 $n x\_n \to 1$。
 
 </div>
@@ -547,6 +564,7 @@ $$y_{n+1} - y_n = \frac{1}{x_n}\left(\frac{1}{1 - x_n} - 1\right) = \frac{1}{1 -
 <div class="callout-content" markdown="block">
 
 $$\begin{cases} \lim\limits_{n \to \infty} a_{2n} = A \\[4pt] \lim\limits_{n \to \infty} a_{2n-1} = A \end{cases} \Longrightarrow \lim_{n \to \infty} a_n = A$$
+
 推广：若对 $r = 0, 1, \dots, p-1$ 都有 $\lim\limits\_{n \to \infty} a\_{pn+r} = A$，则 $\lim\limits\_{n \to \infty} a\_n = A$（即按模 $p$ 的完全剩余系分类）。
 
 </div>
@@ -561,7 +579,9 @@ $$\begin{cases} \lim\limits_{n \to \infty} a_{2n} = A \\[4pt] \lim\limits_{n \to
 <div class="callout-content" markdown="block">
 
 设 $\\{y\_n\\}$ 严格单调递增且 $\lim\limits\_{n \to \infty} y\_n = +\infty$。若
+
 $$\lim_{n \to \infty} \frac{x_n - x_{n-1}}{y_n - y_{n-1}} = a$$
+
 则 $\lim\limits\_{n \to \infty} \dfrac{x\_n}{y\_n} = a$。其中 $a$ 可以是有限数，也可以是 $+\infty$ 或 $-\infty$。
 
 </div>
@@ -575,6 +595,7 @@ $$\lim_{n \to \infty} \frac{x_n - x_{n-1}}{y_n - y_{n-1}} = a$$
 <div class="callout-content" markdown="block">
 
 $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty} \frac{(n+1)^{k}}{(n+1)^{k+1} - n^{k+1}} = \frac{1}{k+1}$$
+
 因为分母 $(n+1)^{k+1} - n^{k+1} \sim (k+1)n^{k}$。
 
 </div>
@@ -615,6 +636,7 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 <div class="callout-content" markdown="block">
 
 序列 $\left(1 + \dfrac{1}{n}\right)^{n}$ 单调递增且有上界，故收敛，记
+
 $$\lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^{n} = e$$
 
 </div>
@@ -654,6 +676,7 @@ $$\left(1 + \frac{1}{n}\right)^{n} < 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdot
 <div class="callout-content" markdown="block">
 
 $$\left(1 + \frac{1}{n}\right)^{n} < e < \left(1 + \frac{1}{n}\right)^{n+1}$$
+
 $n$ 越大，所得的界越精确。
 
 </div>
@@ -706,9 +729,13 @@ $$e = \lim_{n \to \infty}\left(1 + 1 + \sum_{i=2}^{n} \frac{1}{i!}\left(1 - \fra
 <div class="callout-content" markdown="block">
 
 **证（反证）**：设 $e = \dfrac{p}{q}$，$p, q \in \mathbb{N}$ 且互质。由 [ SYNC\_MATH\_446  的级数表示](#e-series)，
+
 $$e \cdot q! = \underbrace{\left(1 + 1 + \frac{1}{2!} + \cdots + \frac{1}{q!}\right)q!}_{\text{整数}} + \underbrace{\lim_{n \to \infty}\left[\frac{1}{(q+1)!} + \frac{1}{(q+2)!} + \cdots + \frac{1}{(q+n)!}\right]}_{\text{记为 } r}$$
+
 左边 $e\,q! = p\,(q-1)!$ 是整数，前一项也是整数，所以 $r$ 必须是整数。但
+
 $$0 < r < \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\right)^{2} + \cdots + \left(\frac{1}{q+1}\right)^{n}\right] \le \frac{1}{q}$$
+
 又 $e \in (2, 3)$ 不是整数，故 $q \ge 2$，从而 $0 \lt  r \lt  \dfrac{1}{q} \le \dfrac{1}{2} \lt  1$，与"$r$ 是整数"矛盾。
 
 故假设不成立，$e$ 为无理数。
@@ -790,6 +817,7 @@ $$\operatorname{sh} x = \frac{e^{x} - e^{-x}}{2}, \qquad \operatorname{ch} x = \
 <div class="callout-content" markdown="block">
 
 $$(x_0 - \delta, x_0 + \delta) \setminus \{x_0\} = (x_0 - \delta, x_0) \cup (x_0, x_0 + \delta)$$
+
 简记为 $U^{\circ}(x\_0, \delta)$ 或 $U^{\circ}(x\_0)$。
 
 </div>
@@ -854,6 +882,7 @@ $$\lim_{x \to a} f(x) = L \iff \lim_{x \to a} (f(x) - L) = 0$$
 - **保号性**：$\lim\limits\_{x \to a} f(x) = A \gt  B$，取 $\varepsilon = A - B$，则存在 $\delta$，当 $x \in U^{\circ}(a, \delta)$ 时 $\mid f(x) - A\mid  \lt  A - B$，故 $f(x) \gt  B$。
 - **保序性**：在 $U^{\circ}(a, \delta)$ 上 $f(x) \ge g(x)$，若 $f \to A,\ g \to B$，则 $A \ge B$。
 - **四则运算**：各自极限存在时才可拆开，且 $B \neq 0$ 时
+
 $$\lim_{x \to a}(f \pm g) = A \pm B,\quad \lim_{x \to a}(f g) = AB,\quad \lim_{x \to a}\frac{f}{g} = \frac{A}{B}$$
 
 </div>
@@ -875,8 +904,11 @@ $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^
 先用 $\delta$ 把 $x$ 限制在一个范围内，把"含 $x$ 的因子"放大成常数，再让剩下的部分 $\lt  \varepsilon$。
 
 先限定 $\mid x - 2\mid  \lt  1$，则 $\mid x + 2\mid  \lt  5$，于是
+
 $$|x^{2} - 4| = |x - 2|\,|x + 2| < 5|x - 2|$$
+
 要让它 $\lt  \varepsilon$，只需 $\mid x - 2\mid  \lt  \dfrac{\varepsilon}{5}$。故取
+
 $$\delta = \min\left\{1, \frac{\varepsilon}{5}\right\}$$
 
 记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
@@ -930,7 +962,9 @@ $f$ 在 $(a - \delta, a + \delta)$ 内单调有界，$\lim\limits\_{x \to a} f(x
 <div class="callout-content" markdown="block">
 
 设 $\lim\limits\_{x \to x\_0} g(x) = u\_0$，在 $x\_0$ 的某去心邻域内 $g(x) \neq u\_0$，且 $\lim\limits\_{u \to u\_0} f(u) = A$，则
+
 $$\lim_{x \to x_0} f\big(g(x)\big) = A$$
+
 若 $g(x) \equiv u\_0$，相当于只求 $f(u\_0)$，但极限的本质是去心邻域，此时不能直接代入。
 
 </div>
@@ -947,6 +981,7 @@ $$\lim_{x \to x_0} f\big(g(x)\big) = A$$
 <div class="callout-content" markdown="block">
 
 $$\lim_{x \to 0} \frac{\sin x}{x} = 1 \iff \lim_{x \to 0^{-}}\frac{\sin x}{x} = \lim_{x \to 0^{+}}\frac{\sin x}{x} = 1, \qquad \lim_{x \to \infty}\left(1 + \frac{1}{x}\right)^{x} = e$$
+
 第二个就是数列 $e = \lim\limits\_{n \to \infty}\left(1+\frac{1}{n}\right)^{n}$（见 [e 的定义](#e-definition)）的函数版。
 
 </div>
@@ -961,7 +996,9 @@ $$\lim_{x \to 0} \frac{\sin x}{x} = 1 \iff \lim_{x \to 0^{-}}\frac{\sin x}{x} = 
 <div class="callout-content" markdown="block">
 
 用 $\ln(1 + x) \lt  x$ 与 $\ln(1 + t) = 2\ln\sqrt{1+t} \lt  2(\sqrt{1+t} - 1)$：
+
 $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t} + 1} \to 0$$
+
 所以 $e^{0} = 1$。
 
 </div>
@@ -1028,6 +1065,7 @@ $$f(\xi) = \lim_{k \to \infty} f(x_{n_k}) = m$$
 <div class="callout-content" markdown="block">
 
 设存在小邻域使 $\beta(x) \neq 0$，则
+
 $$\alpha(x) \sim \beta(x) \iff \alpha(x) = \beta(x) + o(\beta(x))$$
 
 </div>
@@ -1040,7 +1078,9 @@ $$\alpha(x) \sim \beta(x) \iff \alpha(x) = \beta(x) + o(\beta(x))$$
 <div class="callout-content" markdown="block">
 
 $$\sin x \sim x \sim \tan x \sim \arcsin x \sim \arctan x \sim e^{x} - 1 \sim \ln(1 + x)$$
+
 $$1 - \cos x \sim \frac{1}{2}x^{2}, \qquad (1 + x)^{a} - 1 \sim ax\ (a \neq 0)$$
+
 $$a^{x} - 1 \sim x\ln a\ (a > 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \frac{x}{\ln a}, \qquad \ln\!\left(x + \sqrt{1 + x^{2}}\right) \sim x$$
 
 </div>
@@ -1097,8 +1137,11 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 <div class="callout-content" markdown="block">
 
 $$\lim_{n \to \infty} \frac{(n!)^{\alpha}}{n^{n}} = +\infty$$
+
 看相邻两项之比：
+
 $$\frac{\frac{((n+1)!)^{\alpha}}{(n+1)^{n+1}}}{\frac{(n!)^{\alpha}}{n^{n}}} = \frac{(n+1)^{\alpha-1}}{\left(1 + \frac{1}{n}\right)^{n}} \to \frac{(n+1)^{\alpha-1}}{e} \to +\infty$$
+
 比值趋于 $+\infty$，故数列本身趋于 $+\infty$（$\alpha \gt  1$ 时分子是 $n$ 的正幂次，压过常数 $e$）。
 
 </div>
@@ -1109,9 +1152,13 @@ $$\frac{\frac{((n+1)!)^{\alpha}}{(n+1)^{n+1}}}{\frac{(n!)^{\alpha}}{n^{n}}} = \f
 <div class="callout-content" markdown="block">
 
 此时 $(n!)^{\alpha} \le n!$（因 $n! \ge 1$），故
+
 $$0 \le \frac{(n!)^{\alpha}}{n^{n}} \le \frac{n!}{n^{n}}$$
+
 其中 $\dfrac{n!}{n^{n}} = \displaystyle\prod\_{k=1}^{n}\frac{k}{n}$，用**配对放缩**：把 $\frac{k}{n}$ 与 $\frac{n-k}{n}$ 配成一对，
+
 $$\frac{k}{n}\cdot\frac{n-k}{n} = \frac{k(n-k)}{n^{2}} \le \frac{1}{4}$$
+
 所以 $\dfrac{n!}{n^{n}} \le \left(\dfrac{1}{4}\right)^{\lfloor n/2 \rfloor}$（$n$ 为奇数时中间那个因子 $\le 1$，可以丢掉）。
 由 [夹逼定理](#squeeze) 与非负性，$\lim\limits\_{n \to \infty} \dfrac{(n!)^{\alpha}}{n^{n}} = 0$。
 

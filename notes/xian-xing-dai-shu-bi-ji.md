@@ -23,9 +23,13 @@ render_with_liquid: false
 <div class="callout-content" markdown="block">
 
 ① **线性过程：先图式化，暂时抛弃形式化**，走"形象 $\to$ 抽象 $\to$ 结构"的路：
+
 $$\text{形象} \longrightarrow \text{抽象} \longrightarrow \text{结构}$$
+
 但最后要两条腿走路：
+
 $$\begin{cases}\text{严格：写得出证明}\\[2pt] \text{直观：画得出图式}\end{cases}$$
+
 ② **独立解题时卡壳，是在做跳跃**；以慢为快。
 
 </div>
@@ -143,22 +147,21 @@ $$C_{ij} = \sum_{k=1}^{p} a_{ik} b_{kj}, \qquad A_{m \times p} \, B_{p \times n}
 
 也就是说：$A$ 的第 $i$ 行 $\times$ $B$ 的第 $j$ 列 $\Rightarrow C\_{ij}$。
 
-<details class="callout example" data-callout="example" open>
+<details class="callout example" id="matrix-multiply" data-callout="example" open>
 <summary class="callout-title">手算一遍</summary>
 <div class="callout-content" markdown="block">
 
+$$
+\begin{bmatrix} 3 & 2 \\ -2 & 1 \\ 0 & 1 \end{bmatrix}
+\begin{bmatrix} 1 & 2 & 3 & 1 \\ 2 & 4 & 1 & 3 \end{bmatrix}
+=
+\begin{bmatrix} 7 & 14 & 11 & 9 \\ 0 & 0 & -5 & 1 \\ 2 & 4 & 1 & 3 \end{bmatrix}
+$$
+
+口诀：**对乘**（行对列逐位相乘）、**中间消，看两头**（求和指标 $k$ 被消掉，剩下的 $i, j$ 就是结果的指标）。
+
 </div>
 </details>
-
-$$
-> \begin{bmatrix} 3 & 2 \\ -2 & 1 \\ 0 & 1 \end{bmatrix}
-> \begin{bmatrix} 1 & 2 & 3 & 1 \\ 2 & 4 & 1 & 3 \end{bmatrix}
-> =
-> \begin{bmatrix} 7 & 14 & 11 & 9 \\ 0 & 0 & -5 & 1 \\ 2 & 4 & 1 & 3 \end{bmatrix}
-> $$
-
-> 口诀：**对乘**（行对列逐位相乘）、**中间消，看两头**（求和指标 $k$ 被消掉，剩下的 $i, j$ 就是结果的指标）。
-<a id="matrix-multiply"></a>
 
 #### 2.2.1 结合律 $(AB)C = A(BC)$
 
@@ -167,6 +170,7 @@ $$
 <div class="callout-content" markdown="block">
 
 设 $A\_{m \times p},\ B\_{p \times q},\ C\_{q \times n}$，则
+
 $$(AB)C = A(BC)$$
 
 </div>
@@ -221,27 +225,25 @@ $$
 - 特例：数量矩阵与任何矩阵可交换，$kI \cdot A = kA = A \cdot kI$，$kIA = kA$。
 - $A = B$ 只能推出"左乘同一矩阵"或"右乘同一矩阵"后仍相等，左右不能互换。
 
-<details class="callout example" data-callout="example" open>
+<details class="callout example" id="zero-divisor" data-callout="example" open>
 <summary class="callout-title">零因子：$A, B \neq O$ 却 $AB = O$</summary>
 <div class="callout-content" markdown="block">
 
+$$
+A = \begin{bmatrix} 1 & 0 \\ 1 & 0 \end{bmatrix}, \qquad
+B = \begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}
+$$
+
+甚至两个矩阵**都不含 $0$ 元素**也能乘出零矩阵，可见"零因子"与元素是否为 $0$ 无关：
+
+$$
+\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}
+\begin{bmatrix} 1 & -1 \\ -1 & 1 \end{bmatrix}
+= \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix}
+$$
+
 </div>
 </details>
-
-$$
-> A = \begin{bmatrix} 1 & 0 \\ 1 & 0 \end{bmatrix}, \qquad
-> B = \begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}
-> $$
-
-> 甚至两个矩阵**都不含 $0$ 元素**也能乘出零矩阵，可见"零因子"与元素是否为 $0$ 无关：
-> 
-$$
-> \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}
-> \begin{bmatrix} 1 & -1 \\ -1 & 1 \end{bmatrix}
-> = \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix}
-> $$
-
-<a id="zero-divisor"></a>
 
 ### 2.4 转置
 
@@ -300,7 +302,9 @@ $$f(A) = a_n A^{n} + a_{n-1} A^{n-1} + \cdots + a_1 A + a_0 I$$
 <div class="callout-content" markdown="block">
 
 若 $A, B$ **同阶**且 $AB = BA$，则
+
 $$(A+B)^{n} = \sum_{k=0}^{n} C_n^{k} A^{k} B^{n-k}$$
+
 关键前提是**可交换**。否则 $(A+B)^{2} = A^{2} + AB + BA + B^{2} \neq A^{2} + 2AB + B^{2}$。
 
 </div>
@@ -374,23 +378,22 @@ $$AB = \begin{bmatrix} A_{1\cdot} B \\ A_{2\cdot} B \\ \vdots \\ A_{m\cdot} B \e
 - **按列**：$AB$ 的第 $j$ 列 $= A\, B\_{\cdot j}$。
 - 可乘条件：$A$ 的列数 $=$ $B$ 的行数。
 
-<details class="callout note" data-callout="note" open>
+<details class="callout note" id="matrix-equation" data-callout="note" open>
 <summary class="callout-title">线性方程组的矩阵写法</summary>
 <div class="callout-content" markdown="block">
 
+$$
+A = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ \vdots & \vdots & & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{bmatrix},
+\quad
+x = \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix},
+\quad
+b = \begin{bmatrix} b_1 \\ \vdots \\ b_m \end{bmatrix}
+$$
+
+则 $AX = b$ 就是原来的 $m$ 个方程。$A$ 称**系数矩阵**；注意 $b$ 的行数必须与 $A$ 的行数同为 $m$（不是 $n$）。
+
 </div>
 </details>
-
-$$
-> A = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ \vdots & \vdots & & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{bmatrix},
-> \quad
-> x = \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix},
-> \quad
-> b = \begin{bmatrix} b_1 \\ \vdots \\ b_m \end{bmatrix}
-> $$
-
-> 则 $AX = b$ 就是原来的 $m$ 个方程。$A$ 称**系数矩阵**；注意 $b$ 的行数必须与 $A$ 的行数同为 $m$（不是 $n$）。
-<a id="matrix-equation"></a>
 
 ---
 
@@ -491,6 +494,7 @@ $$
 <div class="callout-content" markdown="block">
 
 $$r(AB) \le \min\{r(A),\, r(B)\}$$
+
 矩阵乘法不增加信息，只可能减少信息。
 
 </div>
@@ -498,38 +502,37 @@ $$r(AB) \le \min\{r(A),\, r(B)\}$$
 
 ### 5.5 转置不变秩与相抵标准形
 
-<details class="callout note" data-callout="note" open>
+<details class="callout note" id="canonical-form" data-callout="note" open>
 <summary class="callout-title">相抵标准形</summary>
 <div class="callout-content" markdown="block">
 
 任何 $m \times n$ 矩阵 $A$ 都可经初等变换化为
 
+$$
+\begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{m \times n}, \qquad r = r(A)
+$$
+
+称为 $A$ 的**相抵（等价）标准形**。它被 $r(A)$ **唯一确定**，于是
+
+$$A_{m \times n} \cong B_{m \times n} \iff r(A) = r(B)$$
+
 </div>
 </details>
 
-$$
-> \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{m \times n}, \qquad r = r(A)
-> $$
-
-> 称为 $A$ 的**相抵（等价）标准形**。它被 $r(A)$ **唯一确定**，于是
-> $$A_{m \times n} \cong B_{m \times n} \iff r(A) = r(B)$$
-<a id="canonical-form"></a>
-
-<details class="callout theorem" data-callout="theorem" open>
+<details class="callout theorem" id="rank-transpose" data-callout="theorem" open>
 <summary class="callout-title">$r(A) = r(A^{T})$</summary>
 <div class="callout-content" markdown="block">
 
 设 $P\_s \cdots P\_1 A Q\_1 \cdots Q\_t = \begin{bmatrix} I\_r \& O \\ O \& O \end{bmatrix}\_{m \times n}$，两边转置得
 
+$$
+Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{n \times m}
+$$
+
+左边是"可逆矩阵乘 $A^{T}$ 再乘可逆矩阵"，不改变秩；右边的秩为 $r$，故 $r(A^{T}) = r(A) = r$。
+
 </div>
 </details>
-
-$$
-> Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{n \times m}
-> $$
-
-> 左边是"可逆矩阵乘 $A^{T}$ 再乘可逆矩阵"，不改变秩；右边的秩为 $r$，故 $r(A^{T}) = r(A) = r$。
-<a id="rank-transpose"></a>
 
 ---
 
@@ -651,11 +654,15 @@ $[A \mid I] \to [I \mid A^{-1}]$ 是**初等行变换法**；**伴随矩阵法**
 <div class="callout-content" markdown="block">
 
 设 $AX = A + 2X$，证明 $A - 2I$ 可逆并写出 $(A - 2I)^{-1}$，其中
+
 $$A = \begin{bmatrix} 4 & 2 & 3 \\ 1 & 1 & 0 \\ -1 & 2 & 3 \end{bmatrix}$$
 
 **移项**：$AX - 2X = A$，即 $(A - 2I)X = A$，进而
+
 $$(A - 2I)(X - I) = AX - A - 2X + 2I = A - A + 2I = 2I$$
+
 所以 $(A - 2I) \cdot \frac{1}{2}(X - I) = I$，由 [满秩与可逆](#full-rank-invertible) 得
+
 $$\frac{1}{2}(X - I) = (A - 2I)^{-1}$$
 
 **直接验证**：$A - 2I = \begin{bmatrix} 2 \& 2 \& 3 \\ 1 \& -1 \& 0 \\ -1 \& 2 \& 1 \end{bmatrix}$，
