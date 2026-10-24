@@ -58,7 +58,7 @@ $$
 
 ### 1.2 解方程组的通法
 
-<details class="callout key point" id="solve-procedure" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" id="solve-procedure" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">消元 $\to$ 阶梯形 $\to$ 回代</summary>
 <div class="callout-content" markdown="block">
 
@@ -486,7 +486,7 @@ $$
 
 由 $(\ast)$ 得 $r(AQP) \le r(AQ) \le r(A)$；取 $P = Q^{-1}$ 又得 $r(A) \le r(AQ) \le r(A)$，故 $r(AQ) = r(A)$。
 
-<details class="callout key point" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">推论</summary>
 <div class="callout-content" markdown="block">
 
@@ -556,7 +556,7 @@ $$
 - 一次初等**列**变换 $=$ 右乘相应的 $n$ 阶初等矩阵；
 - 口诀：**左行右列** —— 左乘做行变换，右乘做列变换。注意分清两件事：初等矩阵"改动的那个位置"由变换本身决定，而"产生行变换还是列变换"才由左乘/右乘决定。
 
-<details class="callout key point" id="equivalence" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" id="equivalence" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">等价（相抵）关系</summary>
 <div class="callout-content" markdown="block">
 

@@ -111,9 +111,22 @@
 .callout[data-callout="motivation"] { border-left-color: #ec7500; background-color: rgba(236, 117, 0, 0.07); }
 .callout[data-callout="motivation"] .callout-title::before { content: "\f72b"; color: #ec7500; }
 
-/* key point 重点 —— lucide-key-round → fa-key */
+/* keypoint 重点 —— 图标是 Callout Studio 里的 tabler-outline / target-arrow
+   （插件 data.json 只存图标名，SVG 从这里内联；用 mask 着色，
+     background-color 跟随明暗切换。同时兼容旧的 "key point" 写法） */
+.callout[data-callout="keypoint"],
 .callout[data-callout="key point"] { border-left-color: #ff5722; background-color: rgba(255, 87, 34, 0.07); }
-.callout[data-callout="key point"] .callout-title::before { content: "\f084"; color: #ff5722; }
+
+.callout[data-callout="keypoint"] .callout-title::before,
+.callout[data-callout="key point"] .callout-title::before {
+  content: "";
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  background-color: #ff5722;
+  -webkit-mask: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci10YXJnZXQtYXJyb3ciPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIgLz48cGF0aCBkPSJNMTEgMTJhMSAxIDAgMSAwIDIgMGExIDEgMCAxIDAgLTIgMCIgLz48cGF0aCBkPSJNMTIgN2E1IDUgMCAxIDAgNSA1IiAvPjxwYXRoIGQ9Ik0xMyAzLjA1NWE5IDkgMCAxIDAgNy45NDEgNy45NDUiIC8+PHBhdGggZD0iTTE1IDZ2M2gzbDMgLTNoLTN2LTNsLTMgMyIgLz48cGF0aCBkPSJNMTUgOWwtMyAzIiAvPjwvc3ZnPg==") center / contain no-repeat;
+  mask: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci10YXJnZXQtYXJyb3ciPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIgLz48cGF0aCBkPSJNMTEgMTJhMSAxIDAgMSAwIDIgMGExIDEgMCAxIDAgLTIgMCIgLz48cGF0aCBkPSJNMTIgN2E1IDUgMCAxIDAgNSA1IiAvPjxwYXRoIGQ9Ik0xMyAzLjA1NWE5IDkgMCAxIDAgNy45NDEgNy45NDUiIC8+PHBhdGggZD0iTTE1IDZ2M2gzbDMgLTNoLTN2LTNsLTMgMyIgLz48cGF0aCBkPSJNMTUgOWwtMyAzIiAvPjwvc3ZnPg==") center / contain no-repeat;
+}
 
 /* context 背景 / 上下文 —— lucide-map-pin → fa-map-pin */
 .callout[data-callout="context"] { border-left-color: #00bfbc; background-color: rgba(0, 191, 188, 0.07); }
@@ -218,8 +231,11 @@
   .callout[data-callout="idea"] { border-left-color: #dce775; background-color: rgba(220, 231, 117, 0.14); }
   .callout[data-callout="idea"] .callout-title::before { color: #dce775; }
 
+  .callout[data-callout="keypoint"],
   .callout[data-callout="key point"] { border-left-color: #ff8a65; background-color: rgba(255, 138, 101, 0.15); }
-  .callout[data-callout="key point"] .callout-title::before { color: #ff8a65; }
+
+  .callout[data-callout="keypoint"] .callout-title::before,
+  .callout[data-callout="key point"] .callout-title::before { background-color: #ff8a65; }
 
   .callout[data-callout="abstract"] { border-left-color: #00bfa5; background-color: rgba(0, 191, 165, 0.15); }
   .callout[data-callout="abstract"] .callout-title::before { color: #00bfa5; }

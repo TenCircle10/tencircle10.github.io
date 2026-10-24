@@ -200,7 +200,7 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 - 有上界就必有**无限多个**上界（上界往上都还是上界）。
 - 上确界是把"所有上界"压到最紧的那一个；**它不一定属于 $E$**。
 
-<details class="callout key point" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">一句话理解（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
@@ -344,7 +344,7 @@ $$\exists \varepsilon > 0,\ \forall N \in \mathbb{N},\ \exists n > N,\ |a_n - A|
 
 $$\left| \frac{1}{n} - 0 \right| = \frac{1}{n} < \varepsilon$$
 
-<details class="callout key point" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">该记住的常见极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -542,7 +542,7 @@ $$y_{n+1} - y_n = \frac{1}{x_n}\left(\frac{1}{1 - x_n} - 1\right) = \frac{1}{1 -
 </div>
 </details>
 
-<details class="callout key point" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">更强的结论（用于"合并"）</summary>
 <div class="callout-content" markdown="block">
 
@@ -649,7 +649,7 @@ $$\left(1 + \frac{1}{n}\right)^{n} < 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdot
 
 ### 5.2 $e$ 的上下界
 
-<details class="callout key point" id="e-bounds" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" id="e-bounds" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">两侧夹住 $e$</summary>
 <div class="callout-content" markdown="block">
 
@@ -942,7 +942,7 @@ $$\lim_{x \to x_0} f\big(g(x)\big) = A$$
 
 ### 7.6 两个重要极限
 
-<details class="callout key point" id="important-limits" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" id="important-limits" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">基本款</summary>
 <div class="callout-content" markdown="block">
 
@@ -1035,7 +1035,7 @@ $$\alpha(x) \sim \beta(x) \iff \alpha(x) = \beta(x) + o(\beta(x))$$
 
 ### 9.2 常用等价无穷小（$x \to 0$）
 
-<details class="callout key point" id="equivalent-infinitesimals" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" id="equivalent-infinitesimals" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">背下来的一串</summary>
 <div class="callout-content" markdown="block">
 
@@ -1079,7 +1079,7 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 
 ### 10.2 放缩的经验
 
-<details class="callout key point" data-callout="key point" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
 <summary class="callout-title">三条（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
