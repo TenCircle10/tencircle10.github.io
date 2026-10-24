@@ -287,6 +287,20 @@ Obsidian 里写：  > [!theorem] 定理 1.0.1
 | 折叠箭头 | FA `\f078` / `\f054` | 纯 CSS 三角（`border` 实现） |
 | 新增类型成本 | 4~6 行 + 找 FA 对应字符码 | 2 行（颜色 + 图标） |
 
+**数学公式必须交给 MathJax 3，不能让 kramdown 处理**
+
+`_config.yml` 里 **`math_engine: ~`**（显式 null），这是 2026-10-24 修的一个坑：
+
+| 配置 | 结果 |
+|---|---|
+| `math_engine: mathjax`（kramdown 2.x 默认） | 把 `$$...$$` 转成 **MathJax 2** 的 `<script type="math/tex">` 标签 |
+| 站点实际加载 | **MathJax 3**（`tex-chtml.js`），不认那个标签 |
+| 症状 | 块级公式原样显示成 `$$...$$` 文本（里面的大于号 `>` 看起来像引用符号残留），或整块消失 |
+| 行内 `$...$` | **不受影响** —— kramdown 只认 `$$`，`$...$` 它不管，一直由 MathJax 3 处理，所以一直是好的 |
+| 修复后 `math_engine: ~` | `$$...$$` 原样保留在 HTML 里，MathJax 3 按 `displayMath` 渲染并居中 |
+
+已确认安全：全站 84 个单行 `$$...$$` + 19 个三行 `$$` 块中，**没有任何一个**包含会被 Markdown 误判的强调语法（`*word*` / `_word_`），所以关掉 kramdown 数学不会破坏公式里的下划线和星号。
+
 **核心 CSS 结构**
 
 ```css
