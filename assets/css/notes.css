@@ -259,13 +259,10 @@ mjx-container[display="true"] {
 
 /* ----------------------------- Obsidian Callout --------------------------- */
 
-/* 暗色模式下 callout 背景跟随主题，避免亮色块刺眼。
-   基础样式（边框颜色、图标）见 assets/css/obsidian-callouts.css。 */
-@media (prefers-color-scheme: dark) {
-  .callout {
-    background-color: #2a2b36;
-  }
-}
+/* 注意：这里曾经有一条 `@media (prefers-color-scheme: dark) { .callout { background-color: #2a2b36 } }`。
+   它会把所有类型的背景统一压成同一种深灰，抹掉每种 Callout 自己的淡色底。
+   现在背景由 obsidian-callouts.css 的 `--callout-color` + color-mix 派生，
+   暗色只是换一个 accent 色，所以这条旧规则已删除，不要再加回来。 */
 
 /* ------------------------------ 锚点跳转偏移 ------------------------------ */
 
