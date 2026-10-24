@@ -6,7 +6,7 @@ permalink: "/notes/real-irrational-uncountable/"
 render_with_liquid: false
 ---
 
-<details class="callout theorem" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" data-callout="theorem" open>
 <summary class="callout-title">Theorem</summary>
 <div class="callout-content" markdown="block">
 
@@ -15,7 +15,7 @@ render_with_liquid: false
 </div>
 </details>
 
-<details class="callout tip" data-callout="tip" markdown="block" open>
+<details class="callout tip" data-callout="tip" open>
 <summary class="callout-title">引理</summary>
 <div class="callout-content" markdown="block">
 

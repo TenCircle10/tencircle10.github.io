@@ -50,9 +50,12 @@ kramdown:
   math_engine: mathjax
   input: GFM
   hard_wrap: false
-  # 让 <details markdown="block"> / <div markdown="block"> 内部的 Markdown 正常解析
-  # （Obsidian Callout 转换出的结构依赖这个开关，否则 callout 内容会原样显示）
-  parse_block_html: true
+  # 注意：不要开 parse_block_html。
+  # 它会让所有 HTML 块内部都按 Markdown 解析，结果是 <details> 里的 <summary>、
+  # </div>、</details> 被当成普通文本输出 —— 标签直接暴露、details 无法闭合，
+  # 后面的 callout 会全部被吞进前一个 details（表现为"左侧边框一级套一级"）。
+  # 真正需要解析 Markdown 的只有 <div class="callout-content" markdown="block">，
+  # 那个 markdown 属性是独立机制，不需要 parse_block_html 也能生效。
   
 # The following files will be removed from the generated website.
 exclude:

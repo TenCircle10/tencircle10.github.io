@@ -8,7 +8,7 @@ render_with_liquid: false
 
 # 线性代数
 
-<details class="callout abstract" data-callout="abstract" markdown="block" open>
+<details class="callout abstract" data-callout="abstract" open>
 <summary class="callout-title">名字的含义</summary>
 <div class="callout-content" markdown="block">
 
@@ -18,7 +18,7 @@ render_with_liquid: false
 </div>
 </details>
 
-<details class="callout motivation" data-callout="motivation" markdown="block" open>
+<details class="callout motivation" data-callout="motivation" open>
 <summary class="callout-title">学习路线（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
@@ -46,7 +46,7 @@ a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = 0
 \end{cases}
 $$
 
-<details class="callout note" id="homogeneous-system" data-callout="note" markdown="block" open>
+<details class="callout note" id="homogeneous-system" data-callout="note" open>
 <summary class="callout-title">两类解</summary>
 <div class="callout-content" markdown="block">
 
@@ -58,7 +58,7 @@ $$
 
 ### 1.2 解方程组的通法
 
-<details class="callout keypoint" id="solve-procedure" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" id="solve-procedure" data-callout="keypoint" open>
 <summary class="callout-title">消元 $\to$ 阶梯形 $\to$ 回代</summary>
 <div class="callout-content" markdown="block">
 
@@ -78,7 +78,7 @@ $$
 
 ### 1.3 初等变换
 
-<details class="callout definition" id="elementary-ops" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="elementary-ops" data-callout="definition" open>
 <summary class="callout-title">初等变换（三种）</summary>
 <div class="callout-content" markdown="block">
 
@@ -93,7 +93,7 @@ $$
 
 初等变换是**可逆**的：每一种都能用同类的初等变换还原（倍乘用 $1/k$，倍加用 $-k$，对换再对换一次）。
 
-<details class="callout question" data-callout="question" markdown="block" open>
+<details class="callout question" data-callout="question" open>
 <summary class="callout-title">为什么倍乘不允许乘 $0$？</summary>
 <div class="callout-content" markdown="block">
 
@@ -116,7 +116,7 @@ $$
 
 同型矩阵对应元素相加，满足 $A + B = B + A$，并且
 
-<details class="callout note" data-callout="note" markdown="block" open>
+<details class="callout note" data-callout="note" open>
 <summary class="callout-title">为什么这里会出现"阿贝尔群"</summary>
 <div class="callout-content" markdown="block">
 
@@ -127,7 +127,7 @@ $$
 </div>
 </details>
 
-<details class="callout idea" data-callout="idea" markdown="block" open>
+<details class="callout idea" data-callout="idea" open>
 <summary class="callout-title">两个类比（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
@@ -143,7 +143,7 @@ $$C_{ij} = \sum_{k=1}^{p} a_{ik} b_{kj}, \qquad A_{m \times p} \, B_{p \times n}
 
 也就是说：$A$ 的第 $i$ 行 $\times$ $B$ 的第 $j$ 列 $\Rightarrow C\_{ij}$。
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">手算一遍</summary>
 <div class="callout-content" markdown="block">
 
@@ -162,7 +162,7 @@ $$
 
 #### 2.2.1 结合律 $(AB)C = A(BC)$
 
-<details class="callout theorem" id="associativity" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="associativity" data-callout="theorem" open>
 <summary class="callout-title">矩阵乘法满足结合律</summary>
 <div class="callout-content" markdown="block">
 
@@ -196,7 +196,7 @@ $$
 
 于是 $(AB)C = A(BC)$，结合律得证。
 
-<details class="callout warning" data-callout="warning" markdown="block" open>
+<details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">这里最容易写错的一步</summary>
 <div class="callout-content" markdown="block">
 
@@ -207,7 +207,7 @@ $$
 
 ### 2.3 矩阵乘法的代价：不可交换、不能消去、有零因子
 
-<details class="callout warning" data-callout="warning" markdown="block" open>
+<details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">三条"不能想当然"</summary>
 <div class="callout-content" markdown="block">
 
@@ -221,7 +221,7 @@ $$
 - 特例：数量矩阵与任何矩阵可交换，$kI \cdot A = kA = A \cdot kI$，$kIA = kA$。
 - $A = B$ 只能推出"左乘同一矩阵"或"右乘同一矩阵"后仍相等，左右不能互换。
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">零因子：$A, B \neq O$ 却 $AB = O$</summary>
 <div class="callout-content" markdown="block">
 
@@ -264,7 +264,7 @@ $$(AB^{T} + BA^{T})^{T} = B A^{T} + A B^{T} = AB^{T} + BA^{T}$$
 
 ### 2.5 单位矩阵、零矩阵、方阵的幂与多项式
 
-<details class="callout definition" data-callout="definition" markdown="block" open>
+<details class="callout definition" data-callout="definition" open>
 <summary class="callout-title">方阵与单位矩阵</summary>
 <div class="callout-content" markdown="block">
 
@@ -282,7 +282,7 @@ $$(AB^{T} + BA^{T})^{T} = B A^{T} + A B^{T} = AB^{T} + BA^{T}$$
 
 $$f(A) = a_n A^{n} + a_{n-1} A^{n-1} + \cdots + a_1 A + a_0 I$$
 
-<details class="callout tip" id="matrix-polynomial" data-callout="tip" markdown="block" open>
+<details class="callout tip" id="matrix-polynomial" data-callout="tip" open>
 <summary class="callout-title">为什么 $f(A) = g(A)h(A)$ 一定成立？</summary>
 <div class="callout-content" markdown="block">
 
@@ -295,7 +295,7 @@ $$f(A) = a_n A^{n} + a_{n-1} A^{n-1} + \cdots + a_1 A + a_0 I$$
 
 ## 3 特殊矩阵的幂：二项式定理与若尔当块
 
-<details class="callout theorem" id="binomial-theorem" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="binomial-theorem" data-callout="theorem" open>
 <summary class="callout-title">可交换情形的二项式定理</summary>
 <div class="callout-content" markdown="block">
 
@@ -374,7 +374,7 @@ $$AB = \begin{bmatrix} A_{1\cdot} B \\ A_{2\cdot} B \\ \vdots \\ A_{m\cdot} B \e
 - **按列**：$AB$ 的第 $j$ 列 $= A\, B\_{\cdot j}$。
 - 可乘条件：$A$ 的列数 $=$ $B$ 的行数。
 
-<details class="callout note" data-callout="note" markdown="block" open>
+<details class="callout note" data-callout="note" open>
 <summary class="callout-title">线性方程组的矩阵写法</summary>
 <div class="callout-content" markdown="block">
 
@@ -398,7 +398,7 @@ $$
 
 ### 5.1 定义
 
-<details class="callout definition" id="rank-definition" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="rank-definition" data-callout="definition" open>
 <summary class="callout-title">秩</summary>
 <div class="callout-content" markdown="block">
 
@@ -414,7 +414,7 @@ $$
 
 ### 5.2 性质
 
-<details class="callout theorem" id="rank-properties" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="rank-properties" data-callout="theorem" open>
 <summary class="callout-title">设 $A$ 是 $m \times n$ 矩阵</summary>
 <div class="callout-content" markdown="block">
 
@@ -430,7 +430,7 @@ $$
   - 直观记法：**秩不超过非零行数，也不超过非零列数**（零列一定出不了主元；非零列也可能只贡献自由元）。
 - 性质 3 见下。
 
-<details class="callout warning" data-callout="warning" markdown="block" open>
+<details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">两个容易写错的推论</summary>
 <div class="callout-content" markdown="block">
 
@@ -442,7 +442,7 @@ $$
 
 ### 5.3 初等行变换不改变秩
 
-<details class="callout theorem" id="rank-invariance" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="rank-invariance" data-callout="theorem" open>
 <summary class="callout-title">初等行变换不改变秩</summary>
 <div class="callout-content" markdown="block">
 
@@ -464,7 +464,7 @@ $$r(A) = r_1 < r_2 = r(B)$$
 
 ### 5.4 列变换、乘积的秩
 
-<details class="callout theorem" id="rank-column-op" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="rank-column-op" data-callout="theorem" open>
 <summary class="callout-title">右乘满秩矩阵不改变秩</summary>
 <div class="callout-content" markdown="block">
 
@@ -486,7 +486,7 @@ $$
 
 由 $(\ast)$ 得 $r(AQP) \le r(AQ) \le r(A)$；取 $P = Q^{-1}$ 又得 $r(A) \le r(AQ) \le r(A)$，故 $r(AQ) = r(A)$。
 
-<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">推论</summary>
 <div class="callout-content" markdown="block">
 
@@ -498,7 +498,7 @@ $$r(AB) \le \min\{r(A),\, r(B)\}$$
 
 ### 5.5 转置不变秩与相抵标准形
 
-<details class="callout note" data-callout="note" markdown="block" open>
+<details class="callout note" data-callout="note" open>
 <summary class="callout-title">相抵标准形</summary>
 <div class="callout-content" markdown="block">
 
@@ -515,7 +515,7 @@ $$
 > $$A_{m \times n} \cong B_{m \times n} \iff r(A) = r(B)$$
 <a id="canonical-form"></a>
 
-<details class="callout theorem" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" data-callout="theorem" open>
 <summary class="callout-title">$r(A) = r(A^{T})$</summary>
 <div class="callout-content" markdown="block">
 
@@ -535,7 +535,7 @@ $$
 
 ## 6 初等矩阵与矩阵等价
 
-<details class="callout definition" data-callout="definition" markdown="block" open>
+<details class="callout definition" data-callout="definition" open>
 <summary class="callout-title">初等矩阵</summary>
 <div class="callout-content" markdown="block">
 
@@ -556,7 +556,7 @@ $$
 - 一次初等**列**变换 $=$ 右乘相应的 $n$ 阶初等矩阵；
 - 口诀：**左行右列** —— 左乘做行变换，右乘做列变换。注意分清两件事：初等矩阵"改动的那个位置"由变换本身决定，而"产生行变换还是列变换"才由左乘/右乘决定。
 
-<details class="callout keypoint" id="equivalence" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" id="equivalence" data-callout="keypoint" open>
 <summary class="callout-title">等价（相抵）关系</summary>
 <div class="callout-content" markdown="block">
 
@@ -572,7 +572,7 @@ $$
 
 ## 7 满秩与可逆
 
-<details class="callout theorem" id="full-rank-invertible" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="full-rank-invertible" data-callout="theorem" open>
 <summary class="callout-title">满秩 $\iff$ 可逆</summary>
 <div class="callout-content" markdown="block">
 
@@ -637,7 +637,7 @@ $$(A \mid I) \xrightarrow{\ \text{只做初等行变换}\ } (I \mid A^{-1})$$
 
 理由：若 $P\_1 \cdots P\_s A = I$，则 $P\_1 \cdots P\_s = A^{-1}$，于是 $P\_1 \cdots P\_s I = A^{-1}$ —— 把 $A$ 化成 $I$ 的**同一串行变换**，作用在 $I$ 上就得到 $A^{-1}$。
 
-<details class="callout warning" id="inverse-algorithm" data-callout="warning" markdown="block" open>
+<details class="callout warning" id="inverse-algorithm" data-callout="warning" open>
 <summary class="callout-title">别记错名字</summary>
 <div class="callout-content" markdown="block">
 
@@ -646,7 +646,7 @@ $[A \mid I] \to [I \mid A^{-1}]$ 是**初等行变换法**；**伴随矩阵法**
 </div>
 </details>
 
-<details class="callout example" id="example-inverse" data-callout="example" markdown="block" open>
+<details class="callout example" id="example-inverse" data-callout="example" open>
 <summary class="callout-title">例题：由 $AX = A + 2X$ 反推可逆性</summary>
 <div class="callout-content" markdown="block">
 

@@ -214,7 +214,6 @@ M0 0h24v24H0z | M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0 | M12 7a5 5 0 1 0 5 5 | M13 
 ```html
 <details class="callout theorem"
          data-callout="theorem"
-         markdown="block"
          open>
   <summary class="callout-title">定理 1.0.1</summary>
   <div class="callout-content" markdown="block">
@@ -239,7 +238,7 @@ M0 0h24v24H0z | M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0 | M12 7a5 5 0 1 0 5 5 | M13 
 ### B.2 折叠状态
 
 ```html
-<details class="callout note" data-callout="note" markdown="block">
+<details class="callout note" data-callout="note">
   <summary class="callout-title">点击展开</summary>
   <div class="callout-content" markdown="block">
 
@@ -254,7 +253,7 @@ Obsidian 的折叠约定：`[!note]` 和 `[!note]+` 都默认**展开**，只有
 ### B.3 带块 ID（锚点跳转）
 
 ```html
-<details class="callout keypoint" id="kp01" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" id="kp01" data-callout="keypoint" open>
   <summary class="callout-title">一句话理解</summary>
   <div class="callout-content" markdown="block">
 
@@ -277,6 +276,14 @@ Obsidian 的折叠约定：`[!note]` 和 `[!note]+` 都默认**展开**，只有
 
 **不要嵌套**。`<details>` 嵌套会导致折叠状态互相干扰，且多数 Markdown 解析器处理 `markdown="block"` 嵌套时不可靠。需要分层表达时，用「主 callout + 内部小标题」代替。
 
+> ⚠️ **踩过的坑（2026-10-24）**：`markdown="block"` **只能加在内层 `<div class="callout-content">` 上，
+> 绝不能加在 `<details>` 上**。加在 `<details>` 上时，kramdown 会把整个 details 的内容按块级 Markdown 解析，
+> 而 `<summary>` 不在它认识的块级 HTML 标签列表里，于是 `<summary>` / `</div>` / `</details>` 全部被当作
+> 普通文本输出 —— 表现为**标签直接暴露在页面上、`<details>` 无法闭合、后面的 callout 全部被吞进前一个
+> （左侧边框看起来"一级套一级"）**。
+>
+> 同理 **不要开 `parse_block_html: true`**：它会让所有 HTML 块内部都按 Markdown 解析，放大这个问题。
+> `markdown="block"` 是独立机制，不需要 `parse_block_html` 也能生效。
 ### B.5 Jekyll 必配项
 
 ```yaml
@@ -286,7 +293,7 @@ kramdown:
   math_engine: mathjax
   input: GFM
   hard_wrap: false
-  parse_block_html: true      # ← 关键：否则 <details markdown="block"> 内部 Markdown 不渲染
+  parse_block_html: true      # ← 关键：否则 <details> 内部 Markdown 不渲染
 ```
 
 ### B.6 生成 callout 的最小 Python 片段
@@ -304,7 +311,7 @@ def to_details(match_type: str, fold: str, title: str, body_lines: list[str]) ->
     title = title or match_type.capitalize()
     body = "\n".join(body_lines)
     return (
-        f'<details class="callout {match_type}" data-callout="{match_type}" markdown="block"{open_attr}>\n'
+        f'<details class="callout {match_type}" data-callout="{match_type}"{open_attr}>\n'
         f'<summary class="callout-title">{title}</summary>\n'
         f'<div class="callout-content" markdown="block">\n\n{body}\n\n</div>\n'
         f'</details>\n'

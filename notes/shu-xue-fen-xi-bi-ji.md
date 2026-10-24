@@ -8,7 +8,7 @@ render_with_liquid: false
 
 # 数学分析
 
-<details class="callout abstract" data-callout="abstract" markdown="block" open>
+<details class="callout abstract" data-callout="abstract" open>
 <summary class="callout-title">主线（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
@@ -34,7 +34,7 @@ render_with_liquid: false
 - $1 \in \\{1\\}$，而 $1 \neq \\{1\\}$（元素不等于集合）；
 - $\varnothing \subseteq A$ 对任何集合 $A$ 成立（$A$ 允许为空集）。
 
-<details class="callout warning" data-callout="warning" markdown="block" open>
+<details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">一个容易混的点</summary>
 <div class="callout-content" markdown="block">
 
@@ -56,7 +56,7 @@ $\varnothing \subset A$ 里的符号要理解为"包含于"（$\subseteq$）；�
 
 运算律：交换律、结合律、分配律。
 
-<details class="callout theorem" id="de-morgan" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="de-morgan" data-callout="theorem" open>
 <summary class="callout-title">德摩根律（de Morgan）</summary>
 <div class="callout-content" markdown="block">
 
@@ -79,7 +79,7 @@ $$A \times B = \{(x, y) \mid x \in A,\ y \in B\}$$
 - $\mathbb{R}$：$\mathbb{Q}$ 添上无理数，四则封闭；
 - $\mathbb{C}$：四则封闭，还封闭开方（但不是有序域，见下）。
 
-<details class="callout definition" id="number-field" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="number-field" data-callout="definition" open>
 <summary class="callout-title">数域</summary>
 <div class="callout-content" markdown="block">
 
@@ -88,7 +88,7 @@ $$A \times B = \{(x, y) \mid x \in A,\ y \in B\}$$
 </div>
 </details>
 
-<details class="callout warning" data-callout="warning" markdown="block" open>
+<details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">数域的定义里不需要再验证运算律</summary>
 <div class="callout-content" markdown="block">
 
@@ -97,7 +97,7 @@ $$A \times B = \{(x, y) \mid x \in A,\ y \in B\}$$
 </div>
 </details>
 
-<details class="callout definition" id="ordered-field" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="ordered-field" data-callout="definition" open>
 <summary class="callout-title">有序域</summary>
 <div class="callout-content" markdown="block">
 
@@ -120,7 +120,7 @@ $$A \times B = \{(x, y) \mid x \in A,\ y \in B\}$$
 
 ### 2.1 定义
 
-<details class="callout definition" id="countable-set" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="countable-set" data-callout="definition" open>
 <summary class="callout-title">可列集</summary>
 <div class="callout-content" markdown="block">
 
@@ -133,7 +133,7 @@ $$A = \{a_1, a_2, \dots, a_n, \dots\}$$
 
 ### 2.2 可列个可列集之并
 
-<details class="callout theorem" id="f0fbb3" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="f0fbb3" data-callout="theorem" open>
 <summary class="callout-title">定理 1.0.1</summary>
 <div class="callout-content" markdown="block">
 
@@ -183,7 +183,7 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 
 ### 3.1 上确界与下确界
 
-<details class="callout definition" id="sup-inf-def" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="sup-inf-def" data-callout="definition" open>
 <summary class="callout-title">上确界（最小上界）</summary>
 <div class="callout-content" markdown="block">
 
@@ -200,7 +200,7 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 - 有上界就必有**无限多个**上界（上界往上都还是上界）。
 - 上确界是把"所有上界"压到最紧的那一个；**它不一定属于 $E$**。
 
-<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">一句话理解（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
@@ -211,7 +211,7 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 
 ### 3.2 确界原理（完备性）
 
-<details class="callout theorem" id="completeness" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="completeness" data-callout="theorem" open>
 <summary class="callout-title">确界原理</summary>
 <div class="callout-content" markdown="block">
 
@@ -226,7 +226,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 
 ### 3.3 闭区间套定理
 
-<details class="callout theorem" id="nested-intervals" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="nested-intervals" data-callout="theorem" open>
 <summary class="callout-title">闭区间套定理</summary>
 <div class="callout-content" markdown="block">
 
@@ -238,7 +238,7 @@ $$\lim_{n \to \infty} a_n = \lim_{n \to \infty} b_n = c$$
 
 ### 3.4 Bolzano–Weierstrass 定理
 
-<details class="callout theorem" id="bolzano-weierstrass" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="bolzano-weierstrass" data-callout="theorem" open>
 <summary class="callout-title">有界序列必有收敛子列</summary>
 <div class="callout-content" markdown="block">
 
@@ -274,7 +274,7 @@ $$0 \le x - x_n < \frac{1}{10^{n}}$$
 - **单调增**：$x\_n \le x\_{n+1}$（严格单调增则成立 $\lt $）；
 - **有界**：既有上界又有下界，等价地 $\exists M \gt  0,\ \forall n,\ \mid x\_n\mid  \le M$。
 
-<details class="callout definition" id="sequence-limit" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="sequence-limit" data-callout="definition" open>
 <summary class="callout-title">数列极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -286,7 +286,7 @@ $\forall \varepsilon \gt  0$，$\exists N \in \mathbb{N}$，只要 $n \gt  N$ �
 
 **几何意义**：当 $n \gt  N$ 时，$a\_n$ 全部落在 $(l - \varepsilon, l + \varepsilon)$ 内，称为 $l$ 的 **$\varepsilon$ 邻域**，记 $U(l, \varepsilon)$。
 
-<details class="callout note" id="limit-tail" data-callout="note" markdown="block" open>
+<details class="callout note" id="limit-tail" data-callout="note" open>
 <summary class="callout-title">等价的"尾巴"说法</summary>
 <div class="callout-content" markdown="block">
 
@@ -296,7 +296,7 @@ $\lim\limits\_{n \to \infty} a\_n = l \iff$ 对 $l$ 的任意 $\varepsilon$ 邻�
 </div>
 </details>
 
-<details class="callout question" data-callout="question" markdown="block" open>
+<details class="callout question" data-callout="question" open>
 <summary class="callout-title">如果把"只有有限项在邻域外"改成"有无穷项在邻域外"，对吗？</summary>
 <div class="callout-content" markdown="block">
 
@@ -317,7 +317,7 @@ $$a_{2n-1} = -1 + \frac{1}{2n-1} \le 1 - \frac{1}{2}$$
 </div>
 </details>
 
-<details class="callout note" id="limit-negation" data-callout="note" markdown="block" open>
+<details class="callout note" id="limit-negation" data-callout="note" open>
 <summary class="callout-title">"不以 $A$ 为极限"怎么写</summary>
 <div class="callout-content" markdown="block">
 
@@ -329,7 +329,7 @@ $$\exists \varepsilon > 0,\ \forall N \in \mathbb{N},\ \exists n > N,\ |a_n - A|
 
 ### 4.2 $\varepsilon$–$N$ 证明的实践
 
-<details class="callout tip" data-callout="tip" markdown="block" open>
+<details class="callout tip" data-callout="tip" open>
 <summary class="callout-title">自己的经验（保留）</summary>
 <div class="callout-content" markdown="block">
 
@@ -344,7 +344,7 @@ $$\exists \varepsilon > 0,\ \forall N \in \mathbb{N},\ \exists n > N,\ |a_n - A|
 
 $$\left| \frac{1}{n} - 0 \right| = \frac{1}{n} < \varepsilon$$
 
-<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">该记住的常见极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -358,7 +358,7 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 
 ### 4.3 极限的性质
 
-<details class="callout theorem" id="sign-preserving" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="sign-preserving" data-callout="theorem" open>
 <summary class="callout-title">保号性</summary>
 <div class="callout-content" markdown="block">
 
@@ -372,7 +372,7 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 - **推论 1**：$\\{a\_n\\}$ 收敛于 $A$，若存在 $N$ 使 $n \gt  N$ 时 $a\_n \ge 0$，则 $A \ge 0$。
 - **推论 2**：$\\{a\_n\\}$ 收敛于 $A \gt  0$，则存在 $N$，当 $n \gt  N$ 时 $a\_n \ge \dfrac{A}{2}$。
 
-<details class="callout theorem" id="order-preserving" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="order-preserving" data-callout="theorem" open>
 <summary class="callout-title">保序性（性质 4）</summary>
 <div class="callout-content" markdown="block">
 
@@ -387,7 +387,7 @@ $$|b_n - B| < \varepsilon \ \Rightarrow\ b_n < B + \varepsilon = \frac{A + B}{2}
 </div>
 </details>
 
-<details class="callout question" data-callout="question" markdown="block" open>
+<details class="callout question" data-callout="question" open>
 <summary class="callout-title">把 $A \gt  B$ 换成 $A \ge B$，还能得到"存在 $N$，当 $n \gt  N$ 时 $a\_n \ge b\_n$"吗？</summary>
 <div class="callout-content" markdown="block">
 
@@ -398,7 +398,7 @@ $$|b_n - B| < \varepsilon \ \Rightarrow\ b_n < B + \varepsilon = \frac{A + B}{2}
 
 - **推论 3**：$\\{a\_n\\}, \\{b\_n\\}$ 收敛于 $A, B$，若存在 $N$ 使 $n \gt  N$ 时 $a\_n \le b\_n$，则 $A \le B$。
 
-<details class="callout danger" data-callout="danger" markdown="block" open>
+<details class="callout danger" data-callout="danger" open>
 <summary class="callout-title">注意：$a\_n \le b\_n$ 推不出"$a\_n \le B$"</summary>
 <div class="callout-content" markdown="block">
 
@@ -411,7 +411,7 @@ $$|b_n - B| < \varepsilon \ \Rightarrow\ b_n < B + \varepsilon = \frac{A + B}{2}
 
 ### 4.4 四则运算与复合
 
-<details class="callout note" id="limit-arithmetic" data-callout="note" markdown="block" open>
+<details class="callout note" id="limit-arithmetic" data-callout="note" open>
 <summary class="callout-title">什么时候能拆</summary>
 <div class="callout-content" markdown="block">
 
@@ -428,7 +428,7 @@ $$f(x) = b_m x^{m} + b_{m-1} x^{m-1} + \cdots + b_1 x + b_0$$
 
 ### 4.5 根式与幂的极限
 
-<details class="callout theorem" id="sqrt-limit" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="sqrt-limit" data-callout="theorem" open>
 <summary class="callout-title">开方保持极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -445,7 +445,7 @@ $$|\sqrt{a_n} - \sqrt{a}| = \frac{|a_n - a|}{\sqrt{a_n} + \sqrt{a}} \le \frac{|a
 </div>
 </details>
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">两道"分母有理化"的题</summary>
 <div class="callout-content" markdown="block">
 
@@ -460,7 +460,7 @@ $$\lim_{n \to \infty} \frac{5^{n+1} - (-2)^{n}}{3 \times 5^{n} + 2 \times 3^{n}}
 
 ### 4.6 夹逼定理
 
-<details class="callout theorem" id="squeeze" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="squeeze" data-callout="theorem" open>
 <summary class="callout-title">夹逼定理</summary>
 <div class="callout-content" markdown="block">
 
@@ -476,7 +476,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 
 ### 4.7 单调有界定理
 
-<details class="callout theorem" id="monotone-bounded" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="monotone-bounded" data-callout="theorem" open>
 <summary class="callout-title">单调有界定理</summary>
 <div class="callout-content" markdown="block">
 
@@ -492,7 +492,7 @@ $$a - \varepsilon < x_N \le x_n \le a < a + \varepsilon$$
 
 即 $\mid x\_n - a\mid  \lt  \varepsilon$，故 $x\_n \to a$。
 
-<details class="callout tip" data-callout="tip" markdown="block" open>
+<details class="callout tip" data-callout="tip" open>
 <summary class="callout-title">直观记法（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
@@ -501,7 +501,7 @@ $$a - \varepsilon < x_N \le x_n \le a < a + \varepsilon$$
 </div>
 </details>
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">应用：Euler 常数 $\gamma$ 存在</summary>
 <div class="callout-content" markdown="block">
 
@@ -517,7 +517,7 @@ $$a - \varepsilon < x_N \le x_n \le a < a + \varepsilon$$
 </div>
 </details>
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">应用：$x\_{n+1} = x\_n(1 - x\_n)$</summary>
 <div class="callout-content" markdown="block">
 
@@ -533,7 +533,7 @@ $$y_{n+1} - y_n = \frac{1}{x_n}\left(\frac{1}{1 - x_n} - 1\right) = \frac{1}{1 -
 
 ### 4.8 子列
 
-<details class="callout theorem" id="subsequence" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="subsequence" data-callout="theorem" open>
 <summary class="callout-title">子列继承极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -542,7 +542,7 @@ $$y_{n+1} - y_n = \frac{1}{x_n}\left(\frac{1}{1 - x_n} - 1\right) = \frac{1}{1 -
 </div>
 </details>
 
-<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">更强的结论（用于"合并"）</summary>
 <div class="callout-content" markdown="block">
 
@@ -556,7 +556,7 @@ $$\begin{cases} \lim\limits_{n \to \infty} a_{2n} = A \\[4pt] \lim\limits_{n \to
 
 ### 4.9 Stolz 定理
 
-<details class="callout theorem" id="stolz" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="stolz" data-callout="theorem" open>
 <summary class="callout-title">Stolz 定理（离散的洛必达法则）</summary>
 <div class="callout-content" markdown="block">
 
@@ -570,7 +570,7 @@ $$\lim_{n \to \infty} \frac{x_n - x_{n-1}}{y_n - y_{n-1}} = a$$
 - 用差分形式去表示 $x\_n$、$y\_n$，凑出已知极限；
 - 用无穷大去抵消"有限的累加项"。
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">例：幂和与 $n^{k+1}$</summary>
 <div class="callout-content" markdown="block">
 
@@ -582,7 +582,7 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 
 ### 4.10 无穷小量与无穷大量
 
-<details class="callout theorem" id="infinitesimal" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="infinitesimal" data-callout="theorem" open>
 <summary class="callout-title">有界 $\times$ 无穷小 $=$ 无穷小</summary>
 <div class="callout-content" markdown="block">
 
@@ -591,7 +591,7 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 </div>
 </details>
 
-<details class="callout warning" id="infinite-large" data-callout="warning" markdown="block" open>
+<details class="callout warning" id="infinite-large" data-callout="warning" open>
 <summary class="callout-title">无穷大量 $\neq$ 无界量</summary>
 <div class="callout-content" markdown="block">
 
@@ -610,7 +610,7 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 
 ### 5.1 $(1 + \frac{1}{n})^{n}$ 单调有界
 
-<details class="callout theorem" id="e-definition" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="e-definition" data-callout="theorem" open>
 <summary class="callout-title">单调增 + 有上界</summary>
 <div class="callout-content" markdown="block">
 
@@ -638,7 +638,7 @@ $$\left(1 + \frac{1}{n}\right)^{n} < 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdot
 
 由 [单调有界定理](#monotone-bounded)，极限存在，记为 $e$。
 
-<details class="callout tip" data-callout="tip" markdown="block" open>
+<details class="callout tip" data-callout="tip" open>
 <summary class="callout-title">另一个"很惊人的注意力"（保留）</summary>
 <div class="callout-content" markdown="block">
 
@@ -649,7 +649,7 @@ $$\left(1 + \frac{1}{n}\right)^{n} < 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdot
 
 ### 5.2 $e$ 的上下界
 
-<details class="callout keypoint" id="e-bounds" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" id="e-bounds" data-callout="keypoint" open>
 <summary class="callout-title">两侧夹住 $e$</summary>
 <div class="callout-content" markdown="block">
 
@@ -679,7 +679,7 @@ $$\sqrt[n+1]{\left(\frac{n}{n+1}\right)^{n+1} \cdot 1} \le \frac{\frac{n}{n+1}(n
 
 ### 5.3 $e$ 的级数表示
 
-<details class="callout theorem" id="e-series" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="e-series" data-callout="theorem" open>
 <summary class="callout-title">$e = \sum\limits\_{n=0}^{\infty} \frac{1}{n!}$</summary>
 <div class="callout-content" markdown="block">
 
@@ -701,7 +701,7 @@ $$e = \lim_{n \to \infty}\left(1 + 1 + \sum_{i=2}^{n} \frac{1}{i!}\left(1 - \fra
 
 ### 5.4 $e$ 是无理数
 
-<details class="callout theorem" id="e-irrational" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="e-irrational" data-callout="theorem" open>
 <summary class="callout-title">$e$ 是无理数</summary>
 <div class="callout-content" markdown="block">
 
@@ -734,7 +734,7 @@ $$\lim_{n \to \infty} e^{b_n \ln a_n} = e^{b \ln a} = a^{b}$$
 
 - $X$ 是**定义域**，$f(X) = \\{f(x) \mid x \in X\\}$ 是**值域**，且 $f(X) \subset Y$（$Y$ 为陪域）。
 
-<details class="callout definition" id="sign-function" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="sign-function" data-callout="definition" open>
 <summary class="callout-title">符号函数</summary>
 <div class="callout-content" markdown="block">
 
@@ -743,7 +743,7 @@ $$\operatorname{sgn} x = \begin{cases} 1, & x > 0 \\ 0, & x = 0 \\ -1, & x < 0 \
 </div>
 </details>
 
-<details class="callout definition" id="periodic-function" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="periodic-function" data-callout="definition" open>
 <summary class="callout-title">周期函数</summary>
 <div class="callout-content" markdown="block">
 
@@ -753,7 +753,7 @@ $$\operatorname{sgn} x = \begin{cases} 1, & x > 0 \\ 0, & x = 0 \\ -1, & x < 0 \
 </div>
 </details>
 
-<details class="callout example" id="dirichlet-function" data-callout="example" markdown="block" open>
+<details class="callout example" id="dirichlet-function" data-callout="example" open>
 <summary class="callout-title">Dirichlet 函数</summary>
 <div class="callout-content" markdown="block">
 
@@ -765,7 +765,7 @@ $$D(x) = \begin{cases} 1, & x \in \mathbb{Q} \\ 0, & x \in \mathbb{Q}^{c} \end{c
 </div>
 </details>
 
-<details class="callout note" id="hyperbolic" data-callout="note" markdown="block" open>
+<details class="callout note" id="hyperbolic" data-callout="note" open>
 <summary class="callout-title">双曲函数</summary>
 <div class="callout-content" markdown="block">
 
@@ -785,7 +785,7 @@ $$\operatorname{sh} x = \frac{e^{x} - e^{-x}}{2}, \qquad \operatorname{ch} x = \
 
 ### 7.1 定义
 
-<details class="callout definition" id="punctured-neighborhood" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="punctured-neighborhood" data-callout="definition" open>
 <summary class="callout-title">空心（去心）邻域</summary>
 <div class="callout-content" markdown="block">
 
@@ -795,7 +795,7 @@ $$(x_0 - \delta, x_0 + \delta) \setminus \{x_0\} = (x_0 - \delta, x_0) \cup (x_0
 </div>
 </details>
 
-<details class="callout definition" id="function-limit" data-callout="definition" markdown="block" open>
+<details class="callout definition" id="function-limit" data-callout="definition" open>
 <summary class="callout-title">函数极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -815,7 +815,7 @@ $$\lim_{x \to x_0} f(x) = L \iff \lim_{x \to x_0^{+}} f(x) = \lim_{x \to x_0^{-}
 
 ### 7.2 Heine 定理
 
-<details class="callout theorem" id="heine" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="heine" data-callout="theorem" open>
 <summary class="callout-title">Heine（海涅）定理</summary>
 <div class="callout-content" markdown="block">
 
@@ -837,7 +837,7 @@ $$\lim_{x \to a} f(x) = L \iff \lim_{x \to a} (f(x) - L) = 0$$
 - 有界 $\times$ 无穷小 $=$ 无穷小：$x \to a$ 时 $\alpha(x) \to 0$，$h(x)$ 有界，则 $\alpha(x)h(x) \to 0$。
 - $\lim\limits\_{x \to a} f(x) = \infty \iff \lim\limits\_{x \to a} \dfrac{1}{f(x)} = 0$；若 $f(x) \neq 0$，则 $\lim\limits\_{x \to a} f(x) = 0 \iff \lim\limits\_{x \to a} \dfrac{1}{f(x)} = \infty$。
 
-<details class="callout warning" data-callout="warning" markdown="block" open>
+<details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">无界 ≠ 无穷大（函数版）</summary>
 <div class="callout-content" markdown="block">
 
@@ -847,7 +847,7 @@ $$\lim_{x \to a} f(x) = L \iff \lim_{x \to a} (f(x) - L) = 0$$
 </div>
 </details>
 
-<details class="callout theorem" id="function-limit-props" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="function-limit-props" data-callout="theorem" open>
 <summary class="callout-title">函数极限的保号性与四则运算</summary>
 <div class="callout-content" markdown="block">
 
@@ -859,7 +859,7 @@ $$\lim_{x \to a}(f \pm g) = A \pm B,\quad \lim_{x \to a}(f g) = AB,\quad \lim_{x
 </div>
 </details>
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">例：多项式型的技巧</summary>
 <div class="callout-content" markdown="block">
 
@@ -868,7 +868,7 @@ $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^
 </div>
 </details>
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">$\varepsilon$–$\delta$ 的模板：证明 $\lim\limits\_{x \to 2} x^{2} = 4$</summary>
 <div class="callout-content" markdown="block">
 
@@ -886,7 +886,7 @@ $$\delta = \min\left\{1, \frac{\varepsilon}{5}\right\}$$
 
 ### 7.4 夹逼与单调收敛（函数版）
 
-<details class="callout theorem" id="function-squeeze" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="function-squeeze" data-callout="theorem" open>
 <summary class="callout-title">函数版的夹逼</summary>
 <div class="callout-content" markdown="block">
 
@@ -902,7 +902,7 @@ $$\delta = \min\left\{1, \frac{\varepsilon}{5}\right\}$$
 
 两边取极限即得 $1$。
 
-<details class="callout theorem" id="function-monotone" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="function-monotone" data-callout="theorem" open>
 <summary class="callout-title">单调收敛（单侧）</summary>
 <div class="callout-content" markdown="block">
 
@@ -913,7 +913,7 @@ $$\delta = \min\left\{1, \frac{\varepsilon}{5}\right\}$$
 </div>
 </details>
 
-<details class="callout warning" data-callout="warning" markdown="block" open>
+<details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">$\triangle$ 双侧不行</summary>
 <div class="callout-content" markdown="block">
 
@@ -925,7 +925,7 @@ $f$ 在 $(a - \delta, a + \delta)$ 内单调有界，$\lim\limits\_{x \to a} f(x
 
 ### 7.5 复合函数与变量替换
 
-<details class="callout theorem" id="composite-limit" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="composite-limit" data-callout="theorem" open>
 <summary class="callout-title">复合函数极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -942,7 +942,7 @@ $$\lim_{x \to x_0} f\big(g(x)\big) = A$$
 
 ### 7.6 两个重要极限
 
-<details class="callout keypoint" id="important-limits" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" id="important-limits" data-callout="keypoint" open>
 <summary class="callout-title">基本款</summary>
 <div class="callout-content" markdown="block">
 
@@ -956,7 +956,7 @@ $$\lim_{x \to 0} \frac{\sin x}{x} = 1 \iff \lim_{x \to 0^{-}}\frac{\sin x}{x} = 
 - $\lim\limits\_{x \to 0^{+}}\left(1 + \dfrac{1}{x}\right)^{x} = \lim\limits\_{t \to +\infty} (1 + t)^{\frac{1}{t}} = e^{\lim\limits\_{t \to +\infty} \frac{\ln(1+t)}{t}} = e^{0} = 1$；
 - $\lim\limits\_{x \to \infty} x^{\frac{1}{x}} = 1$，$\lim\limits\_{x \to 0^{+}} x^{x} = 1$。
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">草稿：极限 $\ln(1+t)/t \to 0$ 的放缩</summary>
 <div class="callout-content" markdown="block">
 
@@ -971,7 +971,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 
 ## 8 闭区间上连续函数的性质
 
-<details class="callout theorem" id="boundedness-theorem" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="boundedness-theorem" data-callout="theorem" open>
 <summary class="callout-title">有界性定理</summary>
 <div class="callout-content" markdown="block">
 
@@ -981,7 +981,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 </div>
 </details>
 
-<details class="callout theorem" id="extreme-value" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="extreme-value" data-callout="theorem" open>
 <summary class="callout-title">最值定理</summary>
 <div class="callout-content" markdown="block">
 
@@ -1000,7 +1000,7 @@ $$f(\xi) = \lim_{k \to \infty} f(x_{n_k}) = m$$
 
 即最小值可以取到。上确界同理。
 
-<details class="callout theorem" id="intermediate-value" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" id="intermediate-value" data-callout="theorem" open>
 <summary class="callout-title">介值定理（零点存在定理）</summary>
 <div class="callout-content" markdown="block">
 
@@ -1023,7 +1023,7 @@ $$f(\xi) = \lim_{k \to \infty} f(x_{n_k}) = m$$
 - $\lim \dfrac{\alpha}{\beta} = c \neq 0$：**同阶**无穷小量；
 - $\lim \dfrac{\alpha}{\beta} = 1$：**等价**无穷小量，记 $\alpha \sim \beta$（等价关系，有传递性）。
 
-<details class="callout note" id="equivalent-infinitesimal" data-callout="note" markdown="block" open>
+<details class="callout note" id="equivalent-infinitesimal" data-callout="note" open>
 <summary class="callout-title">等价的一个刻画</summary>
 <div class="callout-content" markdown="block">
 
@@ -1035,7 +1035,7 @@ $$\alpha(x) \sim \beta(x) \iff \alpha(x) = \beta(x) + o(\beta(x))$$
 
 ### 9.2 常用等价无穷小（$x \to 0$）
 
-<details class="callout keypoint" id="equivalent-infinitesimals" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" id="equivalent-infinitesimals" data-callout="keypoint" open>
 <summary class="callout-title">背下来的一串</summary>
 <div class="callout-content" markdown="block">
 
@@ -1079,7 +1079,7 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 
 ### 10.2 放缩的经验
 
-<details class="callout keypoint" data-callout="keypoint" markdown="block" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">三条（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
@@ -1092,7 +1092,7 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 
 ### 10.3 综合例：$\dfrac{(n!)^{\alpha}}{n^{n}}$ 的极限
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">$\alpha \gt  1$ 时发散到 $+\infty$</summary>
 <div class="callout-content" markdown="block">
 
@@ -1104,7 +1104,7 @@ $$\frac{\frac{((n+1)!)^{\alpha}}{(n+1)^{n+1}}}{\frac{(n!)^{\alpha}}{n^{n}}} = \f
 </div>
 </details>
 
-<details class="callout example" data-callout="example" markdown="block" open>
+<details class="callout example" data-callout="example" open>
 <summary class="callout-title">$\alpha \le 1$ 时趋于 $0$</summary>
 <div class="callout-content" markdown="block">
 

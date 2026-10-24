@@ -6,7 +6,7 @@ permalink: "/notes/infinite-countable-equivalence/"
 render_with_liquid: false
 ---
 
-<details class="callout theorem" data-callout="theorem" markdown="block" open>
+<details class="callout theorem" data-callout="theorem" open>
 <summary class="callout-title">Theorem</summary>
 <div class="callout-content" markdown="block">
 

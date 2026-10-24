@@ -20,7 +20,7 @@ render_with_liquid: false
 
 # 从“证明稀缺”到“证明过剩”：AI对数学的冲击、影响与未来展望
 
-<details class="callout abstract" data-callout="abstract" markdown="block" open>
+<details class="callout abstract" data-callout="abstract" open>
 <summary class="callout-title">摘要</summary>
 <div class="callout-content" markdown="block">
 
@@ -42,7 +42,7 @@ AI 与数学的关系在过去两年多内经历了从“竞赛选手”到“�
 
 本文的核心问题是：当 AI 使证明生产从稀缺走向相对过剩时，数学作为人类集体事业的组织方式将发生何种变化？为此，本文基于所给材料，采用时间线分析与机制分析相结合的方法，先梳理三阶段演进，再讨论验证成本、评价制度与治理争议，最后给出未来展望。
 
-<details class="callout warning" data-callout="warning" markdown="block" open>
+<details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">材料说明</summary>
 <div class="callout-content" markdown="block">
 
@@ -83,7 +83,7 @@ AI 与数学的关系在过去两年多内经历了从“竞赛选手”到“�
 
 9 月 11 日，包括陶哲轩、邓煜、Peter Scholze、Martin Hairer、Maryna Viazovska 在内的 25 位菲尔兹奖得主联合发表《人工智能在数学中的严重错位》，核心论点是：AI 公司将重大开放问题当作模型能力基准，与数学研究追求概念理解和洞见的目标错位[5]。9 月 13 日，《[莱顿宣言](#leiden-declaration)》签名达 4,013 人；该宣言获国际数学联盟背书，指出虚假证明、署名版权、技术依赖与不平等、过度炒作、研究自主权丧失等五大威胁，并提出 23 条建议[4]。9 月 24 日，丘成桐等人在 arXiv 提交微分几何预印本，致谢 ChatGPT 6 Astra 与 Claude Pro 在部分证明策略与计算上的帮助，同时声明作者对人工验证与阐述负责[6]。10 月 7 日，OpenAI 在 GitHub 公开一批内部模型数学结果，首版目录 722 份手稿、372 个结果家族[7][8]。
 
-<details class="callout note" data-callout="note" markdown="block" open>
+<details class="callout note" data-callout="note" open>
 <summary class="callout-title">时间线要点</summary>
 <div class="callout-content" markdown="block">
 

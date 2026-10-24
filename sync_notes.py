@@ -250,8 +250,11 @@ def convert_callouts(text: str, counts: dict[str, int]) -> str:
         # Obsidian 里 [!note] 和 [!note]+ 都默认展开，只有 [!note]- 才是折叠
         open_attr = "" if fold == "-" else " open"
         counts["callout"] += 1
+        # 注意：markdown="block" 只加在 <div class="callout-content"> 上，绝不能加在 <details> 上。
+        # 一旦加在 <details> 上，kramdown 会把整个 details 的内容按块级 Markdown 解析，
+        # 而 <summary> 不属于它认识的块级 HTML 标签，会被当作普通文本 → 标签直接暴露成字面量。
         output.append(
-            '<details class="callout %s"%s data-callout="%s" markdown="block"%s>'
+            '<details class="callout %s"%s data-callout="%s"%s>'
             % (callout_type, id_attr, callout_type, open_attr)
         )
         output.append('<summary class="callout-title">%s</summary>' % title)

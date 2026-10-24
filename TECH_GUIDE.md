@@ -168,7 +168,7 @@ python sync_notes.py --src other --dest out    # 自定义目录
 
 | 语法 | 转换结果 |
 |---|---|
-| `> [!type] 标题` | `<details class="callout type" data-callout="type" markdown="block">` + `<summary class="callout-title">` |
+| `> [!type] 标题` | `<details class="callout type" data-callout="type">` + `<summary class="callout-title">` |
 | `[!type]+` / `[!type]-` | 带 `open` / 不带 `open`（与 Obsidian 一致：默认和 `+` 展开，只有 `-` 折叠） |
 | `^abc123` | 独占行 → `<a id="abc123"></a>`；标题里或行尾 → 绑到 `<details id="abc123">` |
 | `[[#^abc123\|文字]]` | `[文字](#abc123)` |
@@ -268,7 +268,7 @@ python sync_notes.py --src other --dest out    # 自定义目录
 ```
 Obsidian 里写：  > [!theorem] 定理 1.0.1
         ↓ sync_notes.py（convert_callouts）
-生成的 HTML：    <details class="callout theorem" data-callout="theorem" markdown="block" open>
+生成的 HTML：    <details class="callout theorem" data-callout="theorem" open>
                    <summary class="callout-title">定理 1.0.1</summary>
                    <div class="callout-content" markdown="block">…</div>
                  </details>
@@ -353,9 +353,17 @@ $s = [regex]::Replace($s, '>\s+<', '><').Trim()
 > ⚠️ 不要直接用原始的 base64 —— Lucide 的 SVG 开头带 `<!-- @license lucide-static ... -->` 注释，
 > 虽然浏览器多数能容忍，但不规范且白白增大体积。现有 CSS 里 **21 个图标已全部清理干净**。
 
+> ⚠️ **踩过的坑（2026-10-24）**：`markdown="block"` **只能加在内层 `<div class="callout-content">` 上，
+> 绝不能加在 `<details>` 上**。加在 `<details>` 上时，kramdown 会把整个 details 的内容按块级 Markdown 解析，
+> 而 `<summary>` 不在它认识的块级 HTML 标签列表里，于是 `<summary>` / `</div>` / `</details>` 全部被当作
+> 普通文本输出 —— 表现为**标签直接暴露在页面上、`<details>` 无法闭合、后面的 callout 全部被吞进前一个
+> （左侧边框看起来"一级套一级"）**。
+>
+> 同理 **不要开 `parse_block_html: true`**：它会让所有 HTML 块内部都按 Markdown 解析，放大这个问题。
+> `markdown="block"` 是独立机制，不需要 `parse_block_html` 也能生效。
 **必须记住的三件事**
 
-1. `_config.yml` 里 **`parse_block_html: true`** 不能删 —— 删了之后 callout 内部的公式、列表、粗体会原样显示成 Markdown 源码
+1. `_config.yml` 里**不要开** `parse_block_html`（开了会让 `<summary>` 等标签暴露成文本）；Markdown 解析靠 `<div class="callout-content" markdown="block">` 自身
 2. `data-callout` 的值必须和 `callout-for-web.md` 的 Part A 表**完全一致**（含大小写）；`keypoint` 是单类名，旧写法 `key point` 有兼容规则但已不推荐
 3. `sync_notes.py` 的 callout 正则允许**内部空格**（`[!key point]` 能解析），但生成 `class` 时会带空格 → 只影响 `.callout` 的类名，CSS 靠 `data-callout` 匹配，所以不报错
 
