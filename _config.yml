@@ -71,3 +71,4 @@ exclude:
   - .gitignore
   - origin/
   - TECH_GUIDE.md
+  - callout-for-web.md
