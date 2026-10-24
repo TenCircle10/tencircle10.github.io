@@ -72,3 +72,4 @@ exclude:
   - origin/
   - TECH_GUIDE.md
   - callout-for-web.md
+  - assets/css/obsidian-callouts.css.bak

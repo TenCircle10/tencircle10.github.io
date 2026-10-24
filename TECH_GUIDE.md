@@ -71,6 +71,7 @@ gem "webrick", "~> 1.8"
 | 返回顶部按钮 | `_layouts/note.html` + `assets/css/notes.css` | Uiverse 展开式（vinodjangid07 版），滚动 300px 后出现 |
 | 霞鹜文楷字体 | `assets/css/publications.css` 第 1 行 `@import` | 只用于侧边栏「每日一言」 |
 | Giscus 评论 | `_includes/giscus.html` + `notes.css` / `publications.css` | 主页留言板 + 每篇文章独立评论区 |
+| Callout 样式 | `assets/css/obsidian-callouts.css` | Obsidian Callout Studio 的 20 种类型，SVG mask + Base64 内联，详见 `callout-for-web.md` |
 
 ---
 
@@ -246,6 +247,97 @@ python sync_notes.py --src other --dest out    # 自定义目录
 ```
 
 每次部署 URL 都会变 → CDN 和浏览器必然重新拉取。**这是"改了样式线上没反应"的根治方案。**
+
+> `obsidian-callouts.css` 现在也带 `?v=` 时间戳了（`note.html` 和 `homepage.html` 两处）。
+
+### 4.5 Obsidian Callout 渲染
+
+**数据来源**：`PaperBell/.obsidian/plugins/callout-studio/data.json`
+**完整手册**：项目根目录 `callout-for-web.md`（含每种类型的 base64 图标和原始 SVG path）
+
+**支持的类型（20 种）**
+
+| 内置 12 种 | 自建 8 种 |
+|---|---|
+| `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` | `definition` `highlight` `idea` `motivation` `theorem` `context` `formula` `keypoint` |
+
+**渲染链路**
+
+```
+Obsidian 里写：  > [!theorem] 定理 1.0.1
+        ↓ sync_notes.py（convert_callouts）
+生成的 HTML：    <details class="callout theorem" data-callout="theorem" markdown="block" open>
+                   <summary class="callout-title">定理 1.0.1</summary>
+                   <div class="callout-content" markdown="block">…</div>
+                 </details>
+        ↓ kramdown（需要 parse_block_html: true）
+        ↓ obsidian-callouts.css
+网页显示：       左边框 + 淡色背景 + 彩色图标 + 标题
+```
+
+**技术方案（v2，2026-10 重写）**
+
+| 项目 | 旧版 | 现在 |
+|---|---|---|
+| 图标 | Font Awesome 字体字符（`content: "\f05a"`，26 处） | 官方 SVG + CSS `mask`，Base64 内联 |
+| 颜色 | 每个类型写死 4 处（边框 / 背景 / 图标 / 暗色各一遍） | 只写 1 个 `--callout-color` |
+| 暗色 | 需要把整段规则抄一遍 | 只覆盖颜色变量 |
+| 折叠箭头 | FA `\f078` / `\f054` | 纯 CSS 三角（`border` 实现） |
+| 新增类型成本 | 4~6 行 + 找 FA 对应字符码 | 2 行（颜色 + 图标） |
+
+**核心 CSS 结构**
+
+```css
+.callout {
+  --callout-color: #086ddd;
+  --callout-bg-opacity: 8%;
+  border-left: 4px solid var(--callout-color);
+  background-color: color-mix(in srgb, var(--callout-color) var(--callout-bg-opacity), transparent);
+}
+
+.callout-title::before {
+  content: "";
+  width: 1.1em; height: 1.1em;
+  background-color: var(--callout-color);
+  -webkit-mask: var(--callout-icon) center / contain no-repeat;
+          mask: var(--callout-icon) center / contain no-repeat;
+}
+
+/* 每种类型只写这 2 行 */
+.callout[data-callout="theorem"] {
+  --callout-color: #086ddd;
+  --callout-icon: url("data:image/svg+xml;base64,...");
+}
+
+/* 暗色只换颜色，不重复 base64 */
+@media (prefers-color-scheme: dark) {
+  .callout[data-callout="theorem"] { --callout-color: #027aff; }
+}
+```
+
+**图标来源（全部官方原版，非近似）**
+
+| 图标库 | 版本 | 用到的图标 |
+|---|---|---|
+| Lucide | `lucide-static@1.61.0` | 16 个（`clipboard-list` `zap` `list` `x` `info` `pencil` `help-circle` `quote` `check` `flame` `check-circle-2` `alert-triangle` `lightbulb` `sparkles` `function-square` `map-pin`） |
+| Tabler Icons | `@tabler/icons@3.49.0` | `target-arrow`（keypoint） |
+| Octicons | `@primer/octicons@19.42.0` | `sparkles-fill`（highlight） |
+| Material Symbols | `@material-symbols/svg-400@0.48.1` | `book_ribbon`（definition） |
+
+**必须记住的三件事**
+
+1. `_config.yml` 里 **`parse_block_html: true`** 不能删 —— 删了之后 callout 内部的公式、列表、粗体会原样显示成 Markdown 源码
+2. `data-callout` 的值必须和 `callout-for-web.md` 的 Part A 表**完全一致**（含大小写）；`keypoint` 是单类名，旧写法 `key point` 有兼容规则但已不推荐
+3. `sync_notes.py` 的 callout 正则允许**内部空格**（`[!key point]` 能解析），但生成 `class` 时会带空格 → 只影响 `.callout` 的类名，CSS 靠 `data-callout` 匹配，所以不报错
+
+**回滚方式**
+
+```bash
+# 旧版（Font Awesome 实现）备份在：
+assets/css/obsidian-callouts.css.bak
+# 或直接从 git 历史取：
+git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts.css
+```
 
 ---
 
