@@ -8,3 +8,9 @@ git-update.sh
 origin/
 __pycache__/
 *.pyc
+
+# 官方图标包本地缓存（体积大，不入库）
+_icon-src/
+
+# 备份文件（网页不用，本地保留）
+*.bak

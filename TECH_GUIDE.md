@@ -71,7 +71,7 @@ gem "webrick", "~> 1.8"
 | 返回顶部按钮 | `_layouts/note.html` + `assets/css/notes.css` | Uiverse 展开式（vinodjangid07 版），滚动 300px 后出现 |
 | 霞鹜文楷字体 | `assets/css/publications.css` 第 1 行 `@import` | 只用于侧边栏「每日一言」 |
 | Giscus 评论 | `_includes/giscus.html` + `notes.css` / `publications.css` | 主页留言板 + 每篇文章独立评论区 |
-| Callout 样式 | `assets/css/obsidian-callouts.css` | Obsidian Callout Studio 的 20 种类型，SVG mask + Base64 内联，详见 `callout-for-web.md` |
+| Callout 样式 | `assets/css/obsidian-callouts.css` | Obsidian Callout Studio 的 21 种类型，SVG mask + Base64 内联，详见 `callout-for-web.md` |
 
 ---
 
@@ -255,11 +255,13 @@ python sync_notes.py --src other --dest out    # 自定义目录
 **数据来源**：`PaperBell/.obsidian/plugins/callout-studio/data.json`
 **完整手册**：项目根目录 `callout-for-web.md`（含每种类型的 base64 图标和原始 SVG path）
 
-**支持的类型（20 种）**
+**支持的类型（21 种）**
 
-| 内置 12 种 | 自建 8 种 |
+| 内置 12 种 | 自建 9 种 |
 |---|---|
-| `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` | `definition` `highlight` `idea` `motivation` `theorem` `context` `formula` `keypoint` |
+| `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` | `highlight` `definition` `conclusion` `idea` `motivation` `theorem` `context` `formula` `keypoint` |
+
+> `conclusion` 是 2026-10-24 更新里新增的（图标 `lucide-badge-check`），同时从 `data.json` 删掉了 15 个中文/编号临时项。
 
 **渲染链路**
 
@@ -319,10 +321,37 @@ Obsidian 里写：  > [!theorem] 定理 1.0.1
 
 | 图标库 | 版本 | 用到的图标 |
 |---|---|---|
-| Lucide | `lucide-static@1.61.0` | 16 个（`clipboard-list` `zap` `list` `x` `info` `pencil` `help-circle` `quote` `check` `flame` `check-circle-2` `alert-triangle` `lightbulb` `sparkles` `function-square` `map-pin`） |
+| Lucide | `lucide-static@1.61.0` | 17 个（`clipboard-list` `zap` `list` `x` `info` `pencil` `help-circle` `quote` `check` `flame` `check-circle-2` `alert-triangle` `badge-check` `lightbulb` `sparkles` `function-square` `map-pin`） |
 | Tabler Icons | `@tabler/icons@3.49.0` | `target-arrow`（keypoint） |
 | Octicons | `@primer/octicons@19.42.0` | `sparkles-fill`（highlight） |
 | Material Symbols | `@material-symbols/svg-400@0.48.1` | `book_ribbon`（definition） |
+
+**图标源包本地缓存**
+
+四个图标包已解压到项目根目录 `_icon-src/`（共 38,972 个 SVG，约 74 MB）：
+
+```
+_icon-src/
+├── README.md          # 来源、版本、取用方法
+├── lucide/            # package/icons/*.svg
+├── tabler/            # package/icons/outline/*.svg
+├── octicons/          # package/build/svg/*-24.svg
+└── material/          # package/outlined/*.svg
+```
+
+**已在 `.gitignore` 里忽略，不会推到 GitHub**。以后换图标直接从本地取，不用重新下载：
+
+```powershell
+$raw = [System.IO.File]::ReadAllText('_icon-src/lucide/package/icons/badge-check.svg')
+$s = [regex]::Replace($raw, '<!--[\s\S]*?-->', '')            # 去 license 注释
+$s = [regex]::Replace($s, '\s+(class|width|height)="[^"]*"', '')  # 去无用属性
+$s = [regex]::Replace($s, '\s+', ' ')
+$s = [regex]::Replace($s, '>\s+<', '><').Trim()
+[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($s))
+```
+
+> ⚠️ 不要直接用原始的 base64 —— Lucide 的 SVG 开头带 `<!-- @license lucide-static ... -->` 注释，
+> 虽然浏览器多数能容忍，但不规范且白白增大体积。现有 CSS 里 **21 个图标已全部清理干净**。
 
 **必须记住的三件事**
 

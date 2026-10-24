@@ -3,22 +3,22 @@
 > 本文档从 Obsidian 插件 **Callout Studio**（`PaperBell/.obsidian/plugins/callout-studio/`）的配置中完整提取，
 > 用于在任意静态站点（Jekyll / Hugo / 纯 HTML）中还原与 Obsidian 一致的 Callout 外观。
 >
-> **数据源**：`data.json`（37,790 bytes，最后修改 2026-10-24 13:06）
-> **图标库版本**：Lucide `lucide-static@1.61.0` · Tabler Icons `@tabler/icons@3.49.0` · Octicons `@primer/octicons@19.42.0` · Material Symbols `@material-symbols/svg-400@0.48.1`
+> **数据源**：`data.json`（61,501 bytes，最后修改 2026-10-24 13:23）
+> **图标库版本**：Lucide `lucide-static@1.61.0` · Tabler Icons `@tabler/icons@3.49.0` · Octicons `@primer/octicons@19.42.0` · Material Symbols `@material-symbols/svg-400@0.48.1`（本地缓存在 `_icon-src/`，不入库）
 > **所有 SVG 均为对应官方包中的原始文件，未做近似替换。**
 
 ---
 
 ## 0. 数据总览
 
-`data.json` 里共 **45 条** Callout 定义，但真正可用的是 **20 条**：
+`data.json` 里共 **30 条** Callout 定义（2026-10-24 从 45 条精简而来），其中 **21 条可用**：
 
 | 分类 | 数量 | 说明 |
 |---|---|---|
 | 内置标准类型 | 12 | `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` |
-| 自建有效类型 | 8 | `definition` `highlight` `idea` `motivation` `theorem` `context` `formula` `keypoint` |
-| **合计可用** | **20** | 已全部在本文档中给出完整 CSS |
-| 模板残留 / 占位 | 25 | 见 [A.3](#a3-无效与占位项25-个)，**不要**用于正式文档 |
+| 自建有效类型 | 9 | `highlight` `definition` `conclusion` `idea` `motivation` `theorem` `context` `formula` `keypoint` |
+| **合计可用** | **21** | 已全部在本文档中给出完整 CSS |
+| 模板占位（未清理） | 9 | 见 [A.3](#a3-未清理的占位项9-个)，**不要**用于正式文档 |
 
 **关于颜色字段**：Callout Studio 的每条配置只有 **两个十六进制色值**——`colorLight`（亮色模式）和 `colorDark`（暗色模式）。它没有独立的「背景色 / 边框色 / 标题色」字段，这三种颜色都是从这一个 accent 色**派生**出来的：
 
@@ -34,30 +34,31 @@ accent   = colorLight / colorDark
 
 ## Part A: Callout 资产清单表
 
-### A.1 可用类型（20 个）
+### A.1 可用类型（21 个）
 
 | ID（Obsidian 里写 `[!xxx]`） | CSS 选择器 | 显示名 | 图标库 | 图标名 | 亮色 | 暗色 | base64 长度 |
 |---|---|---|---|---|---|---|---|
-| `abstract` | `[data-callout="abstract"]` | Abstract | Lucide | `clipboard-list` | `#00bfa5` | `#00bfa5` | 676 |
-| `danger` | `[data-callout="danger"]` | Danger | Lucide | `zap` | `#e93147` | `#fb464c` | 596 |
-| `example` | `[data-callout="example"]` | Example | Lucide | `list` | `#7852ee` | `#a882ff` | 528 |
-| `failure` | `[data-callout="failure"]` | Failure | Lucide | `x` | `#e93147` | `#fb464c` | 416 |
-| `info` | `[data-callout="info"]` | Info | Lucide | `info` | `#086ddd` | `#027aff` | 464 |
-| `note` | `[data-callout="note"]` | Note | Lucide | `pencil` | `#086ddd` | `#027aff` | 580 |
-| `question` | `[data-callout="question"]` | Question | Lucide | `help-circle` | `#ec7500` | `#e9973f` | 508 |
-| `quote` | `[data-callout="quote"]` | Quote | Lucide | `quote` | `#9e9e9e` | `#9e9e9e` | 732 |
-| `success` | `[data-callout="success"]` | Success | Lucide | `check` | `#08b94e` | `#44cf6e` | 400 |
-| `tip` | `[data-callout="tip"]` | Tip | Lucide | `flame` | `#00bfbc` | `#53dfdd` | 500 |
-| `todo` | `[data-callout="todo"]` | Todo | Lucide | `check-circle-2` | `#086ddd` | `#027aff` | 460 |
-| `warning` | `[data-callout="warning"]` | Warning | Lucide | `alert-triangle` | `#ec7500` | `#e9973f` | 544 |
-| `definition` | `[data-callout="definition"]` | Definition | Material Symbols | `book_ribbon` | `#086ddd` | `#027aff` | 912 |
-| `highlight` | `[data-callout="highlight"]` | Highlight | Octicons | `sparkles-fill` | `#086ddd` | `#027aff` | 1284 |
-| `idea` | `[data-callout="idea"]` | idea | Lucide | `lightbulb` | `#afb42b` | `#dce775` | 572 |
-| `motivation` | `[data-callout="motivation"]` | Motivation | Lucide | `sparkles` | `#ec7500` | `#e9973f` | 828 |
-| `theorem` | `[data-callout="theorem"]` | Theorem | Lucide | `function-square` | `#086ddd` | `#027aff` | 556 |
-| `context` | `[data-callout="context"]` | Context | Lucide | `map-pin` | `#00bfbc` | `#53dfdd` | 556 |
-| `formula` | `[data-callout="formula"]` | Formula | Lucide | `pencil` | `#086ddd` | `#027aff` | 580 |
-| `keypoint` | `[data-callout="keypoint"]` | Keypoint | Tabler Outline | `target-arrow` | `#ff5722` | `#ff8a65` | 560 |
+| `abstract` | `[data-callout="abstract"]` | Abstract | Lucide | `clipboard-list` | `#00bfa5` | `#00bfa5` | 496 |
+| `danger` | `[data-callout="danger"]` | Danger | Lucide | `zap` | `#e93147` | `#fb464c` | 460 |
+| `example` | `[data-callout="example"]` | Example | Lucide | `list` | `#7852ee` | `#a882ff` | 392 |
+| `failure` | `[data-callout="failure"]` | Failure | Lucide | `x` | `#e93147` | `#fb464c` | 284 |
+| `info` | `[data-callout="info"]` | Info | Lucide | `info` | `#086ddd` | `#027aff` | 324 |
+| `note` | `[data-callout="note"]` | Note | Lucide | `pencil` | `#086ddd` | `#027aff` | 440 |
+| `question` | `[data-callout="question"]` | Question | Lucide | `help-circle` | `#ec7500` | `#e9973f` | 360 |
+| `quote` | `[data-callout="quote"]` | Quote | Lucide | `quote` | `#9e9e9e` | `#9e9e9e` | 592 |
+| `success` | `[data-callout="success"]` | Success | Lucide | `check` | `#08b94e` | `#44cf6e` | 260 |
+| `tip` | `[data-callout="tip"]` | Tip | Lucide | `flame` | `#00bfbc` | `#53dfdd` | 360 |
+| `todo` | `[data-callout="todo"]` | Todo | Lucide | `check-circle-2` | `#086ddd` | `#027aff` | 308 |
+| `warning` | `[data-callout="warning"]` | Warning | Lucide | `alert-triangle` | `#ec7500` | `#e9973f` | 392 |
+| `highlight` | `[data-callout="highlight"]` | Highlight | Octicons | `sparkles-fill` | `#086ddd` | `#027aff` | 1252 |
+| `definition` | `[data-callout="definition"]` | Definition | Material Symbols | `book_ribbon` | `#086ddd` | `#027aff` | 884 |
+| `conclusion` | `[data-callout="conclusion"]` | Conclusion | Lucide | `badge-check` | `#086ddd` | `#027aff` | 492 |
+| `idea` | `[data-callout="idea"]` | idea | Lucide | `lightbulb` | `#afb42b` | `#dce775` | 428 |
+| `motivation` | `[data-callout="motivation"]` | Motivation | Lucide | `sparkles` | `#ec7500` | `#e9973f` | 684 |
+| `theorem` | `[data-callout="theorem"]` | Theorem | Lucide | `function-square` | `#086ddd` | `#027aff` | 372 |
+| `context` | `[data-callout="context"]` | Context | Lucide | `map-pin` | `#00bfbc` | `#53dfdd` | 416 |
+| `formula` | `[data-callout="formula"]` | Formula | Lucide | `pencil` | `#086ddd` | `#027aff` | 440 |
+| `keypoint` | `[data-callout="keypoint"]` | Keypoint | Tabler Outline | `target-arrow` | `#ff5722` | `#ff8a65` | 536 |
 
 > **注意图标名的前缀差异**：配置里 `idea` / `motivation` / `theorem` / `context` 的图标值写作 `lucide-lightbulb` / `lucide-sparkles` / `lucide-function-square` / `lucide-map-pin`（带 `lucide-` 前缀），
 > 但真实文件名是 `lightbulb` / `sparkles` / `function-square` / `map-pin`。上表已用真实名。
@@ -70,7 +71,7 @@ accent   = colorLight / colorDark
 #### `abstract` — lucide / `clipboard-list`
 
 ```
-M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2 M12 11h4 M12 16h4 M8 11h.01 M8 16h.01
+M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2 | M12 11h4 | M12 16h4 | M8 11h.01 | M8 16h.01
 ```
 
 #### `danger` — lucide / `zap`
@@ -82,37 +83,37 @@ M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.6
 #### `example` — lucide / `list`
 
 ```
-M3 5h.01 M3 12h.01 M3 19h.01 M8 5h13 M8 12h13 M8 19h13
+M3 5h.01 | M3 12h.01 | M3 19h.01 | M8 5h13 | M8 12h13 | M8 19h13
 ```
 
 #### `failure` — lucide / `x`
 
 ```
-M18 6 6 18 m6 6 12 12
+M18 6 6 18 | m6 6 12 12
 ```
 
 #### `info` — lucide / `info`
 
 ```
-M12 16v-4 M12 8h.01
+M12 16v-4 | M12 8h.01
 ```
 
 #### `note` — lucide / `pencil`
 
 ```
-M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z m15 5 4 4
+M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z | m15 5 4 4
 ```
 
 #### `question` — lucide / `help-circle`
 
 ```
-M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3 M12 17h.01
+M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3 | M12 17h.01
 ```
 
 #### `quote` — lucide / `quote`
 
 ```
-M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z
+M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z | M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z
 ```
 
 #### `success` — lucide / `check`
@@ -136,13 +137,7 @@ m16 9-5.5 5.5L8 12
 #### `warning` — lucide / `alert-triangle`
 
 ```
-m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3 M12 9v4 M12 17h.01
-```
-
-#### `definition` — material / `book_ribbon`
-
-```
-M452-250v-427q-45-30-97.62-46.5Q301.76-740 248-740q-38 0-74.5 9.5T100-707v434q31-14 70.5-20.5T248-300q53.57 0 104.28 12.5Q403-275 452-250Zm30 90q-51-38-111-58.5T248-239q-36.54 0-71.77 9T106-208q-23.1 11-44.55-3Q40-225 40-251v-463q0-15 7-27.5T68-761q42-20 87.39-29.5 45.4-9.5 92.61-9.5 75 0 130.5 19.5T494-723q8 5 13 13.5t5 19.5v440q50-25 98-37.5T712-300q38 0 78.5 6t69.5 16v-496q7.84 2.65 15.42 5.82Q883-765 891-761q14 7 21.5 19.5T920-714v463q0 27.89-22.5 42.45Q875-194 853-208q-34-14-69.23-22.5Q748.54-239 712-239q-63 0-121 21t-109 58Zm130-227v-443l148-50v445l-148 48ZM276-495Z
+m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3 | M12 9v4 | M12 17h.01
 ```
 
 #### `highlight` — octicons / `sparkles-fill`
@@ -151,22 +146,34 @@ M452-250v-427q-45-30-97.62-46.5Q301.76-740 248-740q-38 0-74.5 9.5T100-707v434q31
 M14.4 3.419a.639.639 0 0 1 1.2 0l.61 1.668a9.587 9.587 0 0 0 5.703 5.703l1.668.61a.639.639 0 0 1 0 1.2l-1.668.61a9.587 9.587 0 0 0-5.703 5.703l-.61 1.668a.639.639 0 0 1-1.2 0l-.61-1.668a9.587 9.587 0 0 0-5.703-5.703l-1.668-.61a.639.639 0 0 1 0-1.2l1.668-.61a9.587 9.587 0 0 0 5.703-5.703l.61-1.668ZM8 16.675a.266.266 0 0 1 .5 0l.254.694a3.992 3.992 0 0 0 2.376 2.377l.695.254a.266.266 0 0 1 0 .5l-.695.254a3.992 3.992 0 0 0-2.376 2.377l-.254.694a.266.266 0 0 1-.5 0l-.254-.694a3.992 3.992 0 0 0-2.376-2.377l-.695-.254a.266.266 0 0 1 0-.5l.695-.254a3.992 3.992 0 0 0 2.376-2.377L8 16.675ZM4.2.21a.32.32 0 0 1 .6 0l.305.833a4.793 4.793 0 0 0 2.852 2.852l.833.305a.32.32 0 0 1 0 .6l-.833.305a4.793 4.793 0 0 0-2.852 2.852L4.8 8.79a.32.32 0 0 1-.6 0l-.305-.833a4.793 4.793 0 0 0-2.852-2.852L.21 4.8a.32.32 0 0 1 0-.6l.833-.305a4.793 4.793 0 0 0 2.852-2.852L4.2.21Z
 ```
 
+#### `definition` — material / `book_ribbon`
+
+```
+M452-250v-427q-45-30-97.62-46.5Q301.76-740 248-740q-38 0-74.5 9.5T100-707v434q31-14 70.5-20.5T248-300q53.57 0 104.28 12.5Q403-275 452-250Zm30 90q-51-38-111-58.5T248-239q-36.54 0-71.77 9T106-208q-23.1 11-44.55-3Q40-225 40-251v-463q0-15 7-27.5T68-761q42-20 87.39-29.5 45.4-9.5 92.61-9.5 75 0 130.5 19.5T494-723q8 5 13 13.5t5 19.5v440q50-25 98-37.5T712-300q38 0 78.5 6t69.5 16v-496q7.84 2.65 15.42 5.82Q883-765 891-761q14 7 21.5 19.5T920-714v463q0 27.89-22.5 42.45Q875-194 853-208q-34-14-69.23-22.5Q748.54-239 712-239q-63 0-121 21t-109 58Zm130-227v-443l148-50v445l-148 48ZM276-495Z
+```
+
+#### `conclusion` — lucide / `badge-check`
+
+```
+M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z | m16 9-5.5 5.5L8 12
+```
+
 #### `idea` — lucide / `lightbulb`
 
 ```
-M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5 M9 18h6 M10 22h4
+M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5 | M9 18h6 | M10 22h4
 ```
 
 #### `motivation` — lucide / `sparkles`
 
 ```
-M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z M20 2v4 M22 4h-4
+M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z | M20 2v4 | M22 4h-4
 ```
 
 #### `theorem` — lucide / `function-square`
 
 ```
-M9 17c2 0 2.8-1 2.8-2.8V10c0-2 1-3.3 3.2-3 M9 11.2h5.7
+M9 17c2 0 2.8-1 2.8-2.8V10c0-2 1-3.3 3.2-3 | M9 11.2h5.7
 ```
 
 #### `context` — lucide / `map-pin`
@@ -178,30 +185,25 @@ M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993
 #### `formula` — lucide / `pencil`
 
 ```
-M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z m15 5 4 4
+M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z | m15 5 4 4
 ```
 
 #### `keypoint` — tabler-outline / `target-arrow`
 
 ```
-M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0 | M12 7a5 5 0 1 0 5 5 | M13 3.055a9 9 0 1 0 7.941 7.945 | M15 6v3h3l3 -3h-3v-3l-3 3 | M15 9l-3 3
+M0 0h24v24H0z | M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0 | M12 7a5 5 0 1 0 5 5 | M13 3.055a9 9 0 1 0 7.941 7.945 | M15 6v3h3l3 -3h-3v-3l-3 3 | M15 9l-3 3
 ```
+### A.3 未清理的占位项（9 个）
 
-### A.3 无效与占位项（25 个）
-
-这些条目存在于 `data.json` 里，但**不应生成 CSS**，建议在 Obsidian 里清理掉：
+这些条目仍存在于 `data.json` 里，但**没有在网页里使用**，也不生成 CSS：
 
 | ID | 问题 | 建议 |
 |---|---|---|
-| `数学笔记的基本原则` | 中文 ID，Obsidian 里无法用 `[!xxx]` 语法调用 | 删除 |
-| `例子1.1.1` `例子1.1.2` `例子1.1.3` | 带编号的临时类型，13 个 | 删除 |
-| `例子1.2.2` `例子1.2.3` `例子1.2` | 同上 | 删除 |
-| `例子1.3.2` `例子1.3.3` `例子1.3.4` | 同上 | 删除 |
-| `例子1.4.1` `例子1.4.2` | 同上 | 删除 |
-| `trick 1.2.1` `trick 1.3.1` | 含空格 + 编号 | 删除（或改用 `keypoint`） |
-| `<%= it.colorname %>` | **模板变量残留**，ID 是 EJS 语法 | 删除 |
-| `capacities-body` `capacities-card` `capacities-card-prop` `capacities-index` `capacities-prop` `capacities-prop-image` `capacities-sidebar` | 来自 Capacities 导出模板，7 个 | 删除 |
-| `conclusion` `seealso` `bot` | 自建但图标都是通用的 `pencil` | 可保留，但需自定义图标 |
+| `capacities-body` `capacities-card` `capacities-card-prop` `capacities-index` `capacities-prop` `capacities-prop-image` `capacities-sidebar` | 来自 Capacities 导出模板，7 个，图标都是通用 `pencil` | 删除 |
+| `seealso` | 自建但图标是通用 `pencil` | 删除或换图标 |
+| `bot` | 同上 | 删除或换图标 |
+
+> 2026-10-24 那次清理已移除 15 个：`数学笔记的基本原则`、`例子1.1.1`~`例子1.4.2`（13 个）、`trick 1.2.1`、`trick 1.3.1`、`例子1.2`、`<%= it.colorname %>`（EJS 模板残留）。
 
 ---
 
@@ -344,7 +346,7 @@ def to_details(match_type: str, fold: str, title: str, body_lines: list[str]) ->
   list-style: none;
 }
 
-/* 彩色图标：用 mask 上色，颜色由 --callout-color 控制（亮暗自动切换） */
+/* 彩色图标：mask 上色，颜色由 --callout-color 控制（亮暗自动切换） */
 .callout-title::before {
   content: "";
   width: 1.1em;
@@ -360,121 +362,127 @@ def to_details(match_type: str, fold: str, title: str, body_lines: list[str]) ->
 /* Abstract — lucide / clipboard-list */
 .callout[data-callout="abstract"] {
   --callout-color: #00bfa5;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2xpcGJvYXJkLWxpc3QiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB3aWR0aD0iMjQiICBoZWlnaHQ9IjI0IiAgdmlld0JveD0iMCAwIDI0IDI0IiAgZmlsbD0ibm9uZSIgIHN0cm9rZT0iY3VycmVudENvbG9yIiAgc3Ryb2tlLXdpZHRoPSIyIiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHJlY3Qgd2lkdGg9IjgiIGhlaWdodD0iNCIgeD0iOCIgeT0iMiIgcng9IjEiIHJ5PSIxIiAvPjxwYXRoIGQ9Ik0xNiA0aDJhMiAyIDAgMCAxIDIgMnYxNGEyIDIgMCAwIDEtMiAySDZhMiAyIDAgMCAxLTItMlY2YTIgMiAwIDAgMSAyLTJoMiIgLz48cGF0aCBkPSJNMTIgMTFoNCIgLz48cGF0aCBkPSJNMTIgMTZoNCIgLz48cGF0aCBkPSJNOCAxMWguMDEiIC8+PHBhdGggZD0iTTggMTZoLjAxIiAvPjwvc3ZnPg==");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHJlY3QgeD0iOCIgeT0iMiIgcng9IjEiIHJ5PSIxIiAvPjxwYXRoIGQ9Ik0xNiA0aDJhMiAyIDAgMCAxIDIgMnYxNGEyIDIgMCAwIDEtMiAySDZhMiAyIDAgMCAxLTItMlY2YTIgMiAwIDAgMSAyLTJoMiIgLz48cGF0aCBkPSJNMTIgMTFoNCIgLz48cGF0aCBkPSJNMTIgMTZoNCIgLz48cGF0aCBkPSJNOCAxMWguMDEiIC8+PHBhdGggZD0iTTggMTZoLjAxIiAvPjwvc3ZnPg==");
 }
 
 /* Danger — lucide / zap */
 .callout[data-callout="danger"] {
   --callout-color: #e93147;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtemFwIiAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xNS45MTQgNGExLjUgMS41IDAgMDAtMi40NzQtMS41NjFsLTkgOUExLjUgMS41IDAgMDA1LjUgMTRoNC4wMDJhLjUuNSAwIDAxLjQ3MS42NjZMOC4wODYgMjBhMS41IDEuNSAwIDAwMi40NzUgMS41Nmw5LTlBMS41IDEuNSAwIDAwMTguNSAxMGgtMy45OTdhLjUuNSAwIDAxLS40NzItLjY2N3oiIC8+PC9zdmc+");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE1LjkxNCA0YTEuNSAxLjUgMCAwMC0yLjQ3NC0xLjU2MWwtOSA5QTEuNSAxLjUgMCAwMDUuNSAxNGg0LjAwMmEuNS41IDAgMDEuNDcxLjY2Nkw4LjA4NiAyMGExLjUgMS41IDAgMDAyLjQ3NSAxLjU2bDktOUExLjUgMS41IDAgMDAxOC41IDEwaC0zLjk5N2EuNS41IDAgMDEtLjQ3Mi0uNjY3eiIgLz48L3N2Zz4=");
 }
 
 /* Example — lucide / list */
 .callout[data-callout="example"] {
   --callout-color: #7852ee;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbGlzdCIgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgIHdpZHRoPSIyNCIgIGhlaWdodD0iMjQiICB2aWV3Qm94PSIwIDAgMjQgMjQiICBmaWxsPSJub25lIiAgc3Ryb2tlPSJjdXJyZW50Q29sb3IiICBzdHJva2Utd2lkdGg9IjIiICBzdHJva2UtbGluZWNhcD0icm91bmQiICBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMyA1aC4wMSIgLz48cGF0aCBkPSJNMyAxMmguMDEiIC8+PHBhdGggZD0iTTMgMTloLjAxIiAvPjxwYXRoIGQ9Ik04IDVoMTMiIC8+PHBhdGggZD0iTTggMTJoMTMiIC8+PHBhdGggZD0iTTggMTloMTMiIC8+PC9zdmc+");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTMgNWguMDEiIC8+PHBhdGggZD0iTTMgMTJoLjAxIiAvPjxwYXRoIGQ9Ik0zIDE5aC4wMSIgLz48cGF0aCBkPSJNOCA1aDEzIiAvPjxwYXRoIGQ9Ik04IDEyaDEzIiAvPjxwYXRoIGQ9Ik04IDE5aDEzIiAvPjwvc3ZnPg==");
 }
 
 /* Failure — lucide / x */
 .callout[data-callout="failure"] {
   --callout-color: #e93147;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUteCIgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgIHdpZHRoPSIyNCIgIGhlaWdodD0iMjQiICB2aWV3Qm94PSIwIDAgMjQgMjQiICBmaWxsPSJub25lIiAgc3Ryb2tlPSJjdXJyZW50Q29sb3IiICBzdHJva2Utd2lkdGg9IjIiICBzdHJva2UtbGluZWNhcD0icm91bmQiICBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTggNiA2IDE4IiAvPjxwYXRoIGQ9Im02IDYgMTIgMTIiIC8+PC9zdmc+");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE4IDYgNiAxOCIgLz48cGF0aCBkPSJtNiA2IDEyIDEyIiAvPjwvc3ZnPg==");
 }
 
 /* Info — lucide / info */
 .callout[data-callout="info"] {
   --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaW5mbyIgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgIHdpZHRoPSIyNCIgIGhlaWdodD0iMjQiICB2aWV3Qm94PSIwIDAgMjQgMjQiICBmaWxsPSJub25lIiAgc3Ryb2tlPSJjdXJyZW50Q29sb3IiICBzdHJva2Utd2lkdGg9IjIiICBzdHJva2UtbGluZWNhcD0icm91bmQiICBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgLz48cGF0aCBkPSJNMTIgMTZ2LTQiIC8+PHBhdGggZD0iTTEyIDhoLjAxIiAvPjwvc3ZnPg==");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0iTTEyIDE2di00IiAvPjxwYXRoIGQ9Ik0xMiA4aC4wMSIgLz48L3N2Zz4=");
 }
 
 /* Note — lucide / pencil */
 .callout[data-callout="note"] {
   --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGVuY2lsIiAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMS4xNzQgNi44MTJhMSAxIDAgMCAwLTMuOTg2LTMuOTg3TDMuODQyIDE2LjE3NGEyIDIgMCAwIDAtLjUuODNsLTEuMzIxIDQuMzUyYS41LjUgMCAwIDAgLjYyMy42MjJsNC4zNTMtMS4zMmEyIDIgMCAwIDAgLjgzLS40OTd6IiAvPjxwYXRoIGQ9Im0xNSA1IDQgNCIgLz48L3N2Zz4=");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIxLjE3NCA2LjgxMmExIDEgMCAwIDAtMy45ODYtMy45ODdMMy44NDIgMTYuMTc0YTIgMiAwIDAgMC0uNS44M2wtMS4zMjEgNC4zNTJhLjUuNSAwIDAgMCAuNjIzLjYyMmw0LjM1My0xLjMyYTIgMiAwIDAgMCAuODMtLjQ5N3oiIC8+PHBhdGggZD0ibTE1IDUgNCA0IiAvPjwvc3ZnPg==");
 }
 
 /* Question — lucide / help-circle */
 .callout[data-callout="question"] {
   --callout-color: #ec7500;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaGVscC1jaXJjbGUiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB3aWR0aD0iMjQiICBoZWlnaHQ9IjI0IiAgdmlld0JveD0iMCAwIDI0IDI0IiAgZmlsbD0ibm9uZSIgIHN0cm9rZT0iY3VycmVudENvbG9yIiAgc3Ryb2tlLXdpZHRoPSIyIiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0iTTkuMDkgOWEzIDMgMCAwIDEgNS44MyAxYzAgMi0zIDMtMyAzIiAvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiIC8+PC9zdmc+");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0iTTkuMDkgOWEzIDMgMCAwIDEgNS44MyAxYzAgMi0zIDMtMyAzIiAvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiIC8+PC9zdmc+");
 }
 
 /* Quote — lucide / quote */
 .callout[data-callout="quote"] {
   --callout-color: #9e9e9e;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcXVvdGUiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB3aWR0aD0iMjQiICBoZWlnaHQ9IjI0IiAgdmlld0JveD0iMCAwIDI0IDI0IiAgZmlsbD0ibm9uZSIgIHN0cm9rZT0iY3VycmVudENvbG9yIiAgc3Ryb2tlLXdpZHRoPSIyIiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE2IDNhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDIgMSAxIDAgMCAxIDEgMXYxYTIgMiAwIDAgMS0yIDIgMSAxIDAgMCAwLTEgMXYyYTEgMSAwIDAgMCAxIDEgNiA2IDAgMCAwIDYtNlY1YTIgMiAwIDAgMC0yLTJ6IiAvPjxwYXRoIGQ9Ik01IDNhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDIgMSAxIDAgMCAxIDEgMXYxYTIgMiAwIDAgMS0yIDIgMSAxIDAgMCAwLTEgMXYyYTEgMSAwIDAgMCAxIDEgNiA2IDAgMCAwIDYtNlY1YTIgMiAwIDAgMC0yLTJ6IiAvPjwvc3ZnPg==");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE2IDNhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDIgMSAxIDAgMCAxIDEgMXYxYTIgMiAwIDAgMS0yIDIgMSAxIDAgMCAwLTEgMXYyYTEgMSAwIDAgMCAxIDEgNiA2IDAgMCAwIDYtNlY1YTIgMiAwIDAgMC0yLTJ6IiAvPjxwYXRoIGQ9Ik01IDNhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDIgMSAxIDAgMCAxIDEgMXYxYTIgMiAwIDAgMS0yIDIgMSAxIDAgMCAwLTEgMXYyYTEgMSAwIDAgMCAxIDEgNiA2IDAgMCAwIDYtNlY1YTIgMiAwIDAgMC0yLTJ6IiAvPjwvc3ZnPg==");
 }
 
 /* Success — lucide / check */
 .callout[data-callout="success"] {
   --callout-color: #08b94e;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hlY2siICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB3aWR0aD0iMjQiICBoZWlnaHQ9IjI0IiAgdmlld0JveD0iMCAwIDI0IDI0IiAgZmlsbD0ibm9uZSIgIHN0cm9rZT0iY3VycmVudENvbG9yIiAgc3Ryb2tlLXdpZHRoPSIyIiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwIDYgOSAxN2wtNS01IiAvPjwvc3ZnPg==");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIwIDYgOSAxN2wtNS01IiAvPjwvc3ZnPg==");
 }
 
 /* Tip — lucide / flame */
 .callout[data-callout="tip"] {
   --callout-color: #00bfbc;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZmxhbWUiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB3aWR0aD0iMjQiICBoZWlnaHQ9IjI0IiAgdmlld0JveD0iMCAwIDI0IDI0IiAgZmlsbD0ibm9uZSIgIHN0cm9rZT0iY3VycmVudENvbG9yIiAgc3Ryb2tlLXdpZHRoPSIyIiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDNxMSA0IDQgNi41dDMgNS41YTEgMSAwIDAgMS0xNCAwIDUgNSAwIDAgMSAxLTMgMSAxIDAgMCAwIDUgMGMwLTItMS41LTMtMS41LTVxMC0yIDIuNS00IiAvPjwvc3ZnPg==");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTEyIDNxMSA0IDQgNi41dDMgNS41YTEgMSAwIDAgMS0xNCAwIDUgNSAwIDAgMSAxLTMgMSAxIDAgMCAwIDUgMGMwLTItMS41LTMtMS41LTVxMC0yIDIuNS00IiAvPjwvc3ZnPg==");
 }
 
 /* Todo — lucide / check-circle-2 */
 .callout[data-callout="todo"] {
   --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hlY2stY2lyY2xlLTIiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB3aWR0aD0iMjQiICBoZWlnaHQ9IjI0IiAgdmlld0JveD0iMCAwIDI0IDI0IiAgZmlsbD0ibm9uZSIgIHN0cm9rZT0iY3VycmVudENvbG9yIiAgc3Ryb2tlLXdpZHRoPSIyIiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0ibTE2IDktNS41IDUuNUw4IDEyIiAvPjwvc3ZnPg==");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0ibTE2IDktNS41IDUuNUw4IDEyIiAvPjwvc3ZnPg==");
 }
 
 /* Warning — lucide / alert-triangle */
 .callout[data-callout="warning"] {
   --callout-color: #ec7500;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYWxlcnQtdHJpYW5nbGUiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB3aWR0aD0iMjQiICBoZWlnaHQ9IjI0IiAgdmlld0JveD0iMCAwIDI0IDI0IiAgZmlsbD0ibm9uZSIgIHN0cm9rZT0iY3VycmVudENvbG9yIiAgc3Ryb2tlLXdpZHRoPSIyIiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0ibTIxLjczIDE4LTgtMTRhMiAyIDAgMCAwLTMuNDggMGwtOCAxNEEyIDIgMCAwIDAgNCAyMWgxNmEyIDIgMCAwIDAgMS43My0zIiAvPjxwYXRoIGQ9Ik0xMiA5djQiIC8+PHBhdGggZD0iTTEyIDE3aC4wMSIgLz48L3N2Zz4=");
-}
-
-/* Definition — material / book_ribbon */
-.callout[data-callout="definition"] {
-  --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Ik00NTItMjUwdi00MjdxLTQ1LTMwLTk3LjYyLTQ2LjVRMzAxLjc2LTc0MCAyNDgtNzQwcS0zOCAwLTc0LjUgOS41VDEwMC03MDd2NDM0cTMxLTE0IDcwLjUtMjAuNVQyNDgtMzAwcTUzLjU3IDAgMTA0LjI4IDEyLjVRNDAzLTI3NSA0NTItMjUwWm0zMCA5MHEtNTEtMzgtMTExLTU4LjVUMjQ4LTIzOXEtMzYuNTQgMC03MS43NyA5VDEwNi0yMDhxLTIzLjEgMTEtNDQuNTUtM1E0MC0yMjUgNDAtMjUxdi00NjNxMC0xNSA3LTI3LjVUNjgtNzYxcTQyLTIwIDg3LjM5LTI5LjUgNDUuNC05LjUgOTIuNjEtOS41IDc1IDAgMTMwLjUgMTkuNVQ0OTQtNzIzcTggNSAxMyAxMy41dDUgMTkuNXY0NDBxNTAtMjUgOTgtMzcuNVQ3MTItMzAwcTM4IDAgNzguNSA2dDY5LjUgMTZ2LTQ5NnE3Ljg0IDIuNjUgMTUuNDIgNS44MlE4ODMtNzY1IDg5MS03NjFxMTQgNyAyMS41IDE5LjVUOTIwLTcxNHY0NjNxMCAyNy44OS0yMi41IDQyLjQ1UTg3NS0xOTQgODUzLTIwOHEtMzQtMTQtNjkuMjMtMjIuNVE3NDguNTQtMjM5IDcxMi0yMzlxLTYzIDAtMTIxIDIxdC0xMDkgNThabTEzMC0yMjd2LTQ0M2wxNDgtNTB2NDQ1bC0xNDggNDhaTTI3Ni00OTVaIi8+PC9zdmc+");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0ibTIxLjczIDE4LTgtMTRhMiAyIDAgMCAwLTMuNDggMGwtOCAxNEEyIDIgMCAwIDAgNCAyMWgxNmEyIDIgMCAwIDAgMS43My0zIiAvPjxwYXRoIGQ9Ik0xMiA5djQiIC8+PHBhdGggZD0iTTEyIDE3aC4wMSIgLz48L3N2Zz4=");
 }
 
 /* Highlight — octicons / sparkles-fill */
 .callout[data-callout="highlight"] {
   --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTQuNCAzLjQxOWEuNjM5LjYzOSAwIDAgMSAxLjIgMGwuNjEgMS42NjhhOS41ODcgOS41ODcgMCAwIDAgNS43MDMgNS43MDNsMS42NjguNjFhLjYzOS42MzkgMCAwIDEgMCAxLjJsLTEuNjY4LjYxYTkuNTg3IDkuNTg3IDAgMCAwLTUuNzAzIDUuNzAzbC0uNjEgMS42NjhhLjYzOS42MzkgMCAwIDEtMS4yIDBsLS42MS0xLjY2OGE5LjU4NyA5LjU4NyAwIDAgMC01LjcwMy01LjcwM2wtMS42NjgtLjYxYS42MzkuNjM5IDAgMCAxIDAtMS4ybDEuNjY4LS42MWE5LjU4NyA5LjU4NyAwIDAgMCA1LjcwMy01LjcwM2wuNjEtMS42NjhaTTggMTYuNjc1YS4yNjYuMjY2IDAgMCAxIC41IDBsLjI1NC42OTRhMy45OTIgMy45OTIgMCAwIDAgMi4zNzYgMi4zNzdsLjY5NS4yNTRhLjI2Ni4yNjYgMCAwIDEgMCAuNWwtLjY5NS4yNTRhMy45OTIgMy45OTIgMCAwIDAtMi4zNzYgMi4zNzdsLS4yNTQuNjk0YS4yNjYuMjY2IDAgMCAxLS41IDBsLS4yNTQtLjY5NGEzLjk5MiAzLjk5MiAwIDAgMC0yLjM3Ni0yLjM3N2wtLjY5NS0uMjU0YS4yNjYuMjY2IDAgMCAxIDAtLjVsLjY5NS0uMjU0YTMuOTkyIDMuOTkyIDAgMCAwIDIuMzc2LTIuMzc3TDggMTYuNjc1Wk00LjIuMjFhLjMyLjMyIDAgMCAxIC42IDBsLjMwNS44MzNhNC43OTMgNC43OTMgMCAwIDAgMi44NTIgMi44NTJsLjgzMy4zMDVhLjMyLjMyIDAgMCAxIDAgLjZsLS44MzMuMzA1YTQuNzkzIDQuNzkzIDAgMCAwLTIuODUyIDIuODUyTDQuOCA4Ljc5YS4zMi4zMiAwIDAgMS0uNiAwbC0uMzA1LS44MzNhNC43OTMgNC43OTMgMCAwIDAtMi44NTItMi44NTJMLjIxIDQuOGEuMzIuMzIgMCAwIDEgMC0uNmwuODMzLS4zMDVhNC43OTMgNC43OTMgMCAwIDAgMi44NTItMi44NTJMNC4yLjIxWiIvPjwvc3ZnPg==");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE0LjQgMy40MTlhLjYzOS42MzkgMCAwIDEgMS4yIDBsLjYxIDEuNjY4YTkuNTg3IDkuNTg3IDAgMCAwIDUuNzAzIDUuNzAzbDEuNjY4LjYxYS42MzkuNjM5IDAgMCAxIDAgMS4ybC0xLjY2OC42MWE5LjU4NyA5LjU4NyAwIDAgMC01LjcwMyA1LjcwM2wtLjYxIDEuNjY4YS42MzkuNjM5IDAgMCAxLTEuMiAwbC0uNjEtMS42NjhhOS41ODcgOS41ODcgMCAwIDAtNS43MDMtNS43MDNsLTEuNjY4LS42MWEuNjM5LjYzOSAwIDAgMSAwLTEuMmwxLjY2OC0uNjFhOS41ODcgOS41ODcgMCAwIDAgNS43MDMtNS43MDNsLjYxLTEuNjY4Wk04IDE2LjY3NWEuMjY2LjI2NiAwIDAgMSAuNSAwbC4yNTQuNjk0YTMuOTkyIDMuOTkyIDAgMCAwIDIuMzc2IDIuMzc3bC42OTUuMjU0YS4yNjYuMjY2IDAgMCAxIDAgLjVsLS42OTUuMjU0YTMuOTkyIDMuOTkyIDAgMCAwLTIuMzc2IDIuMzc3bC0uMjU0LjY5NGEuMjY2LjI2NiAwIDAgMS0uNSAwbC0uMjU0LS42OTRhMy45OTIgMy45OTIgMCAwIDAtMi4zNzYtMi4zNzdsLS42OTUtLjI1NGEuMjY2LjI2NiAwIDAgMSAwLS41bC42OTUtLjI1NGEzLjk5MiAzLjk5MiAwIDAgMCAyLjM3Ni0yLjM3N0w4IDE2LjY3NVpNNC4yLjIxYS4zMi4zMiAwIDAgMSAuNiAwbC4zMDUuODMzYTQuNzkzIDQuNzkzIDAgMCAwIDIuODUyIDIuODUybC44MzMuMzA1YS4zMi4zMiAwIDAgMSAwIC42bC0uODMzLjMwNWE0Ljc5MyA0Ljc5MyAwIDAgMC0yLjg1MiAyLjg1Mkw0LjggOC43OWEuMzIuMzIgMCAwIDEtLjYgMGwtLjMwNS0uODMzYTQuNzkzIDQuNzkzIDAgMCAwLTIuODUyLTIuODUyTC4yMSA0LjhhLjMyLjMyIDAgMCAxIDAtLjZsLjgzMy0uMzA1YTQuNzkzIDQuNzkzIDAgMCAwIDIuODUyLTIuODUyTDQuMi4yMVoiLz48L3N2Zz4=");
+}
+
+/* Definition — material / book_ribbon */
+.callout[data-callout="definition"] {
+  --callout-color: #086ddd;
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIj48cGF0aCBkPSJNNDUyLTI1MHYtNDI3cS00NS0zMC05Ny42Mi00Ni41UTMwMS43Ni03NDAgMjQ4LTc0MHEtMzggMC03NC41IDkuNVQxMDAtNzA3djQzNHEzMS0xNCA3MC41LTIwLjVUMjQ4LTMwMHE1My41NyAwIDEwNC4yOCAxMi41UTQwMy0yNzUgNDUyLTI1MFptMzAgOTBxLTUxLTM4LTExMS01OC41VDI0OC0yMzlxLTM2LjU0IDAtNzEuNzcgOVQxMDYtMjA4cS0yMy4xIDExLTQ0LjU1LTNRNDAtMjI1IDQwLTI1MXYtNDYzcTAtMTUgNy0yNy41VDY4LTc2MXE0Mi0yMCA4Ny4zOS0yOS41IDQ1LjQtOS41IDkyLjYxLTkuNSA3NSAwIDEzMC41IDE5LjVUNDk0LTcyM3E4IDUgMTMgMTMuNXQ1IDE5LjV2NDQwcTUwLTI1IDk4LTM3LjVUNzEyLTMwMHEzOCAwIDc4LjUgNnQ2OS41IDE2di00OTZxNy44NCAyLjY1IDE1LjQyIDUuODJRODgzLTc2NSA4OTEtNzYxcTE0IDcgMjEuNSAxOS41VDkyMC03MTR2NDYzcTAgMjcuODktMjIuNSA0Mi40NVE4NzUtMTk0IDg1My0yMDhxLTM0LTE0LTY5LjIzLTIyLjVRNzQ4LjU0LTIzOSA3MTItMjM5cS02MyAwLTEyMSAyMXQtMTA5IDU4Wm0xMzAtMjI3di00NDNsMTQ4LTUwdjQ0NWwtMTQ4IDQ4Wk0yNzYtNDk1WiIvPjwvc3ZnPg==");
+}
+
+/* Conclusion — lucide / badge-check */
+.callout[data-callout="conclusion"] {
+  --callout-color: #086ddd;
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTMuODUgOC42MmE0IDQgMCAwIDEgNC43OC00Ljc3IDQgNCAwIDAgMSA2Ljc0IDAgNCA0IDAgMCAxIDQuNzggNC43OCA0IDQgMCAwIDEgMCA2Ljc0IDQgNCAwIDAgMS00Ljc3IDQuNzggNCA0IDAgMCAxLTYuNzUgMCA0IDQgMCAwIDEtNC43OC00Ljc3IDQgNCAwIDAgMSAwLTYuNzZaIiAvPjxwYXRoIGQ9Im0xNiA5LTUuNSA1LjVMOCAxMiIgLz48L3N2Zz4=");
 }
 
 /* Idea — lucide / lightbulb */
 .callout[data-callout="idea"] {
   --callout-color: #afb42b;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbGlnaHRidWxiIiAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xNSAxNGMuMi0xIC43LTEuNyAxLjUtMi41IDEtLjkgMS41LTIuMiAxLjUtMy41QTYgNiAwIDAgMCA2IDhjMCAxIC4yIDIuMiAxLjUgMy41LjcuNyAxLjMgMS41IDEuNSAyLjUiIC8+PHBhdGggZD0iTTkgMThoNiIgLz48cGF0aCBkPSJNMTAgMjJoNCIgLz48L3N2Zz4=");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE1IDE0Yy4yLTEgLjctMS43IDEuNS0yLjUgMS0uOSAxLjUtMi4yIDEuNS0zLjVBNiA2IDAgMCAwIDYgOGMwIDEgLjIgMi4yIDEuNSAzLjUuNy43IDEuMyAxLjUgMS41IDIuNSIgLz48cGF0aCBkPSJNOSAxOGg2IiAvPjxwYXRoIGQ9Ik0xMCAyMmg0IiAvPjwvc3ZnPg==");
 }
 
 /* Motivation — lucide / sparkles */
 .callout[data-callout="motivation"] {
   --callout-color: #ec7500;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3BhcmtsZXMiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB3aWR0aD0iMjQiICBoZWlnaHQ9IjI0IiAgdmlld0JveD0iMCAwIDI0IDI0IiAgZmlsbD0ibm9uZSIgIHN0cm9rZT0iY3VycmVudENvbG9yIiAgc3Ryb2tlLXdpZHRoPSIyIiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTExLjAxNyAyLjgxNGExIDEgMCAwIDEgMS45NjYgMGwxLjA1MSA1LjU1OGEyIDIgMCAwIDAgMS41OTQgMS41OTRsNS41NTggMS4wNTFhMSAxIDAgMCAxIDAgMS45NjZsLTUuNTU4IDEuMDUxYTIgMiAwIDAgMC0xLjU5NCAxLjU5NGwtMS4wNTEgNS41NThhMSAxIDAgMCAxLTEuOTY2IDBsLTEuMDUxLTUuNTU4YTIgMiAwIDAgMC0xLjU5NC0xLjU5NGwtNS41NTgtMS4wNTFhMSAxIDAgMCAxIDAtMS45NjZsNS41NTgtMS4wNTFhMiAyIDAgMCAwIDEuNTk0LTEuNTk0eiIgLz48cGF0aCBkPSJNMjAgMnY0IiAvPjxwYXRoIGQ9Ik0yMiA0aC00IiAvPjxjaXJjbGUgY3g9IjQiIGN5PSIyMCIgcj0iMiIgLz48L3N2Zz4=");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTExLjAxNyAyLjgxNGExIDEgMCAwIDEgMS45NjYgMGwxLjA1MSA1LjU1OGEyIDIgMCAwIDAgMS41OTQgMS41OTRsNS41NTggMS4wNTFhMSAxIDAgMCAxIDAgMS45NjZsLTUuNTU4IDEuMDUxYTIgMiAwIDAgMC0xLjU5NCAxLjU5NGwtMS4wNTEgNS41NThhMSAxIDAgMCAxLTEuOTY2IDBsLTEuMDUxLTUuNTU4YTIgMiAwIDAgMC0xLjU5NC0xLjU5NGwtNS41NTgtMS4wNTFhMSAxIDAgMCAxIDAtMS45NjZsNS41NTgtMS4wNTFhMiAyIDAgMCAwIDEuNTk0LTEuNTk0eiIgLz48cGF0aCBkPSJNMjAgMnY0IiAvPjxwYXRoIGQ9Ik0yMiA0aC00IiAvPjxjaXJjbGUgY3g9IjQiIGN5PSIyMCIgcj0iMiIgLz48L3N2Zz4=");
 }
 
 /* Theorem — lucide / function-square */
 .callout[data-callout="theorem"] {
   --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZnVuY3Rpb24tc3F1YXJlIiAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiIHJ5PSIyIiAvPjxwYXRoIGQ9Ik05IDE3YzIgMCAyLjgtMSAyLjgtMi44VjEwYzAtMiAxLTMuMyAzLjItMyIgLz48cGF0aCBkPSJNOSAxMS4yaDUuNyIgLz48L3N2Zz4=");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHJlY3QgeD0iMyIgeT0iMyIgcng9IjIiIHJ5PSIyIiAvPjxwYXRoIGQ9Ik05IDE3YzIgMCAyLjgtMSAyLjgtMi44VjEwYzAtMiAxLTMuMyAzLjItMyIgLz48cGF0aCBkPSJNOSAxMS4yaDUuNyIgLz48L3N2Zz4=");
 }
 
 /* Context — lucide / map-pin */
 .callout[data-callout="context"] {
   --callout-color: #00bfbc;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWFwLXBpbiIgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgIHdpZHRoPSIyNCIgIGhlaWdodD0iMjQiICB2aWV3Qm94PSIwIDAgMjQgMjQiICBmaWxsPSJub25lIiAgc3Ryb2tlPSJjdXJyZW50Q29sb3IiICBzdHJva2Utd2lkdGg9IjIiICBzdHJva2UtbGluZWNhcD0icm91bmQiICBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjAgMTBjMCA0Ljk5My01LjUzOSAxMC4xOTMtNy4zOTkgMTEuNzk5YTEgMSAwIDAgMS0xLjIwMiAwQzkuNTM5IDIwLjE5MyA0IDE0Ljk5MyA0IDEwYTggOCAwIDAgMSAxNiAwIiAvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjMiIC8+PC9zdmc+");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIwIDEwYzAgNC45OTMtNS41MzkgMTAuMTkzLTcuMzk5IDExLjc5OWExIDEgMCAwIDEtMS4yMDIgMEM5LjUzOSAyMC4xOTMgNCAxNC45OTMgNCAxMGE4IDggMCAwIDEgMTYgMCIgLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSIzIiAvPjwvc3ZnPg==");
 }
 
 /* Formula — lucide / pencil */
 .callout[data-callout="formula"] {
   --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PCEtLSBAbGljZW5zZSBsdWNpZGUtc3RhdGljIHYxLjYxLjAgLSBJU0MgLS0+PHN2ZyAgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGVuY2lsIiAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMS4xNzQgNi44MTJhMSAxIDAgMCAwLTMuOTg2LTMuOTg3TDMuODQyIDE2LjE3NGEyIDIgMCAwIDAtLjUuODNsLTEuMzIxIDQuMzUyYS41LjUgMCAwIDAgLjYyMy42MjJsNC4zNTMtMS4zMmEyIDIgMCAwIDAgLjgzLS40OTd6IiAvPjxwYXRoIGQ9Im0xNSA1IDQgNCIgLz48L3N2Zz4=");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIxLjE3NCA2LjgxMmExIDEgMCAwIDAtMy45ODYtMy45ODdMMy44NDIgMTYuMTc0YTIgMiAwIDAgMC0uNS44M2wtMS4zMjEgNC4zNTJhLjUuNSAwIDAgMCAuNjIzLjYyMmw0LjM1My0xLjMyYTIgMiAwIDAgMCAuODMtLjQ5N3oiIC8+PHBhdGggZD0ibTE1IDUgNCA0IiAvPjwvc3ZnPg==");
 }
 
 /* Keypoint — tabler-outline / target-arrow */
 .callout[data-callout="keypoint"] {
   --callout-color: #ff5722;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMSAxMmExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIi8+PHBhdGggZD0iTTEyIDdhNSA1IDAgMSAwIDUgNSIvPjxwYXRoIGQ9Ik0xMyAzLjA1NWE5IDkgMCAxIDAgNy45NDEgNy45NDUiLz48cGF0aCBkPSJNMTUgNnYzaDNsMyAtM2gtM3YtM2wtMyAzIi8+PHBhdGggZD0iTTE1IDlsLTMgMyIvPjwvc3ZnPg==");
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIiAvPjxwYXRoIGQ9Ik0xMSAxMmExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiAvPjxwYXRoIGQ9Ik0xMiA3YTUgNSAwIDEgMCA1IDUiIC8+PHBhdGggZD0iTTEzIDMuMDU1YTkgOSAwIDEgMCA3Ljk0MSA3Ljk0NSIgLz48cGF0aCBkPSJNMTUgNnYzaDNsMyAtM2gtM3YtM2wtMyAzIiAvPjxwYXRoIGQ9Ik0xNSA5bC0zIDMiIC8+PC9zdmc+");
 }
 
 /* ===== 暗色：只覆盖颜色，图标和结构不变 ===== */
@@ -489,8 +497,9 @@ def to_details(match_type: str, fold: str, title: str, body_lines: list[str]) ->
   .callout[data-callout="tip"] { --callout-color: #53dfdd; }
   .callout[data-callout="todo"] { --callout-color: #027aff; }
   .callout[data-callout="warning"] { --callout-color: #e9973f; }
-  .callout[data-callout="definition"] { --callout-color: #027aff; }
   .callout[data-callout="highlight"] { --callout-color: #027aff; }
+  .callout[data-callout="definition"] { --callout-color: #027aff; }
+  .callout[data-callout="conclusion"] { --callout-color: #027aff; }
   .callout[data-callout="idea"] { --callout-color: #dce775; }
   .callout[data-callout="motivation"] { --callout-color: #e9973f; }
   .callout[data-callout="theorem"] { --callout-color: #027aff; }
@@ -510,8 +519,9 @@ html[data-theme="dark"] .callout[data-callout="success"] { --callout-color: #44c
 html[data-theme="dark"] .callout[data-callout="tip"] { --callout-color: #53dfdd; }
 html[data-theme="dark"] .callout[data-callout="todo"] { --callout-color: #027aff; }
 html[data-theme="dark"] .callout[data-callout="warning"] { --callout-color: #e9973f; }
-html[data-theme="dark"] .callout[data-callout="definition"] { --callout-color: #027aff; }
 html[data-theme="dark"] .callout[data-callout="highlight"] { --callout-color: #027aff; }
+html[data-theme="dark"] .callout[data-callout="definition"] { --callout-color: #027aff; }
+html[data-theme="dark"] .callout[data-callout="conclusion"] { --callout-color: #027aff; }
 html[data-theme="dark"] .callout[data-callout="idea"] { --callout-color: #dce775; }
 html[data-theme="dark"] .callout[data-callout="motivation"] { --callout-color: #e9973f; }
 html[data-theme="dark"] .callout[data-callout="theorem"] { --callout-color: #027aff; }
@@ -532,16 +542,61 @@ html[data-theme="light"] .callout[data-callout="success"] { --callout-color: #08
 html[data-theme="light"] .callout[data-callout="tip"] { --callout-color: #00bfbc; }
 html[data-theme="light"] .callout[data-callout="todo"] { --callout-color: #086ddd; }
 html[data-theme="light"] .callout[data-callout="warning"] { --callout-color: #ec7500; }
-html[data-theme="light"] .callout[data-callout="definition"] { --callout-color: #086ddd; }
 html[data-theme="light"] .callout[data-callout="highlight"] { --callout-color: #086ddd; }
+html[data-theme="light"] .callout[data-callout="definition"] { --callout-color: #086ddd; }
+html[data-theme="light"] .callout[data-callout="conclusion"] { --callout-color: #086ddd; }
 html[data-theme="light"] .callout[data-callout="idea"] { --callout-color: #afb42b; }
 html[data-theme="light"] .callout[data-callout="motivation"] { --callout-color: #ec7500; }
 html[data-theme="light"] .callout[data-callout="theorem"] { --callout-color: #086ddd; }
 html[data-theme="light"] .callout[data-callout="context"] { --callout-color: #00bfbc; }
 html[data-theme="light"] .callout[data-callout="formula"] { --callout-color: #086ddd; }
 html[data-theme="light"] .callout[data-callout="keypoint"] { --callout-color: #ff5722; }
-```
 
+/* ==========================================================================
+   补充：正文区、折叠标记与折叠指示
+   （纯 CSS 三角，不依赖任何图标字体）
+   ========================================================================== */
+
+.callout-content > :first-child { margin-top: 0; }
+.callout-content > :last-child { margin-bottom: 0; }
+
+.callout > summary.callout-title {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 去掉 <summary> 的原生三角，否则会和我们的图标并排出现两个标记 */
+.callout > summary.callout-title::-webkit-details-marker {
+  display: none;
+}
+
+.callout > summary.callout-title::marker {
+  content: "";
+}
+
+/* 折叠指示三角：颜色跟随 --callout-color */
+.callout > summary.callout-title::after {
+  content: "";
+  width: 0;
+  height: 0;
+  margin-left: auto;
+  flex: 0 0 auto;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid currentColor;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.callout:not([open]) > summary.callout-title::after {
+  transform: rotate(-90deg);
+}
+
+/* ===== 兼容：旧写法 "key point"（带空格） ===== */
+.callout[data-callout="key point"] {
+  --callout-color: #ff5722;
+}
+```
 ### C.3 兼容性说明
 
 | 特性 | 支持情况 |
