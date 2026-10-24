@@ -50,6 +50,9 @@ kramdown:
   math_engine: mathjax
   input: GFM
   hard_wrap: false
+  # 让 <details markdown="block"> / <div markdown="block"> 内部的 Markdown 正常解析
+  # （Obsidian Callout 转换出的结构依赖这个开关，否则 callout 内容会原样显示）
+  parse_block_html: true
   
 # The following files will be removed from the generated website.
 exclude:

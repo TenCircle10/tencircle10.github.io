@@ -200,8 +200,14 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 - 有上界就必有**无限多个**上界（上界往上都还是上界）。
 - 上确界是把"所有上界"压到最紧的那一个；**它不一定属于 $E$**。
 
-> [!key point] 一句话理解（保留自己的话）
-> 确界"取一个不一定取到，但取一段一定包含"：它是界的**边界**，未必落在集合里。例如 $\sup(0, 1) = 1 \notin (0, 1)$，但任何含 $1$ 的开区间都与 $(0,1)$ 相交。
+<details class="callout key point" data-callout="key point" markdown="block" open>
+<summary class="callout-title">一句话理解（保留自己的话）</summary>
+<div class="callout-content" markdown="block">
+
+确界"取一个不一定取到，但取一段一定包含"：它是界的**边界**，未必落在集合里。例如 $\sup(0, 1) = 1 \notin (0, 1)$，但任何含 $1$ 的开区间都与 $(0,1)$ 相交。
+
+</div>
+</details>
 
 ### 3.2 确界原理（完备性）
 
@@ -338,11 +344,17 @@ $$\exists \varepsilon > 0,\ \forall N \in \mathbb{N},\ \exists n > N,\ |a_n - A|
 
 $$\left| \frac{1}{n} - 0 \right| = \frac{1}{n} < \varepsilon$$
 
-> [!key point] 该记住的常见极限
-> $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 1\ (k > 0), \qquad \lim_{n \to \infty} \frac{n^{k}}{2^{n}} = 0$$
-> 直观：$n$ 次根会把幂次压平，而指数增长压过任何多项式。
->
-> **思考**：若 $\lim\limits\_{n \to \infty} a\_n = a$，则 $\lim\limits\_{n \to \infty} \dfrac{a\_1 + a\_2 + \cdots + a\_n}{n} = a$ —— 算术平均也收敛到同一个值（注意外层必须写 $\lim$，否则左边是个随 $n$ 变化的量，不能等于常数 $a$）。
+<details class="callout key point" data-callout="key point" markdown="block" open>
+<summary class="callout-title">该记住的常见极限</summary>
+<div class="callout-content" markdown="block">
+
+$$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 1\ (k > 0), \qquad \lim_{n \to \infty} \frac{n^{k}}{2^{n}} = 0$$
+直观：$n$ 次根会把幂次压平，而指数增长压过任何多项式。
+
+**思考**：若 $\lim\limits\_{n \to \infty} a\_n = a$，则 $\lim\limits\_{n \to \infty} \dfrac{a\_1 + a\_2 + \cdots + a\_n}{n} = a$ —— 算术平均也收敛到同一个值（注意外层必须写 $\lim$，否则左边是个随 $n$ 变化的量，不能等于常数 $a$）。
+
+</div>
+</details>
 
 ### 4.3 极限的性质
 
@@ -530,9 +542,15 @@ $$y_{n+1} - y_n = \frac{1}{x_n}\left(\frac{1}{1 - x_n} - 1\right) = \frac{1}{1 -
 </div>
 </details>
 
-> [!key point] 更强的结论（用于"合并"）
-> $$\begin{cases} \lim\limits_{n \to \infty} a_{2n} = A \\[4pt] \lim\limits_{n \to \infty} a_{2n-1} = A \end{cases} \Longrightarrow \lim_{n \to \infty} a_n = A$$
-> 推广：若对 $r = 0, 1, \dots, p-1$ 都有 $\lim\limits\_{n \to \infty} a\_{pn+r} = A$，则 $\lim\limits\_{n \to \infty} a\_n = A$（即按模 $p$ 的完全剩余系分类）。
+<details class="callout key point" data-callout="key point" markdown="block" open>
+<summary class="callout-title">更强的结论（用于"合并"）</summary>
+<div class="callout-content" markdown="block">
+
+$$\begin{cases} \lim\limits_{n \to \infty} a_{2n} = A \\[4pt] \lim\limits_{n \to \infty} a_{2n-1} = A \end{cases} \Longrightarrow \lim_{n \to \infty} a_n = A$$
+推广：若对 $r = 0, 1, \dots, p-1$ 都有 $\lim\limits\_{n \to \infty} a\_{pn+r} = A$，则 $\lim\limits\_{n \to \infty} a\_n = A$（即按模 $p$ 的完全剩余系分类）。
+
+</div>
+</details>
 
 它的逆否用法很实用：只要找到两个子列极限不同（或某个子列发散），就能断定原数列不收敛，见 [前面  SYNC\_MATH\_385  的反例](#limit-tail)。
 
@@ -631,10 +649,15 @@ $$\left(1 + \frac{1}{n}\right)^{n} < 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdot
 
 ### 5.2 $e$ 的上下界
 
-> [!key point] 两侧夹住 $e$
-> $$\left(1 + \frac{1}{n}\right)^{n} < e < \left(1 + \frac{1}{n}\right)^{n+1}$$
-> $n$ 越大，所得的界越精确。
-<a id="e-bounds"></a>
+<details class="callout key point" id="e-bounds" data-callout="key point" markdown="block" open>
+<summary class="callout-title">两侧夹住 $e$</summary>
+<div class="callout-content" markdown="block">
+
+$$\left(1 + \frac{1}{n}\right)^{n} < e < \left(1 + \frac{1}{n}\right)^{n+1}$$
+$n$ 越大，所得的界越精确。
+
+</div>
+</details>
 
 **证法一（拉格朗日中值定理）**：对 $0 \lt  a \lt  b$，$n \in \mathbb{N}^{\*}$，用 $f(x) = x^{n+1}$ 得
 
@@ -919,10 +942,15 @@ $$\lim_{x \to x_0} f\big(g(x)\big) = A$$
 
 ### 7.6 两个重要极限
 
-> [!key point] 基本款
-> $$\lim_{x \to 0} \frac{\sin x}{x} = 1 \iff \lim_{x \to 0^{-}}\frac{\sin x}{x} = \lim_{x \to 0^{+}}\frac{\sin x}{x} = 1, \qquad \lim_{x \to \infty}\left(1 + \frac{1}{x}\right)^{x} = e$$
-> 第二个就是数列 $e = \lim\limits\_{n \to \infty}\left(1+\frac{1}{n}\right)^{n}$（见 [e 的定义](#e-definition)）的函数版。
-<a id="important-limits"></a>
+<details class="callout key point" id="important-limits" data-callout="key point" markdown="block" open>
+<summary class="callout-title">基本款</summary>
+<div class="callout-content" markdown="block">
+
+$$\lim_{x \to 0} \frac{\sin x}{x} = 1 \iff \lim_{x \to 0^{-}}\frac{\sin x}{x} = \lim_{x \to 0^{+}}\frac{\sin x}{x} = 1, \qquad \lim_{x \to \infty}\left(1 + \frac{1}{x}\right)^{x} = e$$
+第二个就是数列 $e = \lim\limits\_{n \to \infty}\left(1+\frac{1}{n}\right)^{n}$（见 [e 的定义](#e-definition)）的函数版。
+
+</div>
+</details>
 
 - $\lim\limits\_{x \to 0} \dfrac{\arcsin x}{x} = 1$（令 $\arcsin x = t$，即 $x = \sin t$）；
 - $\lim\limits\_{x \to 0^{+}}\left(1 + \dfrac{1}{x}\right)^{x} = \lim\limits\_{t \to +\infty} (1 + t)^{\frac{1}{t}} = e^{\lim\limits\_{t \to +\infty} \frac{\ln(1+t)}{t}} = e^{0} = 1$；
@@ -1007,11 +1035,16 @@ $$\alpha(x) \sim \beta(x) \iff \alpha(x) = \beta(x) + o(\beta(x))$$
 
 ### 9.2 常用等价无穷小（$x \to 0$）
 
-> [!key point] 背下来的一串
-> $$\sin x \sim x \sim \tan x \sim \arcsin x \sim \arctan x \sim e^{x} - 1 \sim \ln(1 + x)$$
-> $$1 - \cos x \sim \frac{1}{2}x^{2}, \qquad (1 + x)^{a} - 1 \sim ax\ (a \neq 0)$$
-> $$a^{x} - 1 \sim x\ln a\ (a > 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \frac{x}{\ln a}, \qquad \ln\!\left(x + \sqrt{1 + x^{2}}\right) \sim x$$
-<a id="equivalent-infinitesimals"></a>
+<details class="callout key point" id="equivalent-infinitesimals" data-callout="key point" markdown="block" open>
+<summary class="callout-title">背下来的一串</summary>
+<div class="callout-content" markdown="block">
+
+$$\sin x \sim x \sim \tan x \sim \arcsin x \sim \arctan x \sim e^{x} - 1 \sim \ln(1 + x)$$
+$$1 - \cos x \sim \frac{1}{2}x^{2}, \qquad (1 + x)^{a} - 1 \sim ax\ (a \neq 0)$$
+$$a^{x} - 1 \sim x\ln a\ (a > 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \frac{x}{\ln a}, \qquad \ln\!\left(x + \sqrt{1 + x^{2}}\right) \sim x$$
+
+</div>
+</details>
 
 ### 9.3 替换的规则
 
@@ -1046,10 +1079,16 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 
 ### 10.2 放缩的经验
 
-> [!key point] 三条（保留自己的话）
-> ① 抛弃常数项（$n \to \infty$ 时常数可忽略）；
-> ② 抛弃"非决定项"（只留起决定作用的项）；
-> ③ 常数 $1$ 是好用的垫脚石（凑 $\mathrm{AM}$–$\mathrm{GM}$、凑"$1$ 的变形"）。
+<details class="callout key point" data-callout="key point" markdown="block" open>
+<summary class="callout-title">三条（保留自己的话）</summary>
+<div class="callout-content" markdown="block">
+
+① 抛弃常数项（$n \to \infty$ 时常数可忽略）；
+② 抛弃"非决定项"（只留起决定作用的项）；
+③ 常数 $1$ 是好用的垫脚石（凑 $\mathrm{AM}$–$\mathrm{GM}$、凑"$1$ 的变形"）。
+
+</div>
+</details>
 
 ### 10.3 综合例：$\dfrac{(n!)^{\alpha}}{n^{n}}$ 的极限
 

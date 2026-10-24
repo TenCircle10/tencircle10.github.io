@@ -58,12 +58,17 @@ $$
 
 ### 1.2 解方程组的通法
 
-> [!key point] 消元 $\to$ 阶梯形 $\to$ 回代
-> 1. **消元**：初等行变换把矩阵 $A$ 化成阶梯形 $B$；
-> 2. **判断**：看有没有 $0 = \text{非零}$ 这样的矛盾方程 —— 有则无解，没有则有解；
-> 3. **定元**：确定**主元（未知数）**与**自由（未知数）**；
-> 4. **回代**：自由未知数任取，主元随之唯一确定。
-<a id="solve-procedure"></a>
+<details class="callout key point" id="solve-procedure" data-callout="key point" markdown="block" open>
+<summary class="callout-title">消元 $\to$ 阶梯形 $\to$ 回代</summary>
+<div class="callout-content" markdown="block">
+
+1. **消元**：初等行变换把矩阵 $A$ 化成阶梯形 $B$；
+2. **判断**：看有没有 $0 = \text{非零}$ 这样的矛盾方程 —— 有则无解，没有则有解；
+3. **定元**：确定**主元（未知数）**与**自由（未知数）**；
+4. **回代**：自由未知数任取，主元随之唯一确定。
+
+</div>
+</details>
 
 - 阶梯形中主元所在列的下方全为 $0$，所以每个主元只受它自己那一行的约束：**自由元一旦取定，主元随之确定**。
 - 对阶梯形的三个期望：
@@ -481,9 +486,15 @@ $$
 
 由 $(\ast)$ 得 $r(AQP) \le r(AQ) \le r(A)$；取 $P = Q^{-1}$ 又得 $r(A) \le r(AQ) \le r(A)$，故 $r(AQ) = r(A)$。
 
-> [!key point] 推论
-> $$r(AB) \le \min\{r(A),\, r(B)\}$$
-> 矩阵乘法不增加信息，只可能减少信息。
+<details class="callout key point" data-callout="key point" markdown="block" open>
+<summary class="callout-title">推论</summary>
+<div class="callout-content" markdown="block">
+
+$$r(AB) \le \min\{r(A),\, r(B)\}$$
+矩阵乘法不增加信息，只可能减少信息。
+
+</div>
+</details>
 
 ### 5.5 转置不变秩与相抵标准形
 
@@ -545,11 +556,17 @@ $$
 - 一次初等**列**变换 $=$ 右乘相应的 $n$ 阶初等矩阵；
 - 口诀：**左行右列** —— 左乘做行变换，右乘做列变换。注意分清两件事：初等矩阵"改动的那个位置"由变换本身决定，而"产生行变换还是列变换"才由左乘/右乘决定。
 
-> [!key point] 等价（相抵）关系
-> 若 $A$ 可经**有限次**初等变换化为 $B$，记 $A \cong B$。
-> - 自反、对称、传递，所以 $\cong$ 是一个等价关系；
-> - 同型矩阵之间：$A \cong B \iff r(A) = r(B)$（见 [相抵标准形](#canonical-form)）。
-<a id="equivalence"></a>
+<details class="callout key point" id="equivalence" data-callout="key point" markdown="block" open>
+<summary class="callout-title">等价（相抵）关系</summary>
+<div class="callout-content" markdown="block">
+
+若 $A$ 可经**有限次**初等变换化为 $B$，记 $A \cong B$。
+
+- 自反、对称、传递，所以 $\cong$ 是一个等价关系；
+- 同型矩阵之间：$A \cong B \iff r(A) = r(B)$（见 [相抵标准形](#canonical-form)）。
+
+</div>
+</details>
 
 ---
 
