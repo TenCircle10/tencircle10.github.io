@@ -230,7 +230,7 @@ M0 0h24v24H0z | M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0 | M12 7a5 5 0 1 0 5 5 | M13 
 |---|---|
 | `class="callout xxx"` | 提供 `.callout` 基础样式；`xxx` 是类型名（供自定义扩展用，CSS 主要靠 `data-callout` 匹配） |
 | `data-callout="xxx"` | **CSS 的实际匹配依据**，必须是上表 A.1 里的 ID 之一 |
-| `markdown="block"` | 让 kramdown（Jekyll）解析内部 Markdown；**必须配合 `_config.yml` 里的 `parse_block_html: true`** |
+| `markdown="block"` | 让 kramdown 解析内部 Markdown。**只加在这个内层 `<div>` 上**，绝不能加到 `<details>` 上（见 B.5 前的坑） |
 | `open` | 默认展开。折叠状态下省略此属性 |
 | `<summary class="callout-title">` | 标题行，CSS 通过 `::before` 在此插入图标 |
 | `<div class="callout-content">` | 正文容器 |
@@ -293,7 +293,7 @@ kramdown:
   math_engine: mathjax
   input: GFM
   hard_wrap: false
-  parse_block_html: true      # ← 关键：否则 <details> 内部 Markdown 不渲染
+  # 不要加 parse_block_html！它会让 <summary> 等标签暴露成文本
 ```
 
 ### B.6 生成 callout 的最小 Python 片段

@@ -272,7 +272,7 @@ Obsidian 里写：  > [!theorem] 定理 1.0.1
                    <summary class="callout-title">定理 1.0.1</summary>
                    <div class="callout-content" markdown="block">…</div>
                  </details>
-        ↓ kramdown（需要 parse_block_html: true）
+        ↓ kramdown（靠内层 div 的 markdown="block" 解析，不要开 parse_block_html）
         ↓ obsidian-callouts.css
 网页显示：       左边框 + 淡色背景 + 彩色图标 + 标题
 ```
