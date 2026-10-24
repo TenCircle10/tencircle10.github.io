@@ -27,22 +27,25 @@
   border-radius: 6px;
 }
 
+/* 标题行：故意【不用】flex —— <summary> 上 display:flex 与 ::marker 的交互
+   在 Chrome / Safari 上行为不一致（曾导致展开时布局崩坏）。
+   这里全部退回最保守的 inline / block 布局。 */
 .callout-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: block;              /* 保持 <summary> 的原生 block 行为，不做覆盖性改动 */
   font-weight: 700;
   color: var(--callout-color);
   margin-bottom: 8px;
   list-style: none;
 }
 
-/* 彩色图标：mask 上色，颜色由 --callout-color 控制（亮暗自动切换） */
+/* 彩色图标：inline-block + vertical-align，比 flex 兼容性更稳 */
 .callout-title::before {
   content: "";
+  display: inline-block;
   width: 1.1em;
   height: 1.1em;
-  flex: 0 0 auto;
+  margin-right: 8px;
+  vertical-align: -0.15em;
   background-color: var(--callout-color);
   -webkit-mask: var(--callout-icon) center / contain no-repeat;
           mask: var(--callout-icon) center / contain no-repeat;
@@ -257,6 +260,7 @@ html[data-theme="light"] .callout[data-callout="keypoint"] { --callout-color: #f
 }
 
 /* 去掉 <summary> 的原生三角，否则会和我们的图标并排出现两个标记 */
+/* 去掉浏览器默认三角（两条规则一起用，覆盖 WebKit 与标准 ::marker） */
 .callout > summary.callout-title::-webkit-details-marker {
   display: none;
 }
@@ -265,18 +269,19 @@ html[data-theme="light"] .callout[data-callout="keypoint"] { --callout-color: #f
   content: "";
 }
 
-/* 折叠指示三角：颜色跟随 --callout-color */
+/* 折叠指示三角：float:right 在 block 容器里最稳
+   —— 不用 absolute、不用 flex、不加 transition
+   （展开/折叠是浏览器原生行为，任何 transition 都可能触发多余重绘） */
 .callout > summary.callout-title::after {
   content: "";
+  float: right;
   width: 0;
   height: 0;
-  margin-left: auto;
-  flex: 0 0 auto;
+  margin-top: 0.55em;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid currentColor;
   opacity: 0.7;
-  transition: transform 0.2s ease;
 }
 
 .callout:not([open]) > summary.callout-title::after {
