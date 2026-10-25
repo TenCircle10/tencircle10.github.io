@@ -124,6 +124,15 @@
         <!-- 正文容器：默认不可见，MathJax 就绪后加 .is-ready 淡入 -->
         <div class="note-main-content" id="note-content">
 
+          <!-- 极端兜底：如果 JavaScript 被禁用或完全没执行，
+               正文不能永久隐藏（否则整页白屏） -->
+          <noscript>
+            <style>
+              .note-main-content { opacity: 1 !important; visibility: visible !important; }
+              #page-loader { display: none !important; }
+            </style>
+          </noscript>
+
           <!-- 标题已移到顶部导航栏中间，正文里不再重复渲染 -->
           {{ content }}
 
