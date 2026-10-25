@@ -412,7 +412,7 @@ git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts
 </div>
 ```
 
-#### 六条硬性规范
+#### 七条硬性规范
 
 | # | 规范 | 实现位置 | 具体做法 |
 |---|---|---|---|
@@ -422,9 +422,14 @@ git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts
 | 3b | **高亮项自动跟随** | `note.html` `followActive()` | 监听 `scroll`（passive）→ `requestAnimationFrame` 合并 → 当前项跑出可视区（上下各留 40px）时才 `sidebar.scrollTo({ behavior: "smooth" })`；抽屉打开后延时 320ms 再定位一次（等滑入动画结束） |
 | 4 | **目录为空时自动隐藏侧边栏** | `note.html` `hideSidebarIfEmpty()` | 初始化后统计 `.js-toc a.toc-link` 数量，为 0 时给 `#toc-sidebar` 和 `#toc-mobile-btn` 加 `.is-empty`；CSS 里 `.is-empty { display: none }` |
 | 5 | **悬停提示补全完整标题**（弥补单行截断的信息损失） | `note.html` `tocbot.init({ onCreate })` | 目录 DOM 生成后遍历 `.js-toc a.toc-link`，取内部 `.toc-text` 的 `textContent`，折叠连续空白后写入该 `<a>` 的 `title` 属性。**不超长的标题也照加** —— 行为统一，浏览器只在真被截断时才弹出提示 |
+| 6 | **移动端长标题折行显示**（移动端无 hover，用物理空间换信息） | `notes.css` `@media (max-width: 900px)` | 在 900px 断点内取消 `.toc-link` / `.toc-text` 的 `nowrap` 与 `ellipsis`：`white-space: normal !important` + `text-overflow: clip !important` + `overflow: visible !important`，`line-height: 1.4`，并给每条加 `margin-bottom: 2px` 防止两行条目贴身；`.toc-text` 改成 `display: inline` 让它随容器折行 |
 
-> 规范 1 和规范 5 是一对：`text-overflow: ellipsis` 会把长标题变成「…是可列集…」这种中间省略，语义丢失；
-> `title` 属性让鼠标悬停时能看全文，而移动端不依赖悬停，靠抽屉里更大的行高和可点区域弥补。
+> 规范 1 / 5 / 6 是一组，分别覆盖三种场景：
+> - **1** 桌面单行截断 → 长标题不会撑爆 250px 侧边栏
+> - **5** 桌面 `title` 提示 → 悬停能看到被截断的全文
+> - **6** 移动端折行 → 手机没有 hover，`title` 无效，只能靠多行物理空间保证信息完整
+>
+> 移动端抽屉宽 280px，标题折两行基本够用；如果某条标题极长（超过 3 行），抽屉本身 `overflow-y: auto` 会兜住，不会顶出屏幕。
 
 #### 断点与布局
 

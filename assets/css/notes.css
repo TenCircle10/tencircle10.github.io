@@ -712,8 +712,25 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
   /* 抽屉里的条目放大一点，便于触摸 */
   .toc-link,
   .js-toc .toc-link {
-    padding: 9px 10px 9px 14px;
+    padding: 10px 10px 10px 14px;
     font-size: 0.95rem;
+    /* 移动端没有 hover，title 提示用不上 —— 所以这里取消单行截断，
+       让长标题自然折行（抽屉 280px 宽，两行基本够用），避免信息丢失 */
+    white-space: normal !important;
+    text-overflow: clip !important;
+    overflow: visible !important;
+    line-height: 1.4;
+    /* 折成两行后条目更高，行间距稍微放松一点，避免彼此黏在一起 */
+    margin-bottom: 2px;
+  }
+
+  /* 标题文字容器同步取消截断（Tocbot 会把标题包在 span 里） */
+  .js-toc .toc-link .toc-text,
+  .js-toc .toc-link > span {
+    white-space: normal !important;
+    text-overflow: clip !important;
+    overflow: visible !important;
+    display: inline;
   }
 
   .toc-title {
