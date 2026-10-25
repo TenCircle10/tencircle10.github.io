@@ -186,7 +186,21 @@
             scrollSmoothOffset: -80,
             // 标题内容里的数学公式不参与生成 id，避免 MathJax 渲染后 id 变化
             headingsOffset: 80,
-            ignoreSelector: ".giscus, .giscus-container, .no-toc"
+            ignoreSelector: ".giscus, .giscus-container, .no-toc",
+            // 目录 DOM 生成后，把完整标题写进 title 属性。
+            // 因为 .toc-link 是单行截断（text-overflow: ellipsis），长标题会变成
+            // "…是可列集…" 这种中间省略，语义不明；加 title 后悬停就能看到全文。
+            // 不超长的也照加 —— 行为统一，浏览器只在真被截断时才显示提示。
+            onCreate: function () {
+              var links = document.querySelectorAll(".js-toc a.toc-link");
+              for (var i = 0; i < links.length; i++) {
+                var textEl = links[i].querySelector(".toc-text");
+                var text = (textEl ? textEl.textContent : links[i].textContent) || "";
+                // 折叠连续空白（Tocbot 会保留标题里的换行与缩进）
+                text = text.replace(/\s+/g, " ").trim();
+                if (text) links[i].setAttribute("title", text);
+              }
+            }
           });
         }
 

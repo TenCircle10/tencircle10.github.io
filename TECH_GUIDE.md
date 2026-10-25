@@ -412,7 +412,7 @@ git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts
 </div>
 ```
 
-#### 五条硬性规范
+#### 六条硬性规范
 
 | # | 规范 | 实现位置 | 具体做法 |
 |---|---|---|---|
@@ -421,6 +421,10 @@ git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts
 | 3 | **长目录必须内部滚动** | `.toc-sidebar` | 桌面 `max-height: calc(100vh - 110px)` + `overflow-y: auto`；移动端 `height: 100vh` + `overflow-y: auto` |
 | 3b | **高亮项自动跟随** | `note.html` `followActive()` | 监听 `scroll`（passive）→ `requestAnimationFrame` 合并 → 当前项跑出可视区（上下各留 40px）时才 `sidebar.scrollTo({ behavior: "smooth" })`；抽屉打开后延时 320ms 再定位一次（等滑入动画结束） |
 | 4 | **目录为空时自动隐藏侧边栏** | `note.html` `hideSidebarIfEmpty()` | 初始化后统计 `.js-toc a.toc-link` 数量，为 0 时给 `#toc-sidebar` 和 `#toc-mobile-btn` 加 `.is-empty`；CSS 里 `.is-empty { display: none }` |
+| 5 | **悬停提示补全完整标题**（弥补单行截断的信息损失） | `note.html` `tocbot.init({ onCreate })` | 目录 DOM 生成后遍历 `.js-toc a.toc-link`，取内部 `.toc-text` 的 `textContent`，折叠连续空白后写入该 `<a>` 的 `title` 属性。**不超长的标题也照加** —— 行为统一，浏览器只在真被截断时才弹出提示 |
+
+> 规范 1 和规范 5 是一对：`text-overflow: ellipsis` 会把长标题变成「…是可列集…」这种中间省略，语义丢失；
+> `title` 属性让鼠标悬停时能看全文，而移动端不依赖悬停，靠抽屉里更大的行高和可点区域弥补。
 
 #### 断点与布局
 
