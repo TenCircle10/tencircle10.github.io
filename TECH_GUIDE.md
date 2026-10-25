@@ -72,6 +72,7 @@ gem "webrick", "~> 1.8"
 | 霞鹜文楷字体 | `assets/css/publications.css` 第 1 行 `@import` | 只用于侧边栏「每日一言」 |
 | Giscus 评论 | `_includes/giscus.html` + `notes.css` / `publications.css` | 主页留言板 + 每篇文章独立评论区 |
 | Callout 样式 | `assets/css/obsidian-callouts.css` | Obsidian Callout Studio 的 21 种类型，SVG mask + Base64 内联，详见 `callout-for-web.md` |
+| 目录侧边栏 | `_layouts/note.html` + `assets/css/notes.css` | Tocbot 4.18.2；桌面 sticky 250px，≤900px 变右侧抽屉，规范见 4.6 |
 
 ---
 
@@ -389,6 +390,86 @@ assets/css/obsidian-callouts.css.bak
 # 或直接从 git 历史取：
 git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts.css
 ```
+
+### 4.6 目录侧边栏（Tocbot）交互规范
+
+**相关文件**：`_layouts/note.html`（HTML + JS）、`assets/css/notes.css`（样式）
+**依赖**：Tocbot 4.18.2（cdnjs CDN，`tocbot.css` + `tocbot.min.js`）
+**只作用于笔记页**，主页不加载。
+
+#### 结构
+
+```html
+<button class="toc-mobile-btn" id="toc-mobile-btn">…</button>   <!-- ≤900px 才显示 -->
+<div class="toc-overlay" id="toc-overlay"></div>                <!-- ≤900px 才显示 -->
+
+<div class="note-container">          <!-- flex：目录 + 正文 -->
+  <aside class="toc-sidebar" id="toc-sidebar">
+    <div class="toc-title">目录</div>
+    <div class="js-toc toc-list"></div>   <!-- Tocbot 往这里写 <ul> -->
+  </aside>
+  <main class="note-main">{{ content }} + Giscus</main>
+</div>
+```
+
+#### 五条硬性规范
+
+| # | 规范 | 实现位置 | 具体做法 |
+|---|---|---|---|
+| 1 | **单行截断**，防止长标题撑爆布局 | `notes.css` `.toc-link` | `white-space: nowrap` + `overflow: hidden` + `text-overflow: ellipsis`，并同时作用于 `.toc-text` / `> span`（Tocbot 把标题包在 span 里）；`.toc-number` 不参与截断 |
+| 2 | **手机端打开抽屉时锁定 body 滚动** | `note.html` `setOpen()` | `document.body.style.overflow = open ? "hidden" : ""`；否则手指滑动会穿透到正文 |
+| 3 | **长目录必须内部滚动** | `.toc-sidebar` | 桌面 `max-height: calc(100vh - 110px)` + `overflow-y: auto`；移动端 `height: 100vh` + `overflow-y: auto` |
+| 3b | **高亮项自动跟随** | `note.html` `followActive()` | 监听 `scroll`（passive）→ `requestAnimationFrame` 合并 → 当前项跑出可视区（上下各留 40px）时才 `sidebar.scrollTo({ behavior: "smooth" })`；抽屉打开后延时 320ms 再定位一次（等滑入动画结束） |
+| 4 | **目录为空时自动隐藏侧边栏** | `note.html` `hideSidebarIfEmpty()` | 初始化后统计 `.js-toc a.toc-link` 数量，为 0 时给 `#toc-sidebar` 和 `#toc-mobile-btn` 加 `.is-empty`；CSS 里 `.is-empty { display: none }` |
+
+#### 断点与布局
+
+| 视口 | 布局 |
+|---|---|
+| > 900px（桌面） | `.note-container` 为 flex，目录 `flex: 0 0 250px` + `position: sticky; top: 90px`；正文 `flex: 1 1 auto` + `min-width: 0`；目录背景透明 |
+| ≤ 900px（移动） | `.note-container` 变 `display: block`；目录变右侧抽屉 `position: fixed; right: 0; width: 280px; height: 100vh; transform: translateX(100%)`，`.is-open` 时 `translateX(0)`；遮罩 `rgba(0,0,0,0.5)`；悬浮按钮 `fixed; bottom: 80px; right: 20px; 48×48 圆形` |
+
+**`min-width: 0` 是必须的**：`.note-main` 作为 flex 子项，不加这一条的话，长公式（`$$...$$`）或长代码块会把 flex 容器撑破——这是 flexbox 的经典坑。
+
+#### Tocbot 初始化参数
+
+```js
+tocbot.init({
+  tocSelector: ".js-toc",
+  contentSelector: ".note-main",
+  headingSelector: "h2, h3",           // 只扫 h2/h3，h1 是页面主标题不进目录
+  hasInnerContainers: true,
+  scrollSmooth: true,
+  scrollSmoothDuration: 400,
+  scrollSmoothOffset: -80,             // 避开 sticky 顶部导航栏
+  headingsOffset: 80,
+  ignoreSelector: ".giscus, .giscus-container, .no-toc"
+});
+```
+
+#### Tocbot 默认样式覆盖要点
+
+| Tocbot 默认 | 本站覆盖 |
+|---|---|
+| `.toc-link::before` 画浅灰竖线 | 关掉（`transparent` + `width: 0`），改用 `.toc-link` 的 `border-left: 2px solid transparent`，`.is-active-link` 时变主题色 |
+| `.toc-link` 颜色（灰蓝） | 亮色 `#555` / 暗色 `#c3c6cc`；hover 与 active 用主题蓝 `#086ddd`（暗色 `rgb(62,183,240)`） |
+| `.is-active-link::before` 默认绿 | 同上，改为主题色边框 |
+
+暗色说明：所有 `.toc-*` 规则都同时写了 `html[data-theme="dark"]`、`@media (prefers-color-scheme: dark)`（配合 `html:not([data-theme="light"])`）、`html[data-theme="light"]` 三套，和站内其他组件保持一致。
+
+#### 与 MathJax / Giscus 的边界
+
+| 风险 | 处理 |
+|---|---|
+| Tocbot 扫到 MathJax 生成的 `mjx-container` | `headingSelector: "h2, h3"` 只匹配标题元素 |
+| 把 Giscus 里的标题也收进目录 | `ignoreSelector` 显式排除 + Giscus 在 iframe 内，本身不可见 |
+| `scroll-margin-top: 88px` 与 `scrollSmoothOffset: -80` 冲突 | 不冲突：前者给浏览器原生锚点用，后者是 Tocbot 自己算滚动位置 |
+
+#### 移动端交互补充
+
+- 点目录链接后**自动关闭抽屉**（仅 ≤900px）
+- **Esc** 关闭抽屉
+- 窗口从窄变宽（> 900px）时自动清理 `is-open` 状态，避免残留
 
 ---
 

@@ -523,6 +523,27 @@ html[data-theme="light"] .back-to-top {
   text-decoration: none !important;
   border-left: 2px solid transparent;
   transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  /* 单行截断：长标题不换行、超出用省略号，避免把 250px 的侧边栏撑爆 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Tocbot 生成的 <span class="toc-text"> 也要跟着不换行 */
+  max-width: 100%;
+}
+
+/* 目录项内部的文字容器同样单行（Tocbot 会把标题包在 span 里） */
+.js-toc .toc-link .toc-text,
+.js-toc .toc-link > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* 序号（如果开了 orderedList）不参与截断 */
+.js-toc .toc-number {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .toc-link:hover {

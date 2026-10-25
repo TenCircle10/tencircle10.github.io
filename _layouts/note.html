@@ -239,6 +239,50 @@
           }
         }
 
+        // ---- 高亮项自动跟随：长目录内部滚动时，让当前项始终留在可视区 ----
+        var followScheduled = false;
+
+        function followActive() {
+          followScheduled = false;
+          if (!sidebar) return;
+          // 抽屉没打开（或桌面端不在可视范围）时不用处理
+          if (getComputedStyle(sidebar).visibility === "hidden") return;
+
+          var active = sidebar.querySelector(".is-active-link");
+          if (!active) return;
+
+          var boxTop = sidebar.getBoundingClientRect().top;
+          var boxBottom = sidebar.getBoundingClientRect().bottom;
+          var itemTop = active.getBoundingClientRect().top;
+          var itemBottom = active.getBoundingClientRect().bottom;
+
+          // 只有当前项跑出可视区（上下各留 40px 余量）时才滚动，
+          // 避免每次滚动都动侧边栏造成抖动
+          var margin = 40;
+          if (itemTop < boxTop + margin || itemBottom > boxBottom - margin) {
+            var target = active.offsetTop - sidebar.clientHeight / 2 + active.offsetHeight / 2;
+            if (target < 0) target = 0;
+            sidebar.scrollTo({ top: target, behavior: "smooth" });
+          }
+        }
+
+        function scheduleFollow() {
+          if (followScheduled) return;
+          followScheduled = true;
+          // 用 rAF 合并同一帧内的多次滚动事件
+          window.requestAnimationFrame(followActive);
+        }
+
+        window.addEventListener("scroll", scheduleFollow, { passive: true });
+
+        // 抽屉刚打开时也定位一次
+        function followAfterOpen() {
+          if (sidebar && sidebar.classList.contains("is-open")) {
+            setTimeout(scheduleFollow, 320);   // 等抽屉滑入动画结束
+          }
+        }
+        if (btn) btn.addEventListener("click", followAfterOpen);
+
         // 从桌面缩放到移动端时，清掉可能残留的打开状态
         window.addEventListener("resize", function () {
           if (window.innerWidth > MOBILE_BREAKPOINT) setOpen(false);
