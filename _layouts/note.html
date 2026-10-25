@@ -110,13 +110,15 @@
       <main class="note-main">
 
         <!-- ===== 页面加载遮罩：MathJax 渲染完成前挡住 $...$ 源码 ===== -->
-        <div id="page-loader" class="loader-balls-wrapper note-loader" role="status" aria-label="公式渲染中">
-          <div class="loader-balls-circle"></div>
-          <div class="loader-balls-circle"></div>
-          <div class="loader-balls-circle"></div>
-          <div class="loader-balls-shadow"></div>
-          <div class="loader-balls-shadow"></div>
-          <div class="loader-balls-shadow"></div>
+        <div id="page-loader" class="note-loader" role="status" aria-label="公式渲染中">
+          <div class="loader-balls-wrapper">
+            <div class="loader-balls-circle"></div>
+            <div class="loader-balls-circle"></div>
+            <div class="loader-balls-circle"></div>
+            <div class="loader-balls-shadow"></div>
+            <div class="loader-balls-shadow"></div>
+            <div class="loader-balls-shadow"></div>
+          </div>
         </div>
 
         <!-- 正文容器：默认不可见，MathJax 就绪后加 .is-ready 淡入 -->

@@ -207,7 +207,10 @@ html[data-theme="dark"] .btn-return-home:hover .btn-return-text {
   position: relative;         /* 加载遮罩 .note-loader 的定位基准 */
 }
 
-/* ---- 公式渲染前的加载遮罩（复用 publications.css 里的三球动画） ---- */
+/* ---- 公式渲染前的加载遮罩（复用 publications.css 里的三球动画） ----
+   两层结构：外层 .note-loader 是铺满正文的遮罩，内层 .loader-balls-wrapper
+   保持 publications.css 里的 120x30 尺寸（三球是 absolute，必须相对它定位）。
+   不要给外层设 width/height，否则会覆盖内层尺寸。 */
 .note-loader {
   position: absolute;
   inset: 0;
@@ -215,8 +218,9 @@ html[data-theme="dark"] .btn-return-home:hover .btn-return-text {
   align-items: center;
   justify-content: center;
   z-index: 30;
-  /* 三球本身很小，给一点最小高度，避免正文为空时遮罩塌成一条线 */
+  /* 正文很短时也给遮罩一个高度，避免它塌成一条线 */
   min-height: 180px;
+  pointer-events: none;       /* 遮罩期间不拦截点击 */
 }
 
 /* ---- 正文容器：默认不可见，等 MathJax 渲染完再加 .is-ready 淡入 ---- */
