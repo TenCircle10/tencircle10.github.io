@@ -109,18 +109,33 @@
 
       <main class="note-main">
 
-        <!-- 标题已移到顶部导航栏中间，正文里不再重复渲染 -->
-        {{ content }}
+        <!-- ===== 页面加载遮罩：MathJax 渲染完成前挡住 $...$ 源码 ===== -->
+        <div id="page-loader" class="loader-balls-wrapper note-loader" role="status" aria-label="公式渲染中">
+          <div class="loader-balls-circle"></div>
+          <div class="loader-balls-circle"></div>
+          <div class="loader-balls-circle"></div>
+          <div class="loader-balls-shadow"></div>
+          <div class="loader-balls-shadow"></div>
+          <div class="loader-balls-shadow"></div>
+        </div>
 
-        <br>
+        <!-- 正文容器：默认不可见，MathJax 就绪后加 .is-ready 淡入 -->
+        <div class="note-main-content" id="note-content">
 
-        <!-- ============ 文章评论区（Giscus，pathname 映射，每篇文章独立） ============ -->
-        {% include giscus.html mapping="pathname" %}
-        <!-- ========================================================================== -->
+          <!-- 标题已移到顶部导航栏中间，正文里不再重复渲染 -->
+          {{ content }}
 
-        {% if site.enable_footnote %}
-        <p><small>Powered by Jekyll and <a href="https://github.com/yaoyao-liu/minimal-light" target="_blank" rel="noopener">Minimal Light</a> theme.</small></p>
-        {% endif %}
+          <br>
+
+          <!-- ============ 文章评论区（Giscus，pathname 映射，每篇文章独立） ============ -->
+          {% include giscus.html mapping="pathname" %}
+          <!-- ========================================================================== -->
+
+          {% if site.enable_footnote %}
+          <p><small>Powered by Jekyll and <a href="https://github.com/yaoyao-liu/minimal-light" target="_blank" rel="noopener">Minimal Light</a> theme.</small></p>
+          {% endif %}
+
+        </div>
 
       </main>
 
@@ -314,6 +329,131 @@
           bindLinkClose();
           hideSidebarIfEmpty();
         }
+      })();
+    </script>
+
+    <!-- ============ Callout 展开/收起过渡动画 ============ -->
+    <script>
+      (function () {
+        var DURATION = 300;   // 与 CSS 里 0.3s 保持一致
+
+        function setupCallouts() {
+          var callouts = document.querySelectorAll("details.callout");
+          for (var i = 0; i < callouts.length; i++) {
+            (function (details) {
+              var summary = details.querySelector("summary.callout-title");
+              var content = details.querySelector(".callout-content");
+              // 没有标题或没有内容区的（比如空的 callout）直接跳过，保持原生行为
+              if (!summary || !content) return;
+
+              var animating = false;
+
+              summary.addEventListener("click", function (e) {
+                // <details> 默认是"瞬间切换"，这里拦下来自己算高度做动画。
+                // 注意：不能用 toggle 事件 —— 它在 open 已经变化之后才触发，拦不住闪跳。
+                e.preventDefault();
+                if (animating) return;
+                animating = true;
+
+                if (details.open) {
+                  // ---- 收起：auto -> 0 ----
+                  content.style.height = content.offsetHeight + "px";
+                  content.style.overflow = "hidden";
+                  content.style.transition = "none";
+
+                  requestAnimationFrame(function () {
+                    content.style.transition =
+                      "height " + DURATION + "ms ease, opacity " + DURATION + "ms ease";
+                    content.style.height = "0px";
+                    content.style.opacity = "0";
+                  });
+
+                  setTimeout(function () {
+                    details.open = false;
+                    // 清理内联样式，避免影响下次展开时的高度计算
+                    content.style.transition = "";
+                    content.style.height = "";
+                    content.style.overflow = "";
+                    content.style.opacity = "";
+                    animating = false;
+                  }, DURATION);
+                } else {
+                  // ---- 展开：0 -> scrollHeight ----
+                  details.open = true;
+                  var target = content.scrollHeight;
+
+                  content.style.transition = "none";
+                  content.style.height = "0px";
+                  content.style.overflow = "hidden";
+                  content.style.opacity = "0";
+
+                  requestAnimationFrame(function () {
+                    content.style.transition =
+                      "height " + DURATION + "ms ease, opacity " + DURATION + "ms ease";
+                    content.style.height = target + "px";
+                    content.style.opacity = "1";
+                  });
+
+                  setTimeout(function () {
+                    // 动画结束后回落成 auto，这样窗口缩放、图片加载后高度都能自适应
+                    content.style.transition = "";
+                    content.style.height = "auto";
+                    content.style.overflow = "";
+                    content.style.opacity = "";
+                    animating = false;
+                  }, DURATION);
+                }
+              });
+            })(callouts[i]);
+          }
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", setupCallouts);
+        } else {
+          setupCallouts();
+        }
+      })();
+    </script>
+
+    <!-- ============ 公式渲染完成前显示三球加载动画 ============ -->
+    <script>
+      (function () {
+        var loader = document.getElementById("page-loader");
+        var content = document.getElementById("note-content");
+        if (!loader || !content) return;
+
+        var done = false;
+
+        function ready() {
+          if (done) return;
+          done = true;
+          loader.style.display = "none";
+          content.classList.add("is-ready");
+        }
+
+        // 正文里没有 $...$ 公式的笔记，没必要等 MathJax（否则会白等 CDN）
+        var text = content.textContent || "";
+        if (!/\$[^$\n]+\$/.test(text) && !/\$\$/.test(text)) {
+          ready();
+          return;
+        }
+
+        // MathJax 3 的 startup.promise 要等引擎脚本加载完才存在，所以轮询等待
+        var start = Date.now();
+        var TIMEOUT = 3000;   // 兜底：CDN 挂了也不会一直白屏
+
+        (function poll() {
+          if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
+            MathJax.startup.promise.then(ready).catch(ready);
+            return;
+          }
+          if (Date.now() - start > TIMEOUT) {
+            ready();
+            return;
+          }
+          setTimeout(poll, 50);
+        })();
       })();
     </script>
 

@@ -204,6 +204,46 @@ html[data-theme="dark"] .btn-return-home:hover .btn-return-text {
   max-width: 860px;
   margin: 0;
   padding: 28px 20px 60px;
+  position: relative;         /* 加载遮罩 .note-loader 的定位基准 */
+}
+
+/* ---- 公式渲染前的加载遮罩（复用 publications.css 里的三球动画） ---- */
+.note-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  /* 三球本身很小，给一点最小高度，避免正文为空时遮罩塌成一条线 */
+  min-height: 180px;
+}
+
+/* ---- 正文容器：默认不可见，等 MathJax 渲染完再加 .is-ready 淡入 ---- */
+.note-main-content {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.note-main-content.is-ready {
+  opacity: 1;
+  visibility: visible;
+  /* 只对透明度做过渡，visibility 用 immediate 切换；
+     不对 height / 布局属性做过渡，否则会触发整页重排 */
+  transition: opacity 0.25s ease;
+}
+
+/* 尊重「减少动态效果」的用户偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .note-main-content.is-ready {
+    transition: none;
+  }
+}
+
+/* ---- Callout 展开/收起：height 过渡由 JS 驱动，这里只保证内容区可裁剪 ---- */
+.callout-content {
+  /* JS 动画期间会临时设置 height / overflow，结束后回落到 auto */
+  will-change: auto;
 }
 
 /* 笔记标题（原来是侧边栏布局里的 h2） */
