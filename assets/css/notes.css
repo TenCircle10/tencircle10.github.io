@@ -21,7 +21,7 @@
   justify-content: space-between;
   flex-wrap: wrap;            /* 窄屏放不下时自然换行，而不是把内容挤变形 */
   gap: 8px 12px;
-  max-width: 860px;
+  max-width: 1180px;          /* 与 .note-container 对齐（目录 250 + 间距 + 正文 860） */
   margin: 0 auto;
   padding: 12px 20px;
   background-color: #fff;
@@ -197,10 +197,12 @@ html[data-theme="dark"] .btn-return-home:hover .btn-return-text {
   }
 }
 
-/* 正文阅读区：水平居中，宽度 860px（落在 800~900px 区间） */
+/* 正文阅读区：作为 .note-container 的 flex 子项（目录在左，正文占剩余宽度） */
 .note-main {
+  flex: 1 1 auto;
+  min-width: 0;               /* 防止长公式 / 长代码把 flex 容器撑破 */
   max-width: 860px;
-  margin: 0 auto;
+  margin: 0;
   padding: 28px 20px 60px;
 }
 
@@ -454,5 +456,263 @@ html[data-theme="light"] .back-to-top {
   .note-nav-right {
     padding-right: 0;
     margin-left: auto;
+  }
+}
+
+/* ==========================================================================
+   目录（Tocbot）：桌面左侧 sticky，移动端右侧抽屉
+   ========================================================================== */
+
+/* 外层容器：左侧目录 + 右侧正文 */
+.note-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  max-width: 1180px;          /* 250 目录 + 32 间距 + 860 正文 */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---- 桌面端侧边栏 ---- */
+.toc-sidebar {
+  flex: 0 0 250px;
+  width: 250px;
+  position: sticky;
+  top: 90px;                  /* 顶部导航栏是 sticky 的，留出它的高度 + 余量 */
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+  padding: 4px 0 24px;
+  scrollbar-width: thin;
+  background: transparent;    /* 桌面端不要色块，直接贴在页面上 */
+}
+
+/* 正文里没有 h2/h3 时整块隐藏（JS 会加 .is-empty） */
+.toc-sidebar.is-empty {
+  display: none;
+}
+
+.toc-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a8f98;
+  margin-bottom: 10px;
+  padding-left: 12px;
+}
+
+/* ---- Tocbot 默认样式覆盖 ---- */
+.toc-list,
+.js-toc .toc-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.js-toc .toc-list .toc-list {
+  padding-left: 14px;         /* 三级标题再缩进一层 */
+}
+
+.toc-link,
+.js-toc .toc-link {
+  display: block;
+  padding: 5px 10px 5px 12px;
+  color: #555 !important;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-decoration: none !important;
+  border-left: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.toc-link:hover {
+  color: #086ddd !important;
+  background-color: rgba(8, 109, 221, 0.06);
+}
+
+/* Tocbot 默认用 ::before 画左侧指示线，这里关掉，改用 border-left */
+.toc-link::before,
+.js-toc .toc-link::before {
+  background-color: transparent !important;
+  width: 0 !important;
+}
+
+/* 当前阅读位置：高亮色 + 左侧粗边框 */
+.toc-link.is-active-link,
+.js-toc .toc-link.is-active-link {
+  color: #086ddd !important;
+  font-weight: 700;
+  border-left-color: #086ddd;
+  background-color: rgba(8, 109, 221, 0.08);
+}
+
+/* ---- 暗色适配 ---- */
+html[data-theme="dark"] .toc-link,
+html[data-theme="dark"] .js-toc .toc-link {
+  color: #c3c6cc !important;
+}
+
+html[data-theme="dark"] .toc-link:hover {
+  color: rgb(62, 183, 240) !important;
+  background-color: rgba(62, 183, 240, 0.1);
+}
+
+html[data-theme="dark"] .toc-link.is-active-link,
+html[data-theme="dark"] .js-toc .toc-link.is-active-link {
+  color: rgb(62, 183, 240) !important;
+  border-left-color: rgb(62, 183, 240);
+  background-color: rgba(62, 183, 240, 0.12);
+}
+
+/* 系统暗色（未手动切亮色） */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .toc-link,
+  html:not([data-theme="light"]) .js-toc .toc-link {
+    color: #c3c6cc !important;
+  }
+
+  html:not([data-theme="light"]) .toc-link:hover {
+    color: rgb(62, 183, 240) !important;
+    background-color: rgba(62, 183, 240, 0.1);
+  }
+
+  html:not([data-theme="light"]) .toc-link.is-active-link,
+  html:not([data-theme="light"]) .js-toc .toc-link.is-active-link {
+    color: rgb(62, 183, 240) !important;
+    border-left-color: rgb(62, 183, 240);
+    background-color: rgba(62, 183, 240, 0.12);
+  }
+}
+
+/* 手动切亮色（覆盖系统暗色） */
+html[data-theme="light"] .toc-link,
+html[data-theme="light"] .js-toc .toc-link {
+  color: #555 !important;
+}
+
+html[data-theme="light"] .toc-link.is-active-link,
+html[data-theme="light"] .js-toc .toc-link.is-active-link {
+  color: #086ddd !important;
+  border-left-color: #086ddd;
+  background-color: rgba(8, 109, 221, 0.08);
+}
+
+/* ---- 移动端专属元素：桌面端一律隐藏 ---- */
+.toc-mobile-btn,
+.toc-overlay {
+  display: none;
+}
+
+/* ==========================================================================
+   移动端（≤900px）：目录变成右侧滑出抽屉
+   ========================================================================== */
+@media screen and (max-width: 900px) {
+  .note-container {
+    display: block;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  /* 抽屉本体：默认在视口右侧外，加 .is-open 才滑进来 */
+  .toc-sidebar {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: auto;
+    width: 280px;
+    max-width: 82vw;
+    height: 100vh;
+    max-height: 100vh;
+    padding: 20px 16px 40px;
+    background-color: #ffffff;
+    box-shadow: -2px 0 24px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+    overflow-y: auto;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0.3s ease;
+  }
+
+  .toc-sidebar.is-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .toc-sidebar.is-empty {
+    display: none;
+  }
+
+  /* 遮罩 */
+  .toc-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .toc-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* 悬浮触发按钮 */
+  .toc-mobile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background-color: #086ddd;
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .toc-mobile-btn:active {
+    transform: scale(0.94);
+  }
+
+  .toc-mobile-btn.is-empty {
+    display: none;
+  }
+
+  /* 抽屉里的条目放大一点，便于触摸 */
+  .toc-link,
+  .js-toc .toc-link {
+    padding: 9px 10px 9px 14px;
+    font-size: 0.95rem;
+  }
+
+  .toc-title {
+    padding-left: 14px;
+    margin-bottom: 12px;
+  }
+
+  /* 暗色：抽屉底色 */
+  html[data-theme="dark"] .toc-sidebar {
+    background-color: #20212b;
+  }
+
+  html[data-theme="light"] .toc-sidebar {
+    background-color: #ffffff;
+  }
+}
+
+/* 系统暗色（未手动切亮色）下的抽屉底色 */
+@media (prefers-color-scheme: dark) and (max-width: 900px) {
+  html:not([data-theme="light"]) .toc-sidebar {
+    background-color: #20212b;
   }
 }

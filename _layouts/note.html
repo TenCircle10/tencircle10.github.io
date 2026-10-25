@@ -49,6 +49,11 @@
     <link rel="stylesheet" href="/assets/css/notes.css?v={{ site.time | date: '%s' }}">
     <!-- 👆 新增结束 -->
 
+    <!-- 👇 Tocbot：笔记页左侧目录（运行时生成，仅扫 h2/h3，不碰 MathJax 与 Giscus） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.min.js"></script>
+    <!-- 👆 新增结束 -->
+
   </head>
   <body>
 
@@ -82,23 +87,44 @@
     </nav>
     <!-- ======================================================================= -->
 
-    <!-- ================= 笔记正文阅读区（居中，无侧边栏） ================= -->
-    <main class="note-main">
+    <!-- ===== 移动端目录触发按钮（≤900px 才显示） ===== -->
+    <button class="toc-mobile-btn" id="toc-mobile-btn" type="button"
+            aria-label="打开目录" aria-controls="toc-sidebar" aria-expanded="false">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+      </svg>
+    </button>
 
-      <!-- 标题已移到顶部导航栏中间，正文里不再重复渲染 -->
-      {{ content }}
+    <!-- ===== 移动端抽屉遮罩（打开时显示） ===== -->
+    <div class="toc-overlay" id="toc-overlay" aria-hidden="true"></div>
 
-      <br>
+    <!-- ================= 笔记正文阅读区（左侧目录 + 正文） ================= -->
+    <div class="note-container">
 
-      <!-- ============ 文章评论区（Giscus，pathname 映射，每篇文章独立） ============ -->
-      {% include giscus.html mapping="pathname" %}
-      <!-- ========================================================================== -->
+      <!-- 左侧目录（桌面常驻 sticky，移动端抽屉） -->
+      <aside class="toc-sidebar" id="toc-sidebar" aria-label="文章目录">
+        <div class="toc-title">目录</div>
+        <div class="js-toc toc-list"></div>
+      </aside>
 
-      {% if site.enable_footnote %}
-      <p><small>Powered by Jekyll and <a href="https://github.com/yaoyao-liu/minimal-light" target="_blank" rel="noopener">Minimal Light</a> theme.</small></p>
-      {% endif %}
+      <main class="note-main">
 
-    </main>
+        <!-- 标题已移到顶部导航栏中间，正文里不再重复渲染 -->
+        {{ content }}
+
+        <br>
+
+        <!-- ============ 文章评论区（Giscus，pathname 映射，每篇文章独立） ============ -->
+        {% include giscus.html mapping="pathname" %}
+        <!-- ========================================================================== -->
+
+        {% if site.enable_footnote %}
+        <p><small>Powered by Jekyll and <a href="https://github.com/yaoyao-liu/minimal-light" target="_blank" rel="noopener">Minimal Light</a> theme.</small></p>
+        {% endif %}
+
+      </main>
+
+    </div>
     <!-- =================================================================== -->
 
     <script src="/assets/js/scale.fix.js"></script>
@@ -138,6 +164,98 @@
         button.addEventListener("click", function () {
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
+      })();
+    </script>
+
+    <!-- ============ 目录（Tocbot）：桌面常驻 + 移动端抽屉 ============ -->
+    <script>
+      (function () {
+        var MOBILE_BREAKPOINT = 900;
+
+        // ---- 1) 初始化 Tocbot（只扫正文里的 h2/h3，不碰 MathJax 与 Giscus）----
+        function initToc() {
+          if (typeof tocbot === "undefined") return;
+          tocbot.init({
+            tocSelector: ".js-toc",
+            contentSelector: ".note-main",
+            headingSelector: "h2, h3",
+            hasInnerContainers: true,
+            scrollSmooth: true,
+            scrollSmoothDuration: 400,
+            // 顶部导航栏是 sticky 的，留出它的高度 + 一点余量
+            scrollSmoothOffset: -80,
+            // 标题内容里的数学公式不参与生成 id，避免 MathJax 渲染后 id 变化
+            headingsOffset: 80,
+            ignoreSelector: ".giscus, .giscus-container, .no-toc"
+          });
+        }
+
+        // 正文里没有 h2/h3 时就不显示侧边栏，避免出现一个空目录框
+        function hideSidebarIfEmpty() {
+          var toc = document.querySelector(".js-toc");
+          var sidebar = document.getElementById("toc-sidebar");
+          var btn = document.getElementById("toc-mobile-btn");
+          if (!toc || !sidebar) return;
+          var empty = toc.querySelectorAll("a.toc-link").length === 0;
+          if (empty) {
+            sidebar.classList.add("is-empty");
+            if (btn) btn.classList.add("is-empty");
+          }
+        }
+
+        // ---- 2) 移动端抽屉 ----
+        var btn = document.getElementById("toc-mobile-btn");
+        var sidebar = document.getElementById("toc-sidebar");
+        var overlay = document.getElementById("toc-overlay");
+
+        function setOpen(open) {
+          if (!sidebar || !overlay) return;
+          sidebar.classList.toggle("is-open", open);
+          overlay.classList.toggle("is-open", open);
+          if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+          // 抽屉打开时锁住滚动，关闭时恢复
+          document.body.style.overflow = open ? "hidden" : "";
+        }
+
+        function toggleToc() {
+          setOpen(!(sidebar && sidebar.classList.contains("is-open")));
+        }
+
+        if (btn) btn.addEventListener("click", toggleToc);
+        if (overlay) overlay.addEventListener("click", function () { setOpen(false); });
+
+        // Esc 关闭
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") setOpen(false);
+        });
+
+        // 点击目录链接后自动关闭（仅移动端）
+        function bindLinkClose() {
+          var links = document.querySelectorAll(".js-toc a.toc-link");
+          for (var i = 0; i < links.length; i++) {
+            links[i].addEventListener("click", function () {
+              if (window.innerWidth <= MOBILE_BREAKPOINT) setOpen(false);
+            });
+          }
+        }
+
+        // 从桌面缩放到移动端时，清掉可能残留的打开状态
+        window.addEventListener("resize", function () {
+          if (window.innerWidth > MOBILE_BREAKPOINT) setOpen(false);
+        });
+
+        // ---- 3) 启动 ----
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", run);
+        } else {
+          run();
+        }
+
+        function run() {
+          initToc();
+          bindLinkClose();
+          hideSidebarIfEmpty();
+        }
       })();
     </script>
 
