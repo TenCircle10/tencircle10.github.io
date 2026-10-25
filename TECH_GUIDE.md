@@ -412,7 +412,7 @@ git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts
 </div>
 ```
 
-#### 七条硬性规范
+#### 八条硬性规范
 
 | # | 规范 | 实现位置 | 具体做法 |
 |---|---|---|---|
@@ -423,6 +423,7 @@ git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts
 | 4 | **目录为空时自动隐藏侧边栏** | `note.html` `hideSidebarIfEmpty()` | 初始化后统计 `.js-toc a.toc-link` 数量，为 0 时给 `#toc-sidebar` 和 `#toc-mobile-btn` 加 `.is-empty`；CSS 里 `.is-empty { display: none }` |
 | 5 | **悬停提示补全完整标题**（弥补单行截断的信息损失） | `note.html` `tocbot.init({ onCreate })` | 目录 DOM 生成后遍历 `.js-toc a.toc-link`，取内部 `.toc-text` 的 `textContent`，折叠连续空白后写入该 `<a>` 的 `title` 属性。**不超长的标题也照加** —— 行为统一，浏览器只在真被截断时才弹出提示 |
 | 6 | **移动端长标题折行显示**（移动端无 hover，用物理空间换信息） | `notes.css` `@media (max-width: 900px)` | 在 900px 断点内取消 `.toc-link` / `.toc-text` 的 `nowrap` 与 `ellipsis`：`white-space: normal !important` + `text-overflow: clip !important` + `overflow: visible !important`，`line-height: 1.4`，并给每条加 `margin-bottom: 2px` 防止两行条目贴身；`.toc-text` 改成 `display: inline` 让它随容器折行 |
+| 7 | **Callout 展开/收起必须用事件委托** | `note.html` 底部 `<script>` | 只用**一个** `document.addEventListener("click", …)` + `e.target.closest("summary.callout-title")` 统一接管全站 Callout 动画，**不再遍历每个 `<summary>` 单独绑定**。67 个 callout 也只占 1 个监听器，且对后续动态插入的内容同样生效。动画状态锁存在 `details.dataset.animating` 上，所以同时点两个不同 callout 不会互相阻塞；标题里如果有 `<a>`，则**放行让链接正常跳转**（`preventDefault` 在 `document` 上会连链接跳转一起拦掉），退回原生折叠 |
 
 > 规范 1 / 5 / 6 是一组，分别覆盖三种场景：
 > - **1** 桌面单行截断 → 长标题不会撑爆 250px 侧边栏

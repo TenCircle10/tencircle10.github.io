@@ -348,82 +348,91 @@
       (function () {
         var DURATION = 300;   // 与 CSS 里 0.3s 保持一致
 
-        function setupCallouts() {
-          var callouts = document.querySelectorAll("details.callout");
-          for (var i = 0; i < callouts.length; i++) {
-            (function (details) {
-              var summary = details.querySelector("summary.callout-title");
-              var content = details.querySelector(".callout-content");
-              // 没有标题或没有内容区的（比如空的 callout）直接跳过，保持原生行为
-              if (!summary || !content) return;
+        // ---- 事件委托：只在 document 上挂一个监听器 ----
+        // 不随 callout 数量增长（67 个 callout 也只占 1 个监听器），
+        // 且对之后动态插入的内容同样生效（比如 Giscus 加载后重排）。
+        document.addEventListener("click", function (e) {
+          var target = e.target;
+          if (!target || typeof target.closest !== "function") return;
 
-              var animating = false;
+          // 向上找标题：点标题里的 <span>、公式（mjx-container）等都能命中
+          var summary = target.closest("summary.callout-title");
+          if (!summary) return;
 
-              summary.addEventListener("click", function (e) {
-                // <details> 默认是"瞬间切换"，这里拦下来自己算高度做动画。
-                // 注意：不能用 toggle 事件 —— 它在 open 已经变化之后才触发，拦不住闪跳。
-                e.preventDefault();
-                if (animating) return;
-                animating = true;
+          // 校验它确实是 callout 的标题（避免误伤别处同名类）
+          var details = summary.parentElement;
+          if (!details || !details.matches("details.callout")) return;
 
-                if (details.open) {
-                  // ---- 收起：auto -> 0 ----
-                  content.style.height = content.offsetHeight + "px";
-                  content.style.overflow = "hidden";
-                  content.style.transition = "none";
+          var content = details.querySelector(".callout-content");
+          if (!content) return;   // 空 callout 保持浏览器原生行为
 
-                  requestAnimationFrame(function () {
-                    content.style.transition =
-                      "height " + DURATION + "ms ease, opacity " + DURATION + "ms ease";
-                    content.style.height = "0px";
-                    content.style.opacity = "0";
-                  });
+          // 标题里如果有链接，优先让链接正常跳转：
+          // e.preventDefault() 在 document 上会连 <a> 的跳转一起拦掉。
+          // 这种情况下退回原生折叠（无动画，但功能正确）。
+          if (target.closest("a")) return;
 
-                  setTimeout(function () {
-                    details.open = false;
-                    // 清理内联样式，避免影响下次展开时的高度计算
-                    content.style.transition = "";
-                    content.style.height = "";
-                    content.style.overflow = "";
-                    content.style.opacity = "";
-                    animating = false;
-                  }, DURATION);
-                } else {
-                  // ---- 展开：0 -> scrollHeight ----
-                  details.open = true;
-                  var target = content.scrollHeight;
-
-                  content.style.transition = "none";
-                  content.style.height = "0px";
-                  content.style.overflow = "hidden";
-                  content.style.opacity = "0";
-
-                  requestAnimationFrame(function () {
-                    content.style.transition =
-                      "height " + DURATION + "ms ease, opacity " + DURATION + "ms ease";
-                    content.style.height = target + "px";
-                    content.style.opacity = "1";
-                  });
-
-                  setTimeout(function () {
-                    // 动画结束后回落成 auto，这样窗口缩放、图片加载后高度都能自适应
-                    content.style.transition = "";
-                    content.style.height = "auto";
-                    content.style.overflow = "";
-                    content.style.opacity = "";
-                    animating = false;
-                  }, DURATION);
-                }
-              });
-            })(callouts[i]);
+          // 每个 details 独立的状态锁（存在 dataset 上），
+          // 所以同时点两个不同的 callout 不会互相阻塞。
+          if (details.dataset.animating === "1") {
+            e.preventDefault();   // 动画中的再次点击直接吞掉，避免叠加
+            return;
           }
-        }
 
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", setupCallouts);
-        } else {
-          setupCallouts();
-        }
+          // <details> 默认是"瞬间切换"，这里拦下来自己算高度做动画。
+          // 不能用 toggle 事件 —— 它在 open 已经变化之后才触发，拦不住闪跳。
+          e.preventDefault();
+          details.dataset.animating = "1";
+
+          function cleanup() {
+            content.style.transition = "";
+            content.style.overflow = "";
+            content.style.opacity = "";
+            delete details.dataset.animating;
+          }
+
+          if (details.open) {
+            // ---- 收起：auto -> 0 ----
+            content.style.height = content.offsetHeight + "px";
+            content.style.overflow = "hidden";
+            content.style.transition = "none";
+
+            requestAnimationFrame(function () {
+              content.style.transition =
+                "height " + DURATION + "ms ease, opacity " + DURATION + "ms ease";
+              content.style.height = "0px";
+              content.style.opacity = "0";
+            });
+
+            setTimeout(function () {
+              details.open = false;
+              // 清理内联样式，避免影响下次展开时的高度计算
+              content.style.height = "";
+              cleanup();
+            }, DURATION);
+          } else {
+            // ---- 展开：0 -> scrollHeight ----
+            details.open = true;
+            var targetHeight = content.scrollHeight;
+
+            content.style.transition = "none";
+            content.style.height = "0px";
+            content.style.overflow = "hidden";
+            content.style.opacity = "0";
+
+            requestAnimationFrame(function () {
+              content.style.transition =
+                "height " + DURATION + "ms ease, opacity " + DURATION + "ms ease";
+              content.style.height = targetHeight + "px";
+              content.style.opacity = "1";
+            });
+
+            setTimeout(function () {
+              // 回落成 auto，这样窗口缩放、图片加载、公式渲染后高度都能自适应
+              content.style.height = "auto";
+              cleanup();
+            }, DURATION);
+          }
+        });
       })();
     </script>
 
