@@ -357,9 +357,19 @@ _icon-src/
 **已在 `.gitignore` 里忽略，不会推到 GitHub**。以后换图标直接从本地取，不用重新下载：
 
 ```powershell
-$raw = [System.IO.File]::ReadAllText('_icon-src/lucide/package/icons/badge-check.svg')
-$s = [regex]::Replace($raw, '<!--[\s\S]*?-->', '')            # 去 license 注释
-$s = [regex]::Replace($s, '\s+(class|width|height)="[^"]*"', '')  # 去无用属性
+$raw = [System.IO.File]::ReadAllText('_icon-src/lucide/icons/badge-check.svg')
+$s = [regex]::Replace($raw, '<!--[\s\S]*?-->', '')   # 去 license 注释
+
+# 【关键】只清理 <svg ...> 开标签上的 class / width / height。
+# 绝不能无差别删掉所有 width="..."：那样会让 <rect width="18" height="18"> 失去尺寸，
+# 方框渲染不出来 —— 这正是 theorem 的 "function-square" 只剩一个 f 的原因（2026-10 踩过）。
+$s = [regex]::Replace($s, '<svg\b[^>]*>', {
+  param($m)
+  $tag = $m.Value
+  $tag = [regex]::Replace($tag, '\s+(class|width|height)="[^"]*"', '')
+  return [regex]::Replace($tag, '\s+', ' ')
+})
+
 $s = [regex]::Replace($s, '\s+', ' ')
 $s = [regex]::Replace($s, '>\s+<', '><').Trim()
 [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($s))
@@ -367,6 +377,10 @@ $s = [regex]::Replace($s, '>\s+<', '><').Trim()
 
 > ⚠️ 不要直接用原始的 base64 —— Lucide 的 SVG 开头带 `<!-- @license lucide-static ... -->` 注释，
 > 虽然浏览器多数能容忍，但不规范且白白增大体积。现有 CSS 里 **21 个图标已全部清理干净**。
+>
+> ⚠️ **清理后务必检查**：凡是内部含 `<rect>` / `<circle>` / `<ellipse>` 的图标，
+> 这些子元素必须保留自己的 `width` / `height` / `r`。可以用一行验证：
+> `$s -match '<rect[^>]*width='`，为 False 就说明尺寸被误删了。
 
 > ⚠️ **踩过的坑（2026-10-24）**：`markdown="block"` **只能加在内层 `<div class="callout-content">` 上，
 > 绝不能加在 `<details>` 上**。加在 `<details>` 上时，kramdown 会把整个 details 的内容按块级 Markdown 解析，
