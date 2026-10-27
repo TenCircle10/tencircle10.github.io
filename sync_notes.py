@@ -402,19 +402,39 @@ _MATH_PLACEHOLDER = "\x00SYNC_MATH_{}\x00"
 
 # 行内公式里会被 kramdown 抢先解释的字符 -> LaTeX 转义写法。
 # 每条都用 (?<!\\) 做负向断言，保证对已经转义过的内容幂等。
+#
+# 2026-10 修正（线上报过 "Missing or unrecognized delimiter for \left"）：
+#   · ``_`` 用 **HTML 实体** ``&#95;`` 而不是 ``\_``：
+#       ``\_`` 是「字面下划线」，会把下标 p_n 变成 p\_n（n 不再是下标）；
+#       而完全不转义又会被 Markdown 当成斜体（实测 x'_{lj} = ... b_{lk} 会命中：
+#       开始 _ 前面是 ' ，结束 _ 后面是 { ，两侧都不是字母数字，边界成立）。
+#       ``&#95;`` 两边都满足：kramdown 看到实体不认作强调，浏览器解码后 MathJax 拿到的仍是 _。
+#   · ``*`` 同理用 ``&#42;``（``\*`` 在 LaTeX 里不是合法命令，会直接报错）。
+#   · ``\{`` / ``\}`` 改写成 ``\lbrace`` / ``\rbrace``。原来的 ``\\{`` 里 ``\\`` 是换行，
+#     会把 \left\{ 拆成「\left + 换行 + {」，MathJax 就报「找不到定界符」。
+#     \lbrace / \rbrace 是合法命令，\left\lbrace … \right\rbrace 也完全合法。
+#   · ``|`` 改写成 ``\vert``（原来是 ``\mid``）。\left| 被改成 \left\mid 后
+#     \mid 不是 \left 的合法定界符，同样会报错；\left\vert 才是对的。
+#   · ``<`` / ``>`` 在 \left、\right 后面不转义：\left< 是合法定界符，
+#     转成 \left\lt 反而非法。用定长负向后顾排除这两种情况。
 _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"(?<!\\)#"), r"\\#"),
-    (re.compile(r"(?<!\\)_"), r"\\_"),
-    (re.compile(r"(?<!\\)\*"), r"\\*"),
-    (re.compile(r"(?<!\\)\\\{"), r"\\\\{"),
-    (re.compile(r"(?<!\\)\\\}"), r"\\\\}"),
-    # 下面四条会替换成字母命令（\mid \lt \gt \sim），必须补一个尾随空格；
-    # 否则紧跟字母/数字时 TeX 会把它合并成 \midb、\ltc、\gtd 这类未定义命令。
+    (re.compile(r"(?<!\\)\\\{"), r"\\lbrace "),
+    (re.compile(r"(?<!\\)\\\}"), r"\\rbrace "),
+    # 用 HTML 实体代替 LaTeX 转义，但【只在真会触发 Markdown 强调的位置】替换：
+    # Markdown 的 _ 强调要求开始 _ 左侧不是字母数字。所以
+    #   a_1 / A_n / p_n      → 左侧是字母，不会触发强调，保持原样（MathJax 正常渲染下标）
+    #   x'_{lj} / )_{m×n}    → 左侧是标点，会触发强调，必须换成实体
+    # 这样既挡住斜体，又不让生成物里塞满无意义的实体。
+    (re.compile(r"(?<![A-Za-z0-9\\])_"), r"&#95;"),
+    (re.compile(r"(?<![A-Za-z0-9\\\s])\*"), r"&#42;"),
+    # 下面三条会替换成字母命令（\vert \lt \gt \sim），必须补一个尾随空格；
+    # 否则紧跟字母/数字时 TeX 会把它合并成 \vertb、\ltc、\gtd 这类未定义命令。
     # 数学模式下空格本身被忽略，所以不会影响渲染间距。
-    (re.compile(r"(?<!\\)\|"), r"\\mid "),
-    (re.compile(r"(?<!\\)<"), r"\\lt "),
-    (re.compile(r"(?<!\\)>"), r"\\gt "),
-    (re.compile(r"(?<!\\)&"), r"\\&"),
+    # \left< / \right> / \left> / \right< 里的符号是定界符，必须原样保留。
+    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)\|"), r"\\vert "),
+    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)<"), r"\\lt "),
+    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)>"), r"\\gt "),
     (re.compile(r"(?<!\\)%"), r"\\%"),
     (re.compile(r"(?<!\\)~"), r"\\sim "),
 ]

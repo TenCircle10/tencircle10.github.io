@@ -35,7 +35,7 @@ a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = 0
 \end{cases}
 $$
 
-**两类解**：**零解（平凡解）** 指 $x\_1 = x\_2 = \cdots = x\_n = 0$；**非零解** 指 $x\_1, \dots, x\_n$ 不全取 $0$。
+**两类解**：**零解（平凡解）** 指 $x_1 = x_2 = \cdots = x_n = 0$；**非零解** 指 $x_1, \dots, x_n$ 不全取 $0$。
 
 ### 1.2 解方程组的通法
 
@@ -85,7 +85,7 @@ $$
 
 ### 1.4 记号约定
 
-$a\_{ij}$ 表示第 $i$ 行第 $j$ 列的元素；矩阵用大写 $A, B, C$，元素用小写 $a, b, a\_{ij}$。只有一行称**行矩阵 / 行向量**，只有一列称**列矩阵 / 列向量**。注意**不同型的零矩阵不相等**：$O\_{2 \times 3} \neq O\_{3 \times 2}$。
+$a_{ij}$ 表示第 $i$ 行第 $j$ 列的元素；矩阵用大写 $A, B, C$，元素用小写 $a, b, a_{ij}$。只有一行称**行矩阵 / 行向量**，只有一列称**列矩阵 / 列向量**。注意**不同型的零矩阵不相等**：$O_{2 \times 3} \neq O_{3 \times 2}$。
 
 ---
 
@@ -113,7 +113,7 @@ $a\_{ij}$ 表示第 $i$ 行第 $j$ 列的元素；矩阵用大写 $A, B, C$，�
 
 $$C_{ij} = \sum_{k=1}^{p} a_{ik} b_{kj}, \qquad A_{m \times p} \, B_{p \times n} = C_{m \times n}$$
 
-也就是说：$A$ 的第 $i$ 行 $\times$ $B$ 的第 $j$ 列 $\Rightarrow C\_{ij}$。
+也就是说：$A$ 的第 $i$ 行 $\times$ $B$ 的第 $j$ 列 $\Rightarrow C_{ij}$。
 
 例（$3\times2$ 乘 $2\times4$ 得 $3\times4$）：
 
@@ -132,12 +132,12 @@ $$
 <summary class="callout-title">矩阵乘法满足结合律</summary>
 <div class="callout-content" markdown="block">
 
-设 $A\_{m \times p},\ B\_{p \times q},\ C\_{q \times n}$，则 $(AB)C = A(BC)$。
+设 $A_{m \times p},\ B_{p \times q},\ C_{q \times n}$，则 $(AB)C = A(BC)$。
 
 </div>
 </details>
 
-**左式**：把 $AB$ 的元素记为 $x\_{ik} = \sum\_{l=1}^{p} a\_{il} b\_{lk}$，则 $(AB)C$ 的 $(i,j)$ 元为
+**左式**：把 $AB$ 的元素记为 $x_{ik} = \sum_{l=1}^{p} a_{il} b_{lk}$，则 $(AB)C$ 的 $(i,j)$ 元为
 
 $$
 y_{ij} = \sum_{k=1}^{q} x_{ik} c_{kj}
@@ -145,7 +145,7 @@ y_{ij} = \sum_{k=1}^{q} x_{ik} c_{kj}
 = \sum_{l=1}^{p}\sum_{k=1}^{q} a_{il} b_{lk} c_{kj}
 $$
 
-**右式**：把 $BC$ 的元素记为 $x'\_{lj} = \sum\_{k=1}^{q} b\_{lk} c\_{kj}$（内层求和指标是 $k$，走 $B$ 的列数 $q$），则 $A(BC)$ 的 $(i,j)$ 元为
+**右式**：把 $BC$ 的元素记为 $x'&#95;{lj} = \sum_{k=1}^{q} b_{lk} c_{kj}$（内层求和指标是 $k$，走 $B$ 的列数 $q$），则 $A(BC)$ 的 $(i,j)$ 元为
 
 $$
 y'_{ij} = \sum_{l=1}^{p} a_{il} x'_{lj}
@@ -153,13 +153,13 @@ y'_{ij} = \sum_{l=1}^{p} a_{il} x'_{lj}
 = \sum_{l=1}^{p}\sum_{k=1}^{q} a_{il} b_{lk} c_{kj}
 $$
 
-**为什么两个求和相等**：两者都是 $p \times q$ 项有限和，项的形状都是 $a\_{il}b\_{lk}c\_{kj}$；把左式 $(l,k)$ 与右式 $(l,k)$ 一一对应（取 $l\_2 = l\_1,\ k\_2 = k\_1$），对应项相同；有限和可交换次序。
+**为什么两个求和相等**：两者都是 $p \times q$ 项有限和，项的形状都是 $a_{il}b_{lk}c_{kj}$；把左式 $(l,k)$ 与右式 $(l,k)$ 一一对应（取 $l_2 = l_1,\ k_2 = k_1$），对应项相同；有限和可交换次序。
 
 <details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">这一步最容易写错</summary>
 <div class="callout-content" markdown="block">
 
-对应关系必须是 $l \leftrightarrow l$、$k \leftrightarrow k$。若写成"$l\_2 = k\_1,\ k\_2 = l\_1$"，就会把项错位成 $a\_{ik} b\_{kl} c\_{lj}$，这不是同一个乘积，比较就失去依据了。
+对应关系必须是 $l \leftrightarrow l$、$k \leftrightarrow k$。若写成"$l_2 = k_1,\ k_2 = l_1$"，就会把项错位成 $a_{ik} b_{kl} c_{lj}$，这不是同一个乘积，比较就失去依据了。
 
 </div>
 </details>
@@ -203,7 +203,7 @@ $$A = [a_{ij}]_{m \times n}, \qquad A^{T} = [a_{ji}]_{n \times m}$$
 - $(A^{T})^{T} = A$，$(A + B)^{T} = A^{T} + B^{T}$；
 - $(AB)^{T} = B^{T} A^{T}$。
 
-**想法**：设 $A\_{m \times p}, B\_{p \times n}$。$AB$ 的 $(i,j)$ 元是 $\sum\_k a\_{ik} b\_{kj}$，转置后它跑到第 $(j,i)$ 位；而 $B^{T}A^{T}$ 的 $(j,i)$ 元是 $\sum\_k b\_{kj} a\_{ik}$ —— 同一个数。口诀：**前行乘后列，转置后行列互换**。推广得 $(A\_1 A\_2 \cdots A\_m)^{T} = A\_m^{T} \cdots A\_2^{T} A\_1^{T}$。
+**想法**：设 $A_{m \times p}, B_{p \times n}$。$AB$ 的 $(i,j)$ 元是 $\sum_k a_{ik} b_{kj}$，转置后它跑到第 $(j,i)$ 位；而 $B^{T}A^{T}$ 的 $(j,i)$ 元是 $\sum_k b_{kj} a_{ik}$ —— 同一个数。口诀：**前行乘后列，转置后行列互换**。推广得 $(A_1 A_2 \cdots A_m)^{T} = A_m^{T} \cdots A_2^{T} A_1^{T}$。
 
 若 $A, B$ 同为 $m \times n$（保证 $AB^{T}$、$BA^{T}$ 是 $n$ 阶方阵），则
 
@@ -218,13 +218,13 @@ $$(AB^{T} + BA^{T})^{T} = B A^{T} + A B^{T} = AB^{T} + BA^{T}$$
 <summary class="callout-title">方阵与单位矩阵</summary>
 <div class="callout-content" markdown="block">
 
-- 若 $A\_{m \times n}$ 中 $m = n$，称 $A$ 为 **$n$ 阶方阵**，$a\_{ii}$ 称为**主对角元**。
-- **单位矩阵** $I\_n$（也写 $E\_n$）：主对角元全为 $1$、其余全为 $0$ 的 $n$ 阶方阵，简记 $I$（或 $E$）。
+- 若 $A_{m \times n}$ 中 $m = n$，称 $A$ 为 **$n$ 阶方阵**，$a_{ii}$ 称为**主对角元**。
+- **单位矩阵** $I_n$（也写 $E_n$）：主对角元全为 $1$、其余全为 $0$ 的 $n$ 阶方阵，简记 $I$（或 $E$）。
 
 </div>
 </details>
 
-单位矩阵是乘法的恒元：$A\_{m \times n} I\_n = A\_{m \times n}$，$I\_m A\_{m \times n} = A\_{m \times n}$；零矩阵则 $A\_{m \times n} O\_{n \times q} = O\_{m \times q}$。
+单位矩阵是乘法的恒元：$A_{m \times n} I_n = A_{m \times n}$，$I_m A_{m \times n} = A_{m \times n}$；零矩阵则 $A_{m \times n} O_{n \times q} = O_{m \times q}$。
 
 方阵的幂：$A^{k} A^{l} = A^{k+l}$，$(A^{k})^{l} = A^{kl}$，规定 $A^{0} = I$、$A^{1} = A$、$I^{k} = I$。多项式搬到矩阵上：$x \to A$，常数 $1 \to I$，
 
@@ -271,7 +271,7 @@ B = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}, \qquad
 \begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix} = A + B
 $$
 
-$AB = BA = \begin{bmatrix} 0 \& \lambda \\ 0 \& 0 \end{bmatrix}$（可交换，定理可用）；$B^{2} = O$，$A^{n} = \begin{bmatrix} \lambda^{n} \& 0 \\ 0 \& \lambda^{n} \end{bmatrix}$。于是 $k \ge 2$ 的项全是 $O$：
+$AB = BA = \begin{bmatrix} 0 & \lambda \\ 0 & 0 \end{bmatrix}$（可交换，定理可用）；$B^{2} = O$，$A^{n} = \begin{bmatrix} \lambda^{n} & 0 \\ 0 & \lambda^{n} \end{bmatrix}$。于是 $k \ge 2$ 的项全是 $O$：
 
 $$
 \begin{aligned}
@@ -308,10 +308,10 @@ $$
 
 ## 4 行/列视角与 $AX = b$
 
-设 $A\_{m \times n},\ B\_{n \times t}$，记 $A\_{i\cdot} = [a\_{i1}\ a\_{i2}\ \cdots\ a\_{in}]$（行向量），$B\_{\cdot j} = [b\_{1j}\ b\_{2j}\ \cdots\ b\_{nj}]^{T}$（列向量）。
+设 $A_{m \times n},\ B_{n \times t}$，记 $A_{i\cdot} = [a_{i1}\ a_{i2}\ \cdots\ a_{in}]$（行向量），$B_{\cdot j} = [b_{1j}\ b_{2j}\ \cdots\ b_{nj}]^{T}$（列向量）。
 
-- **按行**：$AB$ 的第 $i$ 行 $= A\_{i\cdot} B$，即 $AB = \begin{bmatrix} A\_{1\cdot} B \\ A\_{2\cdot} B \\ \vdots \\ A\_{m\cdot} B \end{bmatrix}$；
-- **按列**：$AB$ 的第 $j$ 列 $= A\, B\_{\cdot j}$；
+- **按行**：$AB$ 的第 $i$ 行 $= A_{i\cdot} B$，即 $AB = \begin{bmatrix} A_{1\cdot} B \\ A_{2\cdot} B \\ \vdots \\ A_{m\cdot} B \end{bmatrix}$；
+- **按列**：$AB$ 的第 $j$ 列 $= A\, B_{\cdot j}$；
 - 可乘条件：$A$ 的列数 $=$ $B$ 的行数。
 
 <details class="callout note" id="matrix-equation" data-callout="note" open>
@@ -360,7 +360,7 @@ $$
 设 $A$ 是 $m \times n$ 矩阵，则
 
 1. $r(A) = 0 \iff A = O$；若 $A \neq O$，则 $r(A) \ge 1$；
-2. $r(A) \le \min\\{m, n\\}$；
+2. $r(A) \le \min\lbrace m, n\rbrace $；
 3. 初等行变换不改变矩阵的秩。
 
 </div>
@@ -391,14 +391,14 @@ $$
 </div>
 </details>
 
-**证明（反证）**。由 [初等变换](#elementary-ops) 不改变方程组的解集，齐次方程组 $AX = 0$ 与 $BX = 0$ **同解**。设 $r(A) = r\_1 \lt  r\_2 = r(B)$。
+**证明（反证）**。由 [初等变换](#elementary-ops) 不改变方程组的解集，齐次方程组 $AX = 0$ 与 $BX = 0$ **同解**。设 $r(A) = r_1 \lt  r_2 = r(B)$。
 
-1. 设 $B$ 有 $r\_2$ 个主元未知数、$n - r\_2$ 个自由未知数，把自由未知数的下标集合记为 $F$。
+1. 设 $B$ 有 $r_2$ 个主元未知数、$n - r_2$ 个自由未知数，把自由未知数的下标集合记为 $F$。
 2. **在 $B$ 中**：令 $F$ 中所有自由未知数为 $0$，阶梯形方程组给出唯一解 —— 只能是**零解**。即 $BX = 0$ 在"$F$ 上取 $0$"的解只有零解。
-3. **在 $A$ 中**：同样令 $F$ 中这 $n - r\_2$ 个未知数为 $0$，剩下 $r\_2$ 个未知数只受至多 $r\_1$ 个独立方程约束。因为 $r\_2 \gt  r\_1$（未知数多于有效方程），这个齐次方程组必有**非零解** $X\_0$，且 $X\_0$ 在 $F$ 上取 $0$。
-4. $X\_0$ 是 $A$ 的解，由同解性也是 $B$ 的解；但由第 2 步，$B$ 在 $F$ 上取 $0$ 的解只有零解，矛盾。
+3. **在 $A$ 中**：同样令 $F$ 中这 $n - r_2$ 个未知数为 $0$，剩下 $r_2$ 个未知数只受至多 $r_1$ 个独立方程约束。因为 $r_2 \gt  r_1$（未知数多于有效方程），这个齐次方程组必有**非零解** $X_0$，且 $X_0$ 在 $F$ 上取 $0$。
+4. $X_0$ 是 $A$ 的解，由同解性也是 $B$ 的解；但由第 2 步，$B$ 在 $F$ 上取 $0$ 的解只有零解，矛盾。
 
-所以 $r\_1 = r\_2$，初等行变换不改变秩。
+所以 $r_1 = r_2$，初等行变换不改变秩。
 
 ### 5.4 列变换与乘积的秩
 
@@ -413,7 +413,7 @@ $$
 
 **引理**：阶梯形矩阵 $T$（$r(T) = r$）右乘任何矩阵，非零行数不会增加 —— $T$ 有 $m - r$ 个零行，零行右乘仍是零行，故 $r(TQ) \le r$。
 
-**证明**：设 $P\_s \cdots P\_1 A = T$（$P\_i$ 为初等矩阵），则 $A = P\_1^{-1} \cdots P\_s^{-1} T$，于是
+**证明**：设 $P_s \cdots P_1 A = T$（$P_i$ 为初等矩阵），则 $A = P_1^{-1} \cdots P_s^{-1} T$，于是
 
 $$
 r(AQ) = r(P_1^{-1} \cdots P_s^{-1} TQ) = r(TQ) \le r(T) = r(A) \qquad (\ast)
@@ -421,7 +421,7 @@ $$
 
 （第一、二个等号用的是 [初等行变换不改变秩](#rank-invariance)，最后一个等号由 $r(T) = r(A)$ 得到。）由 $(\ast)$ 得 $r(AQP) \le r(AQ) \le r(A)$；取 $P = Q^{-1}$ 又得 $r(A) \le r(AQ) \le r(A)$，故 $r(AQ) = r(A)$。
 
-**推论**：$r(AB) \le \min\\{r(A),\, r(B)\\}$ —— 矩阵乘法不增加信息，只可能减少信息。
+**推论**：$r(AB) \le \min\lbrace r(A),\, r(B)\rbrace $ —— 矩阵乘法不增加信息，只可能减少信息。
 
 ### 5.5 相抵标准形与转置
 
@@ -429,7 +429,7 @@ $$
 <summary class="callout-title">相抵（等价）标准形</summary>
 <div class="callout-content" markdown="block">
 
-任何 $m \times n$ 矩阵 $A$ 都可经初等变换化为 $\begin{bmatrix} I\_r \& O \\ O \& O \end{bmatrix}\_{m \times n}$（$r = r(A)$），称**相抵标准形**。它被 $r(A)$ **唯一确定**，于是同型矩阵之间
+任何 $m \times n$ 矩阵 $A$ 都可经初等变换化为 $\begin{bmatrix} I_r & O \\ O & O \end{bmatrix}&#95;{m \times n}$（$r = r(A)$），称**相抵标准形**。它被 $r(A)$ **唯一确定**，于是同型矩阵之间
 
 $$A \cong B \iff r(A) = r(B)$$
 
@@ -442,7 +442,7 @@ $$A \cong B \iff r(A) = r(B)$$
 <summary class="callout-title">$r(A) = r(A^{T})$</summary>
 <div class="callout-content" markdown="block">
 
-设 $P\_s \cdots P\_1 A Q\_1 \cdots Q\_t = \begin{bmatrix} I\_r \& O \\ O \& O \end{bmatrix}\_{m \times n}$，两边转置得
+设 $P_s \cdots P_1 A Q_1 \cdots Q_t = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}&#95;{m \times n}$，两边转置得
 
 $$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{n \times m}$$
 
@@ -455,7 +455,7 @@ $$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O 
 
 $r(A+B) \le r(A) + r(B)$。其余专题单开：
 
-- **分块矩阵的秩**（$\begin{bmatrix} A \& O \\ O \& B\end{bmatrix}$ 的秩、$\begin{bmatrix} A \& C \\ 0 \& B\end{bmatrix}$ 的下界）：见 [分块矩阵性质](/notes/分块矩阵性质/)
+- **分块矩阵的秩**（$\begin{bmatrix} A & O \\ O & B\end{bmatrix}$ 的秩、$\begin{bmatrix} A & C \\ 0 & B\end{bmatrix}$ 的下界）：见 [分块矩阵性质](/notes/分块矩阵性质/)
 - **Sylvester 秩不等式** $r(AB) \ge r(A) + r(B) - n$ 及其几何解释：见 [Sylvester 秩不等式](/notes/Sylvester 秩不等式/)
 - **子矩阵的秩不超过原矩阵** $r(B) \le r(A)$：见 [子母矩阵秩的大小关系](/notes/子母矩阵秩的大小关系/)
 - **加长向量组仍无关**（无关的向量组添上若干坐标后仍无关）：见 [向量组无关加元素仍无关](/notes/向量组无关加元素仍无关/)
@@ -478,11 +478,11 @@ $r(A+B) \le r(A) + r(B)$。其余专题单开：
 
 | 变换 | 初等矩阵 $E$ 的元素特征 | 作用方式 |
 | --- | --- | --- |
-| 第 $i$ 行（列）倍乘 $k \neq 0$ | $a\_{ii} = k$，其余对角元为 $1$ | $EA$ 行变 / $AE$ 列变 |
-| 第 $i$ 行（列）的 $k$ 倍加到第 $j$ 行（列） | $a\_{ii} = a\_{jj} = 1$，$a\_{ji} = k$ | $EA$ 行变 / $AE$ 列变 |
-| 对换 $i, j$ 两行（列） | $a\_{ii} = a\_{jj} = 0$，$a\_{ij} = a\_{ji} = 1$，其余对角元为 $1$ | $EA$ 行变 / $AE$ 列变 |
+| 第 $i$ 行（列）倍乘 $k \neq 0$ | $a_{ii} = k$，其余对角元为 $1$ | $EA$ 行变 / $AE$ 列变 |
+| 第 $i$ 行（列）的 $k$ 倍加到第 $j$ 行（列） | $a_{ii} = a_{jj} = 1$，$a_{ji} = k$ | $EA$ 行变 / $AE$ 列变 |
+| 对换 $i, j$ 两行（列） | $a_{ii} = a_{jj} = 0$，$a_{ij} = a_{ji} = 1$，其余对角元为 $1$ | $EA$ 行变 / $AE$ 列变 |
 
-一次初等**行**变换 $=$ 左乘相应的 $m$ 阶初等矩阵（作用在 $A\_{m \times n}$ 上）；一次初等**列**变换 $=$ 右乘相应的 $n$ 阶初等矩阵。**左行右列**：左乘则行变，右乘则列变（$I$ 中改动的位置固定）。
+一次初等**行**变换 $=$ 左乘相应的 $m$ 阶初等矩阵（作用在 $A_{m \times n}$ 上）；一次初等**列**变换 $=$ 右乘相应的 $n$ 阶初等矩阵。**左行右列**：左乘则行变，右乘则列变（$I$ 中改动的位置固定）。
 
 若 $A$ 可经**有限次**初等变换化为 $B$，记 $A \cong B$。它自反、对称、传递，是一个等价关系；同型矩阵之间 $A \cong B \iff r(A) = r(B)$（见 [相抵标准形](#canonical-form)）。
 <a id="equivalence"></a>
@@ -504,7 +504,7 @@ $r(A+B) \le r(A) + r(B)$。其余专题单开：
 </div>
 </details>
 
-**思路**：满秩时可用有限次初等行变换把 $A$ 化成 $I$：$P\_s \cdots P\_1 A = I$，于是
+**思路**：满秩时可用有限次初等行变换把 $A$ 化成 $I$：$P_s \cdots P_1 A = I$，于是
 
 $$
 A = (P_s \cdots P_1)^{-1} = P_1^{-1} P_2^{-1} \cdots P_s^{-1}
@@ -522,7 +522,7 @@ $$
 
 $$(A^{-1})^{-1} = A, \qquad (A^{T})^{-1} = (A^{-1})^{T}, \qquad (AB)^{-1} = B^{-1} A^{-1}$$
 
-若 $A, B, A+B$ 都可逆，则 $A^{-1}(A+B)B^{-1} = A^{-1}AB^{-1} + A^{-1}BB^{-1} = B^{-1} + A^{-1} = A^{-1} + B^{-1}$。对角矩阵（$a\_{ii} \neq 0$）：
+若 $A, B, A+B$ 都可逆，则 $A^{-1}(A+B)B^{-1} = A^{-1}AB^{-1} + A^{-1}BB^{-1} = B^{-1} + A^{-1} = A^{-1} + B^{-1}$。对角矩阵（$a_{ii} \neq 0$）：
 
 $$
 \begin{bmatrix} a_{11} & & & \\ & a_{22} & & \\ & & \ddots & \\ & & & a_{nn} \end{bmatrix}^{-1}
@@ -550,20 +550,20 @@ $$
 
 $$(A \mid I) \xrightarrow{\ \text{只做初等行变换}\ } (I \mid A^{-1})$$
 
-理由：若 $P\_1 \cdots P\_s A = I$，则 $P\_1 \cdots P\_s = A^{-1}$，故 $P\_1 \cdots P\_s I = A^{-1}$ —— 把 $A$ 化成 $I$ 的同一串行变换，作用在 $I$ 上即得 $A^{-1}$。
+理由：若 $P_1 \cdots P_s A = I$，则 $P_1 \cdots P_s = A^{-1}$，故 $P_1 \cdots P_s I = A^{-1}$ —— 把 $A$ 化成 $I$ 的同一串行变换，作用在 $I$ 上即得 $A^{-1}$。
 
 <details class="callout warning" id="inverse-algorithm" data-callout="warning" open>
 <summary class="callout-title">别记错名字</summary>
 <div class="callout-content" markdown="block">
 
-$[A \mid I] \to [I \mid A^{-1}]$ 是**初等行变换法**；**伴随矩阵法**是 $A^{-1} = \dfrac{1}{\mid A\mid } A^{\*}$，两者不是一回事。
+$[A \mid I] \to [I \mid A^{-1}]$ 是**初等行变换法**；**伴随矩阵法**是 $A^{-1} = \dfrac{1}{\vert A\vert } A^{&#42;}$，两者不是一回事。
 
 </div>
 </details>
 
 ### 8.3 例题：由 $AX = A + 2X$ 反推可逆性
 
-设 $AX = A + 2X$，证明 $A - 2I$ 可逆并写出 $(A - 2I)^{-1}$，其中 $A = \begin{bmatrix} 4 \& 2 \& 3 \\ 1 \& 1 \& 0 \\ -1 \& 2 \& 3 \end{bmatrix}$。
+设 $AX = A + 2X$，证明 $A - 2I$ 可逆并写出 $(A - 2I)^{-1}$，其中 $A = \begin{bmatrix} 4 & 2 & 3 \\ 1 & 1 & 0 \\ -1 & 2 & 3 \end{bmatrix}$。
 
 **移项**：$AX - 2X = A$，即 $(A - 2I)X = A$，进而
 
@@ -571,7 +571,7 @@ $$(A - 2I)(X - I) = AX - A - 2X + 2I = A - A + 2I = 2I$$
 
 所以 $(A - 2I) \cdot \frac{1}{2}(X - I) = I$，由 [满秩与可逆](#full-rank-invertible) 得 $\frac{1}{2}(X - I) = (A - 2I)^{-1}$。
 
-**验证**：$A - 2I = \begin{bmatrix} 2 \& 2 \& 3 \\ 1 \& -1 \& 0 \\ -1 \& 2 \& 1 \end{bmatrix}$，$\mid A - 2I\mid  = 2(-1) - 2(1) + 3(1) = -1 \neq 0$，故 $r(A - 2I) = 3$，确实可逆。
+**验证**：$A - 2I = \begin{bmatrix} 2 & 2 & 3 \\ 1 & -1 & 0 \\ -1 & 2 & 1 \end{bmatrix}$，$\vert A - 2I\vert  = 2(-1) - 2(1) + 3(1) = -1 \neq 0$，故 $r(A - 2I) = 3$，确实可逆。
 <a id="example-inverse"></a>
 
 ---
