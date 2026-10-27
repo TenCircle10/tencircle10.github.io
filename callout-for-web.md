@@ -3,21 +3,50 @@
 > 本文档从 Obsidian 插件 **Callout Studio**（`PaperBell/.obsidian/plugins/callout-studio/`）的配置中完整提取，
 > 用于在任意静态站点（Jekyll / Hugo / 纯 HTML）中还原与 Obsidian 一致的 Callout 外观。
 >
-> **数据源**：`data.json`（61,501 bytes，最后修改 2026-10-24 13:23）
-> **图标库版本**：Lucide `lucide-static@1.61.0` · Tabler Icons `@tabler/icons@3.49.0` · Octicons `@primer/octicons@19.42.0` · Material Symbols `@material-symbols/svg-400@0.48.1`（本地缓存在 `_icon-src/`，不入库）
-> **所有 SVG 均为对应官方包中的原始文件，未做近似替换。**
+> **数据源**：`data.json`（最后修改 2026-10-27，33 条定义 / 24 条可用）
+> **图标库版本**：12 个数学类用 **Font Awesome 6.4.2**（`_layouts/note.html` 已 CDN 引入 `all.min.css`）；其余类型用 Lucide `lucide-static@1.61.0` · Tabler `@tabler/icons@3.49.0` · Octicons `@primer/octicons@19.42.0` · Material Symbols（缓存在 `_icon-src/`，不入库）
+
+---
+
+## v4 变更（当前线上实现）
+
+`assets/css/obsidian-callouts.css` 现在是双轨制：
+
+- **12 个数学类**（`theorem` `definition` `conclusion` `corollary` `lemma` `formula` `context` `seealso` `idea` `motivation` `keypoint` `understand`）
+  图标改用 **Font Awesome 6 字形**：`content: var(--callout-icon-glyph)` + `font-family: "Font Awesome 6 Free"; font-weight: 900`；
+  背景改成**显式 `rgba()`**（亮 0.08 / 暗 0.15），不再依赖 `color-mix`。
+- **其余类型**：原样保留 v3 的 `mask + Base64 SVG`，一行没动。
+- `corollary` / `lemma` / `understand` 是 v4 新增类型（v3 文档里没有）。
+
+| ID | 显示名 | 图标 | 码点 | 语义 | 亮色 | 暗色 |
+|---|---|---|---|---|---|---|
+| `theorem` | Theorem | FA solid | `\f698` | 平方根 | `#1e3a8a` | `#60a5fa` |
+| `definition` | Definition | FA solid | `\f02d` | 书本 | `#15803d` | `#4ade80` |
+| `conclusion` | Conclusion | FA solid | `\f058` | 对勾 | `#10b981` | `#34d399` |
+| `corollary` | Corollary | FA solid | `\f126` | 分支 | `#6b21a8` | `#c084fc` |
+| `lemma` | Lemma | FA solid | `\f12e` | 拼图 | `#475569` | `#94a3b8` |
+| `formula` | Formula | FA solid | `\f1ec` | 计算器 | `#0284c7` | `#38bdf8` |
+| `context` | Context | FA solid | `\f276` | 定位 | `#0d9488` | `#2dd4bf` |
+| `seealso` | Seealso | FA solid | `\f0c1` | 链接 | `#475569` | `#94a3b8` |
+| `idea` | Idea | FA solid | `\f0eb` | 灯泡 | `#d97706` | `#fbbf24` |
+| `motivation` | Motivation | FA solid | `\f14e` | 指南针 | `#f97316` | `#fb923c` |
+| `keypoint` | Keypoint | FA solid | `\f140` | 靶心 | `#dc2626` | `#f87171` |
+| `understand` | Understand | FA solid | `\e2ca` | 星火 | `#c026d3` | `#e879f9` |
+
+> `understand` 原计划用 `\f890`，但 FA 6.4.2 的私有区里没有这个字形（会渲染成豆腐块），改用同语义的 `\e2ca`（`wand-magic-sparkles`）。
+> 下文 Part A 的表格仍是 **v3** 的 mask / base64 记录；凡涉及上面 12 个数学类，以本表为准。
 
 ---
 
 ## 0. 数据总览
 
-`data.json` 里共 **30 条** Callout 定义（2026-10-24 从 45 条精简而来），其中 **21 条可用**：
+`data.json` 里共 **33 条** Callout 定义，其中 **24 条可用**：
 
 | 分类 | 数量 | 说明 |
 |---|---|---|
 | 内置标准类型 | 12 | `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` |
-| 自建有效类型 | 9 | `highlight` `definition` `conclusion` `idea` `motivation` `theorem` `context` `formula` `keypoint` |
-| **合计可用** | **21** | 已全部在本文档中给出完整 CSS |
+| 自建有效类型 | 12 | `highlight` `definition` `conclusion` `idea` `motivation` `theorem` `context` `formula` `keypoint` `corollary` `lemma` `understand` |
+| **合计可用** | **24** | 其中 12 个数学类走 v4 的 FA 字形方案 |
 | 模板占位（未清理） | 9 | 见 [A.3](#a3-未清理的占位项9-个)，**不要**用于正式文档 |
 
 **关于颜色字段**：Callout Studio 的每条配置只有 **两个十六进制色值**——`colorLight`（亮色模式）和 `colorDark`（暗色模式）。它没有独立的「背景色 / 边框色 / 标题色」字段，这三种颜色都是从这一个 accent 色**派生**出来的：
@@ -26,8 +55,9 @@
 accent   = colorLight / colorDark
 左边框   = accent（4px solid）
 标题文字 = accent
-背景     = color-mix(accent 8%, transparent)   ← 由 CSS 自动算
-图标     = accent（通过 mask 上色）
+背景     = rgba(accent, 0.08) 亮 / rgba(accent, 0.15) 暗    ← v4：12 个数学类显式写死
+           其余类型仍是 color-mix(accent 8%, transparent)
+图标     = accent（12 类走 FA 字形用 color 上色；其余走 mask 上色）
 ```
 
 ---
