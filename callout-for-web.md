@@ -4,7 +4,7 @@
 > 用于在任意静态站点（Jekyll / Hugo / 纯 HTML）中还原与 Obsidian 一致的 Callout 外观。
 >
 > **数据源**：`data.json`（最后修改 2026-10-27，33 条定义 / 25 条可用）
-> **写笔记时怎么选类型**：见 TECH_GUIDE.md §4.5「Callout 语义映射规范」
+> **写笔记时怎么选类型**：见 `TECH_GUIDE.md` §4.5「Callout 语义映射规范」
 > **图标库版本**：12 个数学类用 **Font Awesome 6.4.2**（`_layouts/note.html` 已 CDN 引入 `all.min.css`）；其余类型用 Lucide `lucide-static@1.61.0` · Tabler `@tabler/icons@3.49.0` · Octicons `@primer/octicons@19.42.0` · Material Symbols（缓存在 `_icon-src/`，不入库）
 
 ---
@@ -46,7 +46,7 @@
 | 分类 | 数量 | 说明 |
 |---|---|---|
 | 内置标准类型 | 12 | `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` |
-| 自建有效类型 | 13 | `highlight` `definition` `conclusion seealso` `idea` `motivation` `theorem` `context` `formula` `keypoint` `corollary` `lemma` `understand` |
+| 自建有效类型 | 13 | `highlight` `definition` `conclusion` `seealso` `idea` `motivation` `theorem` `context` `formula` `keypoint` `corollary` `lemma` `understand` |
 | **合计可用** | **25** | 其中 12 个数学类走 v4 的 FA 字形方案 |
 | 模板占位（未清理） | 9 | 见 [A.3](#a3-未清理的占位项9-个)，**不要**用于正式文档 |
 
