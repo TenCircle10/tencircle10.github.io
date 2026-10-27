@@ -410,7 +410,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\lbrace a, b\rbrace , \qquad
 
 $$\begin{cases} \lim\limits_{n \to \infty} a_{2n} = A \\[4pt] \lim\limits_{n \to \infty} a_{2n-1} = A \end{cases} \Longrightarrow \lim_{n \to \infty} a_n = A$$
 
-推广：若对 $r = 0, 1, \dots, p-1$ 都有 $\lim\limits_{n \to \infty} a_{pn+r} = A$，则 $\lim\limits_{n \to \infty} a_n = A$（即按模 $p$ 的完全剩余系分类）。它的逆否用法很实用：只要找到两个子列极限不同（或某个子列发散），就能断定原数列不收敛，见 [前面  SYNC\_MATH\_361  的反例](#limit-tail)。
+推广：若对 $r = 0, 1, \dots, p-1$ 都有 $\lim\limits_{n \to \infty} a_{pn+r} = A$，则 $\lim\limits_{n \to \infty} a_n = A$（即按模 $p$ 的完全剩余系分类）。它的逆否用法很实用：只要找到两个子列极限不同（或某个子列发散），就能断定原数列不收敛，见 [前面 $(-1)^n + 1/n$ 的反例](#limit-tail)。
 
 ### 4.9 Stolz 定理
 
@@ -565,7 +565,7 @@ $$e = \lim_{n \to \infty}\left(1 + 1 + \sum_{i=2}^{n} \frac{1}{i!}\left(1 - \fra
 <summary class="callout-title">$e$ 是无理数</summary>
 <div class="callout-content" markdown="block">
 
-**证（反证）**：设 $e = \dfrac{p}{q}$，$p, q \in \mathbb{N}$ 且互质。由 [ SYNC\_MATH\_440  的级数表示](#e-series)，
+**证（反证）**：设 $e = \dfrac{p}{q}$，$p, q \in \mathbb{N}$ 且互质。由 [$e$ 的级数表示](#e-series)，
 
 $$e \cdot q! = \underbrace{\left(1 + 1 + \frac{1}{2!} + \cdots + \frac{1}{q!}\right)q!}&#95;{\text{整数}} + \underbrace{\lim_{n \to \infty}\left[\frac{1}{(q+1)!} + \frac{1}{(q+2)!} + \cdots + \frac{1}{(q+n)!}\right]}&#95;{\text{记为 } r}$$
 

@@ -77,6 +77,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import re
 import sys
 from pathlib import Path
@@ -398,7 +399,15 @@ _DISPLAY_MATH_RE = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
 # 避免 $$ 块里的 \$（例如 \$100）被当成行内公式的定界符——那会让正则跨过
 # 整个 $$ 块去和后面正文里的 $ 配对，把真正的行内公式吃掉。
 _INLINE_MATH_RE = re.compile(r"(?<![\\$])\$(?!\$)(.+?)(?<![\\$])\$(?!\$)", re.DOTALL)
-_MATH_PLACEHOLDER = "\x00SYNC_MATH_{}\x00"
+# 占位符必须【纯字母数字】，不能含下划线、\x00 等特殊字符。
+# 历史教训（2026-10）：原来用 "\x00SYNC_MATH_{}\x00"，结果 wikilink 里的公式
+#   [[#^e-series|$e$ 的级数表示]]
+# 被 protect_math 换成 "\x00SYNC_MATH_440\x00" 后，clean_link_text 的
+#   label.replace("_", "\\_")
+# 把占位符里的下划线转义成 "\_"，restore_math 就再也匹配不上，
+# 页面上直接漏出 "SYNC\_MATH\_440"。改成纯字母数字后，任何字符级清洗都动不了它。
+_MATH_PLACEHOLDER = "ZMATHPH{}Z"
+
 
 # 行内公式里会被 kramdown 抢先解释的字符 -> LaTeX 转义写法。
 # 每条都用 (?<!\\) 做负向断言，保证对已经转义过的内容幂等。
@@ -526,9 +535,27 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
 
 
 def restore_math(text: str, formulas: list[str]) -> str:
-    """把公式占位符还原成公式原文。"""
+    """把公式占位符还原成公式原文。
+
+    还原前后各查一次残留：如果占位符在流水线里被某条清洗规则改过（比如下划线被转义），
+    这里就会打印告警，而不是让占位符悄悄漏到页面上。
+    """
+    pattern = re.compile(r"ZMATHPH(\d+)Z")
+
+    before = pattern.findall(text)
+    if before and os.environ.get("SYNC_DEBUG"):
+        print("  [debug] restore 前仍有占位符: %d 个" % len(before), file=sys.stderr)
+
     for position, formula in enumerate(formulas):
         text = text.replace(_MATH_PLACEHOLDER.format(position), formula)
+
+    leftover = pattern.findall(text)
+    if leftover:
+        print(
+            "  [warn] 有 %d 个占位符没能还原（被流水线改坏了）：%s"
+            % (len(leftover), ", ".join("ZMATHPH%sZ" % n for n in leftover[:5])),
+            file=sys.stderr,
+        )
     return text
 
 
