@@ -504,7 +504,12 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
 
     def display(match: re.Match[str]) -> str:
         counts["math"] += 1
-        placeholder = stash("$$" + restore_html_entities(match.group(1)) + "$$")
+        # 块级公式同样要做转义：kramdown 会先按 Markdown 解析 $$ 块的内容，
+        # 里面的 < 会被当成 HTML 标签开头，导致 $$ 定界符失效、公式漏成源码。
+        # escape_math_body 里的 & 规则已经删掉（矩阵对齐符不能转），
+        # | 规则已排除 \left| / \right|，_ 规则按需替换，所以对块级是安全的。
+        body = escape_math_body(restore_html_entities(match.group(1)))
+        placeholder = stash("$$" + body + "$$")
         if is_block_math(text, match):
             # 前后各补一个换行，让 kramdown 把它当成独立的公式块
             return "\n" + placeholder + "\n"

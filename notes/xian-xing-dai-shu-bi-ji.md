@@ -148,7 +148,7 @@ $$
 **右式**：把 $BC$ 的元素记为 $x'&#95;{lj} = \sum_{k=1}^{q} b_{lk} c_{kj}$（内层求和指标是 $k$，走 $B$ 的列数 $q$），则 $A(BC)$ 的 $(i,j)$ 元为
 
 $$
-y'_{ij} = \sum_{l=1}^{p} a_{il} x'_{lj}
+y'&#95;{ij} = \sum_{l=1}^{p} a_{il} x'&#95;{lj}
 = \sum_{l=1}^{p} a_{il} \left( \sum_{k=1}^{q} b_{lk} c_{kj} \right)
 = \sum_{l=1}^{p}\sum_{k=1}^{q} a_{il} b_{lk} c_{kj}
 $$
@@ -198,7 +198,7 @@ $$
 
 ### 2.4 转置
 
-$$A = [a_{ij}]_{m \times n}, \qquad A^{T} = [a_{ji}]_{n \times m}$$
+$$A = [a_{ij}]&#95;{m \times n}, \qquad A^{T} = [a_{ji}]&#95;{n \times m}$$
 
 - $(A^{T})^{T} = A$，$(A + B)^{T} = A^{T} + B^{T}$；
 - $(AB)^{T} = B^{T} A^{T}$。
@@ -444,7 +444,7 @@ $$A \cong B \iff r(A) = r(B)$$
 
 设 $P_s \cdots P_1 A Q_1 \cdots Q_t = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}&#95;{m \times n}$，两边转置得
 
-$$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{n \times m}$$
+$$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}&#95;{n \times m}$$
 
 </div>
 </details>

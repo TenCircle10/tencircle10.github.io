@@ -55,7 +55,7 @@ $$(A \cup B)^{c} = A^{c} \cap B^{c}, \qquad (A \cap B)^{c} = A^{c} \cup B^{c}$$
 
 ### 1.3 笛卡尔积
 
-$$A \times B = \{(x, y) \mid x \in A,\ y \in B\}$$
+$$A \times B = \lbrace (x, y) \mid x \in A,\ y \in B\rbrace $$
 
 ### 1.4 数集、数域与有序域
 
@@ -103,7 +103,7 @@ $\mathbb{Q}$、$\mathbb{R}$ 是有序域；$\mathbb{C}$ **不是**：相容的�
 
 **证明思路（记）**：记 $A_n = \lbrace a_{n1}, a_{n2}, \dots, a_{nk}, \dots\rbrace $，沿对角线方向取
 
-$$\bigcup_{n=1}^{\infty} A_n = \{a_{11},\ a_{21},\ a_{12},\ a_{31},\ a_{22},\ a_{13},\ \dots\}$$
+$$\bigcup_{n=1}^{\infty} A_n = \lbrace a_{11},\ a_{21},\ a_{12},\ a_{31},\ a_{22},\ a_{13},\ \dots\rbrace $$
 
 即按 $i + j$ 递增的顺序枚举（重复元素跳过）：
 
@@ -122,7 +122,7 @@ $$
 
 记 $A_n = [n, n+1] \cap \mathbb{Q}$（$n \in \mathbb{Z}$），则 $\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$。这是**可列个**集合之并，由 [定理 1.0.1](#f0fbb3)，只需证 $A_0$ 可列：
 
-$$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},\ \tfrac{3}{4},\ \tfrac{1}{5},\ \tfrac{2}{5},\ \tfrac{3}{5},\ \tfrac{4}{5},\ \dots\Big\}$$
+$$A_0 = \Big\lbrace 0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},\ \tfrac{3}{4},\ \tfrac{1}{5},\ \tfrac{2}{5},\ \tfrac{3}{5},\ \tfrac{4}{5},\ \dots\Big\rbrace $$
 
 按"分母从小到大、同分母内按分子从小到大"枚举即可，故 $A_0$ 可列，进而 $\mathbb{Q}$ 可列。
 
@@ -237,7 +237,7 @@ $\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 
 <summary class="callout-title">"不以 $A$ 为极限"怎么写</summary>
 <div class="callout-content" markdown="block">
 
-$$\exists \varepsilon > 0,\ \forall N \in \mathbb{N},\ \exists n > N,\ |a_n - A| \ge \varepsilon$$
+$$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ \vert{}a_n - A\vert{} \ge \varepsilon$$
 
 判断"不收敛"时不要拿 $(-1)^{n}/n$ 当反例 —— 它是**收敛**的（趋于 $0$）。
 
@@ -261,7 +261,7 @@ $$\exists \varepsilon > 0,\ \forall N \in \mathbb{N},\ \exists n > N,\ |a_n - A|
 
 **该记住的常见极限**：
 
-$$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 1\ (k > 0), \qquad \lim_{n \to \infty} \frac{n^{k}}{2^{n}} = 0$$
+$$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 1\ (k \gt{} 0), \qquad \lim_{n \to \infty} \frac{n^{k}}{2^{n}} = 0$$
 
 **思考**：若 $\lim\limits_{n \to \infty} a_n = a$，则 $\lim\limits_{n \to \infty} \dfrac{a_1 + a_2 + \cdots + a_n}{n} = a$。
 
@@ -333,7 +333,7 @@ $\lim a_n = a$ 与 $\lim b_n = b$ **都存在**时才能拆开运算，而且只
 
 **证**：分两种情形。若 $a = 0$，由 $a_n \to 0$，$\forall \varepsilon \gt{} 0$ 当 $n$ 充分大时 $0 \le a_n \lt{} \varepsilon^{2}$，于是 $\sqrt{a_n} \lt{} \varepsilon$。若 $a \gt{} 0$，$n$ 充分大时 $a_n \gt{} \dfrac{a}{2} \gt{} 0$，且
 
-$$|\sqrt{a_n} - \sqrt{a}| = \frac{|a_n - a|}{\sqrt{a_n} + \sqrt{a}} \le \frac{|a_n - a|}{\sqrt{a}} \to 0$$
+$$\vert{}\sqrt{a_n} - \sqrt{a}\vert{} = \frac{\vert{}a_n - a\vert{}}{\sqrt{a_n} + \sqrt{a}} \le \frac{\vert{}a_n - a\vert{}}{\sqrt{a}} \to 0$$
 
 注意别把取完极限的分母提前代入写成 $\dfrac{0 \cdot \vert{}a_n - a\vert{}}{2\sqrt a}$；要保留上界 $\dfrac{\vert{}a_n - a\vert{}}{\sqrt a}$，再由 $a_n \to a$ 得结论。
 
@@ -358,7 +358,7 @@ $$\lim_{n \to \infty} \frac{5^{n+1} - (-2)^{n}}{3 \times 5^{n} + 2 \times 3^{n}}
 
 技巧：可以构造**常数列**来夹逼。常用结论（$a, b \gt{} 0$）：
 
-$$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to \infty} \sqrt[n]{a^{n} + k b^{n}} = \max\{a, b\}\ \ (k > 0)$$
+$$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\lbrace a, b\rbrace , \qquad \lim_{n \to \infty} \sqrt[n]{a^{n} + k b^{n}} = \max\lbrace a, b\rbrace \ \ (k \gt{} 0)$$
 
 ### 4.7 单调有界定理
 
@@ -500,7 +500,7 @@ $$\left(1 + \frac{1}{n+1}\right)^{n+1} = 1 + 1 + \sum_{k=2}^{n} \frac{1}{k!}\lef
 
 **② 有界**：
 
-$$\left(1 + \frac{1}{n}\right)^{n} < 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdots + \frac{1}{n!} < 1 + 1 + \frac{1}{2!} + \frac{1}{3\times2} + \frac{1}{4\times3} + \cdots + \frac{1}{n(n-1)}$$
+$$\left(1 + \frac{1}{n}\right)^{n} \lt{} 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdots + \frac{1}{n!} \lt{} 1 + 1 + \frac{1}{2!} + \frac{1}{3\times2} + \frac{1}{4\times3} + \cdots + \frac{1}{n(n-1)}$$
 
 而 $1 + 1 + \dfrac{1}{2!} + \displaystyle\sum_{k=3}^{n} \frac{1}{k(k-1)} = 2 + \frac{1}{2} + \left(\frac{1}{2} - \frac{1}{n}\right) = 3 - \frac{1}{n} \lt{} 3$，故有上界。
 
@@ -521,7 +521,7 @@ $$\left(1 + \frac{1}{n}\right)^{n} < 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdot
 <summary class="callout-title">两侧夹住 $e$</summary>
 <div class="callout-content" markdown="block">
 
-$$\left(1 + \frac{1}{n}\right)^{n} < e < \left(1 + \frac{1}{n}\right)^{n+1}$$
+$$\left(1 + \frac{1}{n}\right)^{n} \lt{} e \lt{} \left(1 + \frac{1}{n}\right)^{n+1}$$
 
 $n$ 越大，所得的界越精确。
 
@@ -567,11 +567,11 @@ $$e = \lim_{n \to \infty}\left(1 + 1 + \sum_{i=2}^{n} \frac{1}{i!}\left(1 - \fra
 
 **证（反证）**：设 $e = \dfrac{p}{q}$，$p, q \in \mathbb{N}$ 且互质。由 [ SYNC\_MATH\_440  的级数表示](#e-series)，
 
-$$e \cdot q! = \underbrace{\left(1 + 1 + \frac{1}{2!} + \cdots + \frac{1}{q!}\right)q!}_{\text{整数}} + \underbrace{\lim_{n \to \infty}\left[\frac{1}{(q+1)!} + \frac{1}{(q+2)!} + \cdots + \frac{1}{(q+n)!}\right]}_{\text{记为 } r}$$
+$$e \cdot q! = \underbrace{\left(1 + 1 + \frac{1}{2!} + \cdots + \frac{1}{q!}\right)q!}&#95;{\text{整数}} + \underbrace{\lim_{n \to \infty}\left[\frac{1}{(q+1)!} + \frac{1}{(q+2)!} + \cdots + \frac{1}{(q+n)!}\right]}&#95;{\text{记为 } r}$$
 
 左边 $e\,q! = p\,(q-1)!$ 是整数，前一项也是整数，所以 $r$ 必须是整数。但
 
-$$0 < r < \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\right)^{2} + \cdots + \left(\frac{1}{q+1}\right)^{n}\right] \le \frac{1}{q}$$
+$$0 \lt{} r \lt{} \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\right)^{2} + \cdots + \left(\frac{1}{q+1}\right)^{n}\right] \le \frac{1}{q}$$
 
 又 $e \in (2, 3)$ 不是整数，故 $q \ge 2$，从而 $0 \lt{} r \lt{} \dfrac{1}{q} \le \dfrac{1}{2} \lt{} 1$，与"$r$ 是整数"矛盾。故 $e$ 为无理数。
 
@@ -811,7 +811,7 @@ $$\sin x \sim x \sim \tan x \sim \arcsin x \sim \arctan x \sim e^{x} - 1 \sim \l
 
 $$1 - \cos x \sim \frac{1}{2}x^{2}, \qquad (1 + x)^{a} - 1 \sim ax\ (a \neq 0)$$
 
-$$a^{x} - 1 \sim x\ln a\ (a > 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \frac{x}{\ln a}, \qquad \ln\!\left(x + \sqrt{1 + x^{2}}\right) \sim x$$
+$$a^{x} - 1 \sim x\ln a\ (a \gt{} 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \frac{x}{\ln a}, \qquad \ln\!\left(x + \sqrt{1 + x^{2}}\right) \sim x$$
 
 </div>
 </details>
@@ -1002,7 +1002,7 @@ $f$ 在 $x_0$ 处连续 $\iff \lim\limits_{x \to x_0} f(x) = f(x_0)$，即 $\for
 
 区间上连续：在 $(a, b)$ 上连续指每一点连续；在 $[a, b]$ 上连续还要求 $a$ 处右连续、$b$ 处左连续。连续函数全体记
 
-$$C[a, b] = \{f(x) \mid f(x) \text{ 在 } [a, b] \text{ 上连续}\}$$
+$$C[a, b] = \lbrace f(x) \mid f(x) \text{ 在 } [a, b] \text{ 上连续}\rbrace $$
 
 **单调连续函数的反函数也是连续的**：若 $f$ 在 $(a, b)$ 上单调且连续，则 $f\big((a, b)\big) = (c, d)$，且反函数 $f^{-1}$ 在 $(c, d)$ 上连续。
 <a id="monotone-inverse-continuity"></a>

@@ -23,12 +23,12 @@ render_with_liquid: false
 块级绝对值：
 
 $$
-\left| f(x) - A \right| < \varepsilon
+\left| f(x) - A \right| \lt{} \varepsilon
 $$
 
 块级大于小于：
 
 $$
-n > N_1 \quad \text{且} \quad x < 0
+n \gt{} N_1 \quad \text{且} \quad x \lt{} 0
 $$
 
