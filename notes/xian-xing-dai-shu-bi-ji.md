@@ -39,7 +39,7 @@ $$
 
 ### 1.2 解方程组的通法
 
-<details class="callout note" id="solve-procedure" data-callout="note" open>
+<details class="callout keypoint" id="solve-procedure" data-callout="keypoint" open>
 <summary class="callout-title">消元 → 阶梯形 → 回代</summary>
 <div class="callout-content" markdown="block">
 
@@ -95,7 +95,7 @@ $a_{ij}$ 表示第 $i$ 行第 $j$ 列的元素；矩阵用大写 $A, B, C$，元
 
 同型矩阵对应元素相加，满足 $A + B = B + A$。
 
-<details class="callout warning" data-callout="warning" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">别把"交换律"算进群的公理</summary>
 <div class="callout-content" markdown="block">
 
@@ -104,10 +104,15 @@ $a_{ij}$ 表示第 $i$ 行第 $j$ 列的元素；矩阵用大写 $A, B, C$，元
 </div>
 </details>
 
-类比：
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">理解</summary>
+<div class="callout-content" markdown="block">
 
-- 元 $\to$ 矩阵：各元相等 $\Rightarrow$ 矩阵相等；
-- 点 $\to$ 轨迹：各点相等 $\Rightarrow$ 轨迹相等。
+元 $\to$ 矩阵：各元相等 $\Rightarrow$ 矩阵相等；
+点 $\to$ 轨迹：各点相等 $\Rightarrow$ 轨迹相等。
+
+</div>
+</details>
 
 ### 2.2 矩阵乘法
 
@@ -115,7 +120,9 @@ $$C_{ij} = \sum_{k=1}^{p} a_{ik} b_{kj}, \qquad A_{m \times p} \, B_{p \times n}
 
 也就是说：$A$ 的第 $i$ 行 $\times$ $B$ 的第 $j$ 列 $\Rightarrow C_{ij}$。
 
-例（$3\times2$ 乘 $2\times4$ 得 $3\times4$）：
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">矩阵乘法（$3 \times 2$ 乘 $2 \times 4$ 得 $3 \times 4$）</summary>
+<div class="callout-content" markdown="block">
 
 $$
 \begin{bmatrix} 3 & 2 \\ -2 & 1 \\ 0 & 1 \end{bmatrix}
@@ -124,7 +131,17 @@ $$
 \begin{bmatrix} 7 & 14 & 11 & 9 \\ 0 & 0 & -5 & 1 \\ 2 & 4 & 1 & 3 \end{bmatrix}
 $$
 
-口诀：**对乘**（行对列逐位相乘）、**中间消，看两头**（求和指标 $k$ 被消掉，剩下的 $i, j$ 就是结果的指标）。
+</div>
+</details>
+
+<details class="callout keypoint" data-callout="keypoint" open>
+<summary class="callout-title">口诀</summary>
+<div class="callout-content" markdown="block">
+
+**对乘**（行对列逐位相乘）、**中间消，看两头**（求和指标 $k$ 被消掉，剩下的 $i, j$ 就是结果的指标）。
+
+</div>
+</details>
 
 #### 2.2.1 结合律 $(AB)C = A(BC)$
 
@@ -155,7 +172,7 @@ $$
 
 **为什么两个求和相等**：两者都是 $p \times q$ 项有限和，项的形状都是 $a_{il}b_{lk}c_{kj}$；把左式 $(l,k)$ 与右式 $(l,k)$ 一一对应（取 $l_2 = l_1,\ k_2 = k_1$），对应项相同；有限和可交换次序。
 
-<details class="callout warning" data-callout="warning" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">这一步最容易写错</summary>
 <div class="callout-content" markdown="block">
 
@@ -166,7 +183,7 @@ $$
 
 ### 2.3 矩阵乘法的代价
 
-<details class="callout warning" data-callout="warning" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">三条"不能想当然"</summary>
 <div class="callout-content" markdown="block">
 
@@ -179,7 +196,9 @@ $$
 
 特例：数量矩阵与任何矩阵可交换，$kI \cdot A = kA = A \cdot kI$，$kIA = kA$。
 
-**零因子**：$A, B \neq O$ 却 $AB = O$，例如
+<details class="callout example" id="zero-divisor" data-callout="example" open>
+<summary class="callout-title">零因子：$A, B \neq O$ 却 $AB = O$</summary>
+<div class="callout-content" markdown="block">
 
 $$
 A = \begin{bmatrix} 1 & 0 \\ 1 & 0 \end{bmatrix}, \qquad
@@ -194,7 +213,8 @@ $$
 = \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix}
 $$
 
-<a id="zero-divisor"></a>
+</div>
+</details>
 
 ### 2.4 转置
 
@@ -230,7 +250,7 @@ $$(AB^{T} + BA^{T})^{T} = B A^{T} + A B^{T} = AB^{T} + BA^{T}$$
 
 $$f(A) = a_n A^{n} + a_{n-1} A^{n-1} + \cdots + a_1 A + a_0 I$$
 
-<details class="callout tip" id="matrix-polynomial" data-callout="tip" open>
+<details class="callout keypoint" id="matrix-polynomial" data-callout="keypoint" open>
 <summary class="callout-title">为什么 $f(A) = g(A)h(A)$ 一定成立</summary>
 <div class="callout-content" markdown="block">
 
@@ -254,7 +274,14 @@ $$(A+B)^{n} = \sum_{k=0}^{n} C_n^{k} A^{k} B^{n-k}$$
 </div>
 </details>
 
-关键前提是**可交换**：否则 $(A+B)^{2} = A^{2} + AB + BA + B^{2} \neq A^{2} + 2AB + B^{2}$。
+<details class="callout keypoint" data-callout="keypoint" open>
+<summary class="callout-title">前提：可交换</summary>
+<div class="callout-content" markdown="block">
+
+否则 $(A+B)^{2} = A^{2} + AB + BA + B^{2} \neq A^{2} + 2AB + B^{2}$。
+
+</div>
+</details>
 
 ### 3.1 二阶若尔当块
 
@@ -314,7 +341,7 @@ $$
 - **按列**：$AB$ 的第 $j$ 列 $= A\, B_{\cdot j}$；
 - 可乘条件：$A$ 的列数 $=$ $B$ 的行数。
 
-<details class="callout note" id="matrix-equation" data-callout="note" open>
+<details class="callout definition" id="matrix-equation" data-callout="definition" open>
 <summary class="callout-title">线性方程组的矩阵写法</summary>
 <div class="callout-content" markdown="block">
 
@@ -370,7 +397,7 @@ $$
 
 性质 2 的想法：$A$ 至多 $m$ 行，故非零行至多 $m$ 个 $\Rightarrow r(A) \le m$；又主元必须落在不同的列上，而只有 $n$ 列，故 $r(A) \le n$。直观记法：**秩不超过非零行数，也不超过非零列数**（零列一定出不了主元；非零列也可能只贡献自由元）。
 
-<details class="callout warning" data-callout="warning" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">两个容易写错的推论</summary>
 <div class="callout-content" markdown="block">
 
@@ -411,7 +438,14 @@ $$
 </div>
 </details>
 
-**引理**：阶梯形矩阵 $T$（$r(T) = r$）右乘任何矩阵，非零行数不会增加 —— $T$ 有 $m - r$ 个零行，零行右乘仍是零行，故 $r(TQ) \le r$。
+<details class="callout lemma" data-callout="lemma" open>
+<summary class="callout-title">阶梯形右乘不增加非零行</summary>
+<div class="callout-content" markdown="block">
+
+阶梯形矩阵 $T$（$r(T) = r$）右乘任何矩阵，非零行数不会增加 —— $T$ 有 $m - r$ 个零行，零行右乘仍是零行，故 $r(TQ) \le r$。
+
+</div>
+</details>
 
 **证明**：设 $P_s \cdots P_1 A = T$（$P_i$ 为初等矩阵），则 $A = P_1^{-1} \cdots P_s^{-1} T$，于是
 
@@ -421,7 +455,14 @@ $$
 
 （第一、二个等号用的是 [初等行变换不改变秩](#rank-invariance)，最后一个等号由 $r(T) = r(A)$ 得到。）由 $(\ast)$ 得 $r(AQP) \le r(AQ) \le r(A)$；取 $P = Q^{-1}$ 又得 $r(A) \le r(AQ) \le r(A)$，故 $r(AQ) = r(A)$。
 
-**推论**：$r(AB) \le \min\lbrace r(A),\, r(B)\rbrace $ —— 矩阵乘法不增加信息，只可能减少信息。
+<details class="callout corollary" data-callout="corollary" open>
+<summary class="callout-title">$r(AB) \le \min\lbrace r(A),\, r(B)\rbrace $</summary>
+<div class="callout-content" markdown="block">
+
+矩阵乘法不增加信息，只可能减少信息。
+
+</div>
+</details>
 
 ### 5.5 相抵标准形与转置
 
@@ -512,17 +553,31 @@ $$
 
 即 $A$ 是初等矩阵之积；初等矩阵都可逆，故 $A$ 可逆。反过来，初等矩阵都满秩，满秩方阵之积仍满秩。
 
-初等矩阵都可逆；若 $P$ 可逆，则存在 $Q$ 使 $PQ = QP = I$，并且 $Q = P^{-1}$。**单侧逆即双侧逆**：若 $A, B$ 都是 $n$ 阶方阵且 $AB = I$，则 $BA = I$、$B = A^{-1}$（非方阵不成立）。可逆只对方阵有意义，但方阵未必可逆（$\iff$ 不满秩）。
+初等矩阵都可逆；若 $P$ 可逆，则存在 $Q$ 使 $PQ = QP = I$，并且 $Q = P^{-1}$。可逆只对方阵有意义，但方阵未必可逆（$\iff$ 不满秩）。
+
+<details class="callout corollary" data-callout="corollary" open>
+<summary class="callout-title">单侧逆即双侧逆</summary>
+<div class="callout-content" markdown="block">
+
+若 $A, B$ 都是 $n$ 阶方阵且 $AB = I$，则 $BA = I$、$B = A^{-1}$（非方阵不成立）。
+
+</div>
+</details>
 
 细节见 [满秩矩阵](/notes/满秩矩阵/)、[满秩方阵的单侧可逆蕴含双侧可逆](/notes/满秩方阵的单侧可逆蕴含双侧可逆/)。
 
 ### 7.1 逆矩阵的运算
 
+<details class="callout formula" id="inverse-properties" data-callout="formula" open>
+<summary class="callout-title">逆矩阵的运算</summary>
+<div class="callout-content" markdown="block">
+
 设 $A, B$ 可逆，则 $A^{-1}$、$A^{T}$、$AB$ 都可逆，且
 
 $$(A^{-1})^{-1} = A, \qquad (A^{T})^{-1} = (A^{-1})^{T}, \qquad (AB)^{-1} = B^{-1} A^{-1}$$
 
-若 $A, B, A+B$ 都可逆，则 $A^{-1}(A+B)B^{-1} = A^{-1}AB^{-1} + A^{-1}BB^{-1} = B^{-1} + A^{-1} = A^{-1} + B^{-1}$。对角矩阵（$a_{ii} \neq 0$）：
+若 $A, B, A+B$ 都可逆，则 $A^{-1}(A+B)B^{-1} = A^{-1}AB^{-1} + A^{-1}BB^{-1} = B^{-1} + A^{-1}$。
+对角矩阵（$a_{ii} \neq 0$）：
 
 $$
 \begin{bmatrix} a_{11} & & & \\ & a_{22} & & \\ & & \ddots & \\ & & & a_{nn} \end{bmatrix}^{-1}
@@ -530,7 +585,8 @@ $$
 \begin{bmatrix} \frac{1}{a_{11}} & & & \\ & \frac{1}{a_{22}} & & \\ & & \ddots & \\ & & & \frac{1}{a_{nn}} \end{bmatrix}
 $$
 
-<a id="inverse-properties"></a>
+</div>
+</details>
 
 ---
 
@@ -538,13 +594,18 @@ $$
 
 ### 8.1 二阶公式
 
+<details class="callout formula" id="inverse-formula-2x2" data-callout="formula" open>
+<summary class="callout-title">二阶求逆公式</summary>
+<div class="callout-content" markdown="block">
+
 $$
 A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}, \qquad
 A^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}
 \quad (ad - bc \neq 0)
 $$
 
-<a id="inverse-formula-2x2"></a>
+</div>
+</details>
 
 ### 8.2 初等行变换法
 
@@ -552,7 +613,7 @@ $$(A \mid I) \xrightarrow{\ \text{只做初等行变换}\ } (I \mid A^{-1})$$
 
 理由：若 $P_1 \cdots P_s A = I$，则 $P_1 \cdots P_s = A^{-1}$，故 $P_1 \cdots P_s I = A^{-1}$ —— 把 $A$ 化成 $I$ 的同一串行变换，作用在 $I$ 上即得 $A^{-1}$。
 
-<details class="callout warning" id="inverse-algorithm" data-callout="warning" open>
+<details class="callout keypoint" id="inverse-algorithm" data-callout="keypoint" open>
 <summary class="callout-title">别记错名字</summary>
 <div class="callout-content" markdown="block">
 
@@ -563,7 +624,14 @@ $[A \mid I] \to [I \mid A^{-1}]$ 是**初等行变换法**；**伴随矩阵法**
 
 ### 8.3 例题：由 $AX = A + 2X$ 反推可逆性
 
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">由 $AX = A + 2X$ 反推可逆性</summary>
+<div class="callout-content" markdown="block">
+
 设 $AX = A + 2X$，证明 $A - 2I$ 可逆并写出 $(A - 2I)^{-1}$，其中 $A = \begin{bmatrix} 4 & 2 & 3 \\ 1 & 1 & 0 \\ -1 & 2 & 3 \end{bmatrix}$。
+
+</div>
+</details>
 
 **移项**：$AX - 2X = A$，即 $(A - 2I)X = A$，进而
 

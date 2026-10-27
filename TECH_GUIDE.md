@@ -71,7 +71,7 @@ gem "webrick", "~> 1.8"
 | 返回顶部按钮 | `_layouts/note.html` + `assets/css/notes.css` | Uiverse 展开式（vinodjangid07 版），滚动 300px 后出现 |
 | 霞鹜文楷字体 | `assets/css/publications.css` 第 1 行 `@import` | 只用于侧边栏「每日一言」 |
 | Giscus 评论 | `_includes/giscus.html` + `notes.css` / `publications.css` | 主页留言板 + 每篇文章独立评论区 |
-| Callout 样式 | `assets/css/obsidian-callouts.css` | Obsidian Callout Studio 的 21 种类型，SVG mask + Base64 内联，详见 `callout-for-web.md` |
+| Callout 样式 | `assets/css/obsidian-callouts.css` | Obsidian Callout Studio 的 25 种类型：12 个数学类用 Font Awesome 字形、13 个内置类用 SVG mask + Base64，详见 `callout-for-web.md` |
 | 目录侧边栏 | `_layouts/note.html` + `assets/css/notes.css` | Tocbot 4.18.2；桌面 sticky 250px，≤900px 变右侧抽屉，规范见 4.6 |
 
 ---
@@ -256,13 +256,17 @@ python sync_notes.py --src other --dest out    # 自定义目录
 **数据来源**：`PaperBell/.obsidian/plugins/callout-studio/data.json`
 **完整手册**：项目根目录 `callout-for-web.md`（含每种类型的 base64 图标和原始 SVG path）
 
-**支持的类型（21 种）**
+**支持的类型（25 种：内置 12 + 自建 13）**
 
-| 内置 12 种 | 自建 9 种 |
+| 分组 | 类型 |
 |---|---|
-| `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` | `highlight` `definition` `conclusion` `idea` `motivation` `theorem` `context` `formula` `keypoint` |
+| 内置 12 种 | `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` |
+| 自建 13 种 | `highlight` `definition` `conclusion` `seealso` `idea` `motivation` `theorem` `context` `formula` `keypoint` `corollary` `lemma` `understand` |
 
-> `conclusion` 是 2026-10-24 更新里新增的（图标 `lucide-badge-check`），同时从 `data.json` 删掉了 15 个中文/编号临时项。
+> 版本沿革：`conclusion` 是 2026-10-24 新增；`corollary` / `lemma` / `understand` 是 2026-10-27 v4 新增（同时把 `seealso` 从 fallback 转为自建并配成石板灰 + `link` 图标）。
+>
+> **12 个"数学类"改走 Font Awesome 字形**：`theorem` `definition` `conclusion` `corollary` `lemma` `formula` `context` `seealso` `idea` `motivation` `keypoint` `understand`。
+> 其余 13 个（含 `highlight`）继续用 `mask + Base64 SVG`。
 
 **渲染链路**
 
@@ -278,15 +282,44 @@ Obsidian 里写：  > [!theorem] 定理 1.0.1
 网页显示：       左边框 + 淡色背景 + 彩色图标 + 标题
 ```
 
-**技术方案（v2，2026-10 重写）**
+**技术方案（v4，2026-10-27：双轨制）**
 
-| 项目 | 旧版 | 现在 |
+| 项目 | v2（旧） | v4（现在） |
 |---|---|---|
-| 图标 | Font Awesome 字体字符（`content: "\f05a"`，26 处） | 官方 SVG + CSS `mask`，Base64 内联 |
-| 颜色 | 每个类型写死 4 处（边框 / 背景 / 图标 / 暗色各一遍） | 只写 1 个 `--callout-color` |
-| 暗色 | 需要把整段规则抄一遍 | 只覆盖颜色变量 |
-| 折叠箭头 | FA `\f078` / `\f054` | 纯 CSS 三角（`border` 实现） |
-| 新增类型成本 | 4~6 行 + 找 FA 对应字符码 | 2 行（颜色 + 图标） |
+| 图标（12 个数学类） | SVG + `mask` + Base64 | **Font Awesome 6 字形**：`content: var(--callout-icon-glyph)` + `font-family: "Font Awesome 6 Free"; font-weight: 900` |
+| 图标（其余 13 类） | SVG + `mask` + Base64 | 不变 |
+| 背景 | `color-mix(in srgb, var(--callout-color) 8%, transparent)` | 12 类**显式 `rgba(R,G,B,0.08)` 亮 / `0.15` 暗**；其余仍用 `color-mix`（`var(--callout-bg, color-mix(...))` 兜底） |
+| 颜色 | 每类 1 个 `--callout-color` | 不变（12 类同时写 `--callout-bg`） |
+| 暗色 | 只覆盖 `--callout-color` | 12 类覆盖 `--callout-color` + `--callout-bg` |
+| 主题覆盖 | `@media (prefers-color-scheme: dark)` | **三套**：同一 media 区块 + `html[data-theme="dark"]` + `html[data-theme="light"]`（站点有手动切换，缺一套就会串色） |
+| 新增类型成本 | 2 行 | 3 行（`--callout-color` / `--callout-bg` / `--callout-icon-glyph`） |
+
+> 字体依赖：`_layouts/note.html` 已从 cdnjs 引入 `font-awesome/6.4.2/css/all.min.css`，所以字形可用；
+> **不要**在 `font-family` 里写 `"Font Awesome 5 Free"`，也不要省略 `font-weight: 900`（缺了只显示豆腐块）。
+>
+> ⚠️ FA 6.4.2 **没有** `\f890` 这个码点（U+F890 是私有区空位，写了就是豆腐块）；`understand` 用的是 `\e2ca`（`wand-magic-sparkles`）。加新图标前先确认码点存在。
+
+**Callout 语义映射规范（写笔记时按这个选类型）**
+
+| 类型 | 用来装什么 | 不要这么用 |
+|---|---|---|
+| `theorem` | 客观陈述的定理、法则 | 自己的解题心得 |
+| `definition` | 概念定义、记号约定 | 一条待证的结论 |
+| `lemma` / `corollary` | 客观陈述的引理、推论 | 全文重点句 |
+| `formula` | 需要单独记住的公式串（等价无穷小表、求导公式、德摩根律） | 整段例题解答 |
+| `keypoint` | 做题容易踩坑的易错点、核心条件（"当且仅当 $x>0$ 时"） | "我觉得这里很美" |
+| `warning` | 严重的反面警告（"分母不能为 0"） | 一般的概念区分 |
+| `example` | 例题题干（计算题 / 证明题） | 把整个解答塞进框 |
+| `idea` / `motivation` | 为什么要引入这个概念、奇思妙想 | 定理陈述 |
+| `understand` | **只有本人**的顿悟、大白话解释 | 别人（含 AI）替你写的解释 |
+
+三条硬规则：
+
+1. **证明过程不进框**：用 `**证明**：…` 普通段落，或 `> [!note]- 证明` 折叠；框里只放定理陈述。
+2. **例题只框题干**，解答留在正文（`**解**：…`）。
+3. **`understand` 必须是本人原话**：整理时添加的解释、类比、补充例句一律不能标成 `understand`（要么进正文，要么改用 `keypoint`）。标题不好取就直接写「理解」。
+
+> 排版配套：框的**上方和下方各留一个空行**；连续两个框之间必须有正文；`$$…$$` 块放进框内时，每一行都要带 `> ` 前缀（`sync_notes.py` 按 `> ` 剥前缀，漏了就会截断公式）。
 
 **数学公式必须交给 MathJax 3，不能让 kramdown 处理**
 
@@ -328,13 +361,15 @@ Select-String -Path notes/*.md -Pattern '&#95;' | Measure-Object
 **核心 CSS 结构**
 
 ```css
+/* 基础：背景用 --callout-bg，缺省回落到 color-mix（保留类型的兜底） */
 .callout {
   --callout-color: #086ddd;
-  --callout-bg-opacity: 8%;
+  --callout-bg: rgba(8, 109, 221, 0.08);
   border-left: 4px solid var(--callout-color);
-  background-color: color-mix(in srgb, var(--callout-color) var(--callout-bg-opacity), transparent);
+  background-color: var(--callout-bg, color-mix(in srgb, var(--callout-color) 8%, transparent));
 }
 
+/* 兜底图标：mask 上色（13 个保留类型走这条） */
 .callout-title::before {
   content: "";
   width: 1.1em; height: 1.1em;
@@ -343,26 +378,51 @@ Select-String -Path notes/*.md -Pattern '&#95;' | Measure-Object
           mask: var(--callout-icon) center / contain no-repeat;
 }
 
-/* 每种类型只写这 2 行 */
+/* 12 个数学类：颜色 + 背景 + 字形，一个类型 3 行 */
 .callout[data-callout="theorem"] {
-  --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,...");
+  --callout-color: #1e3a8a;
+  --callout-bg: rgba(30, 58, 138, 0.08);
+  --callout-icon-glyph: "\f698";
 }
 
-/* 暗色只换颜色，不重复 base64 */
-@media (prefers-color-scheme: dark) {
-  .callout[data-callout="theorem"] { --callout-color: #027aff; }
+/* 这 12 类统一把 mask 换成 FA 字形（一条 :is() 规则，别逐个抄） */
+.callout:is(
+  [data-callout="theorem"], [data-callout="definition"], [data-callout="conclusion"],
+  [data-callout="corollary"], [data-callout="lemma"], [data-callout="formula"],
+  [data-callout="context"], [data-callout="seealso"], [data-callout="idea"],
+  [data-callout="motivation"], [data-callout="keypoint"], [data-callout="understand"],
+  [data-callout="key point"]
+) > .callout-title::before {
+  content: var(--callout-icon-glyph);
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  width: 1.2em; height: auto;
+  margin-right: 8px;
+  vertical-align: -0.12em;
+  text-align: center;
+  background: none;            /* 必须清掉，否则残留色块 */
+  -webkit-mask: none;
+          mask: none;
 }
+
+/* 暗色：12 类要同时换主色和背景；其余只换主色 */
+@media (prefers-color-scheme: dark) {
+  .callout[data-callout="theorem"] { --callout-color: #60a5fa; --callout-bg: rgba(96, 165, 250, 0.15); }
+  .callout[data-callout="note"]    { --callout-color: #027aff; }
+}
+/* 站点支持手动切主题，这两套不能省（否则手动切换时颜色串掉） */
+html[data-theme="dark"] .callout[data-callout="theorem"] { --callout-color: #60a5fa; --callout-bg: rgba(96, 165, 250, 0.15); }
+html[data-theme="light"] .callout[data-callout="theorem"] { --callout-color: #1e3a8a; --callout-bg: rgba(30, 58, 138, 0.08); }
 ```
 
-**图标来源（全部官方原版，非近似）**
+**图标来源**
 
 | 图标库 | 版本 | 用到的图标 |
 |---|---|---|
-| Lucide | `lucide-static@1.61.0` | 17 个（`clipboard-list` `zap` `list` `x` `info` `pencil` `help-circle` `quote` `check` `flame` `check-circle-2` `alert-triangle` `badge-check` `lightbulb` `sparkles` `function-square` `map-pin`） |
-| Tabler Icons | `@tabler/icons@3.49.0` | `target-arrow`（keypoint） |
+| **Font Awesome 6** | 6.4.2（`note.html` CDN 引入 `all.min.css`） | 12 个字形：`\f698` 平方根（theorem）`\f02d` 书本（definition）`\f058` 对勾（conclusion）`\f126` 分支（corollary）`\f12e` 拼图（lemma）`\f1ec` 计算器（formula）`\f276` 定位（context）`\f0c1` 链接（seealso）`\f0eb` 灯泡（idea）`\f14e` 指南针（motivation）`\f140` 靶心（keypoint）`\e2ca` 星火（understand） |
+| Lucide | `lucide-static@1.61.0` | 12 个（走 mask 的内置类型）：`clipboard-list` `zap` `list` `x` `info` `pencil` `help-circle` `quote` `check` `flame` `check-circle-2` `alert-triangle` |
 | Octicons | `@primer/octicons@19.42.0` | `sparkles-fill`（highlight） |
-| Material Symbols | `@material-symbols/svg-400@0.48.1` | `book_ribbon`（definition） |
+| Tabler / Material | — | v4 起不再使用（keypoint 的 `target-arrow`、definition 的 `book_ribbon` 已换成 FA 字形） |
 
 **图标源包本地缓存**
 
@@ -399,7 +459,7 @@ $s = [regex]::Replace($s, '>\s+<', '><').Trim()
 ```
 
 > ⚠️ 不要直接用原始的 base64 —— Lucide 的 SVG 开头带 `<!-- @license lucide-static ... -->` 注释，
-> 虽然浏览器多数能容忍，但不规范且白白增大体积。现有 CSS 里 **21 个图标已全部清理干净**。
+> 虽然浏览器多数能容忍，但不规范且白白增大体积。现有 CSS 里走 mask 的 **13 个图标已全部清理干净**（12 个数学类改用 Font Awesome 字形，不再需要 SVG）。
 >
 > ⚠️ **清理后务必检查**：凡是内部含 `<rect>` / `<circle>` / `<ellipse>` 的图标，
 > 这些子元素必须保留自己的 `width` / `height` / `r`。可以用一行验证：
@@ -413,19 +473,38 @@ $s = [regex]::Replace($s, '>\s+<', '><').Trim()
 >
 > 同理 **不要开 `parse_block_html: true`**：它会让所有 HTML 块内部都按 Markdown 解析，放大这个问题。
 > `markdown="block"` 是独立机制，不需要 `parse_block_html` 也能生效。
-**必须记住的三件事**
+**必须记住的四件事**
 
 1. `_config.yml` 里**不要开** `parse_block_html`（开了会让 `<summary>` 等标签暴露成文本）；Markdown 解析靠 `<div class="callout-content" markdown="block">` 自身
-2. `data-callout` 的值必须和 `callout-for-web.md` 的 Part A 表**完全一致**（含大小写）；`keypoint` 是单类名，旧写法 `key point` 有兼容规则但已不推荐
+2. `data-callout` 的值必须和 `callout-for-web.md` 的 v4 类型表**完全一致**（含大小写）；`keypoint` 是单类名，旧写法 `key point` 有兼容规则但已不推荐
 3. `sync_notes.py` 的 callout 正则允许**内部空格**（`[!key point]` 能解析），但生成 `class` 时会带空格 → 只影响 `.callout` 的类名，CSS 靠 `data-callout` 匹配，所以不报错
+4. **手改 `data.json` 后必须重算 `calloutStudioSync.fingerprint`**，否则插件加载时直接抛 `Settings sync envelope does not match its content`。
+
+**`data.json` 是带完整性信封的，不能只改内容**
+
+```jsonc
+"calloutStudioSync": {
+  "version": 2,
+  "stamps": { "[\"callouts\"]": [30, "<uuid>"], … },   // 每个 JSON 路径的写入次数，别动
+  "fingerprint": "d7dd274c30d1c513"                    // = oa(JSON.stringify(sortKeys({body, stamps})))
+}
+```
+
+算法（逆自 `main.js`）：`body` = 去掉 `calloutStudioSync` 的整份数据 → 递归按键名排序（`t < n ? -1 : 1`）→ `JSON.stringify`（无空格、不转义非 ASCII）→ 与 `stamps` 一起再做**双 FNV-1a**（初值 `2166136261` / `2654435769`，乘子 `16777619` / `2246822507`，第二个每步右移 13 位异或），输出两个 32 位十六进制拼接。
+
+改完用同一算法重算写回即可；**stamps 不要动**（指纹校验只要求 body+stamps 与 fingerprint 自洽）。
+
+> ⚠️ **两个 vault 都装了 callout-studio**：`D:\szy\szy obsidian仓库\PaperBell` 与 `…\TenCircle10`。改配置必须两边都改，否则你在另一个库里看到的是旧颜色（这个坑 2026-10-27 踩过）。
+> ⚠️ 改之前**先退出 Obsidian**：插件把设置缓存在内存里，下次保存会把磁盘上的修改覆盖回去。
 
 **回滚方式**
 
 ```bash
-# 旧版（Font Awesome 实现）备份在：
+# CSS 回到 v3（全 mask 方案）：
+git show c88626c^:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts.css
+# 或旧版 Font Awesome 实现（更早）：
 assets/css/obsidian-callouts.css.bak
-# 或直接从 git 历史取：
-git show f16830f:assets/css/obsidian-callouts.css > assets/css/obsidian-callouts.css
+# data.json：手改前的备份在 %TEMP%\callout-studio-data-*.json.bak
 ```
 
 ### 4.6 目录侧边栏（Tocbot）交互规范

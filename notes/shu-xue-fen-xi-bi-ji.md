@@ -42,7 +42,7 @@ $\varnothing \subset A$ 里的符号要理解为"包含于"（$\subseteq$）；�
 
 $A \cap B$ 交，$A \cup B$ 并，$A \setminus B = \lbrace x \mid x \in A \text{ 且 } x \notin B\rbrace $ 差，$A^{c}$ 补（相对于全集 $X$）。运算律（交换、结合、分配、幂等、吸收、补集、德摩根、差集与对称差恒等式）见 [集合运算律](/notes/集合运算律/)。
 
-<details class="callout theorem" id="de-morgan" data-callout="theorem" open>
+<details class="callout formula" id="de-morgan" data-callout="formula" open>
 <summary class="callout-title">德摩根律（de Morgan）</summary>
 <div class="callout-content" markdown="block">
 
@@ -55,7 +55,14 @@ $$(A \cup B)^{c} = A^{c} \cap B^{c}, \qquad (A \cap B)^{c} = A^{c} \cup B^{c}$$
 
 ### 1.3 笛卡尔积
 
+<details class="callout definition" data-callout="definition" open>
+<summary class="callout-title">笛卡尔积</summary>
+<div class="callout-content" markdown="block">
+
 $$A \times B = \{(x, y) \mid x \in A,\ y \in B\}$$
+
+</div>
+</details>
 
 ### 1.4 数集、数域与有序域
 
@@ -154,11 +161,11 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 
 有上界就必有**无限多个**上界（上界往上都还是上界）；上确界是把"所有上界"压到最紧的那一个，**它不一定属于 $E$**。
 
-<details class="callout tip" data-callout="tip" open>
-<summary class="callout-title">一句话理解（保留自己的话）</summary>
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">理解</summary>
 <div class="callout-content" markdown="block">
 
-确界"取一个不一定取到，但取一段一定包含"：它是界的**边界**，未必落在集合里。例如 $\sup(0, 1) = 1 \notin (0, 1)$，但任何含 $1$ 的开区间都与 $(0,1)$ 相交。
+确界"取一个不一定取到，但取一段一定包含"：它是界的**边界**，未必落在集合里。
 
 </div>
 </details>
@@ -174,7 +181,16 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 </div>
 </details>
 
-**实数集"充满"整个数轴**，没有"洞"，对极限封闭。对 $\mathbb{Q}$ 不成立：$S = \lbrace x \in \mathbb{Q} \mid x^{2} \lt{} 2\rbrace $ 在 $\mathbb{Q}$ 中**没有上确界**（"应该在"的那个位置 $\sqrt{2}$ 不在 $\mathbb{Q}$ 里）；而 $S' = \lbrace x \in \mathbb{R} \mid x^{2} \lt{} 2\rbrace $ 有界，且 $\sup S' = \sqrt{2}$。
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">理解</summary>
+<div class="callout-content" markdown="block">
+
+**实数集"充满"整个数轴**，对极限封闭。
+
+</div>
+</details>
+
+对 $\mathbb{Q}$ 不成立：$S = \lbrace x \in \mathbb{Q} \mid x^{2} \lt{} 2\rbrace $ 在 $\mathbb{Q}$ 中**没有上确界**（"应该在"的那个位置 $\sqrt{2}$ 不在 $\mathbb{Q}$ 里）；而 $S' = \lbrace x \in \mathbb{R} \mid x^{2} \lt{} 2\rbrace $ 有界，且 $\sup S' = \sqrt{2}$。
 
 有最值一定有界，有界不一定有最值（$(0,1)$ 有界但无最值）。
 
@@ -191,7 +207,14 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 
 ### 3.4 Bolzano–Weierstrass 定理
 
-**有界序列必有收敛子列**：若 $a \le x_n \le b$（$n = 1, 2, \dots$），则 $\lbrace x_n\rbrace $ 有收敛子列。
+<details class="callout theorem" data-callout="theorem" open>
+<summary class="callout-title">有界序列必有收敛子列（Bolzano–Weierstrass）</summary>
+<div class="callout-content" markdown="block">
+
+若 $a \le x_n \le b$（$n = 1, 2, \dots$），则 $\lbrace x_n\rbrace $ 有收敛子列。
+
+</div>
+</details>
 
 **证明**：把 $[a, b]$ 等分成两个小区间，必有一个含 $\lbrace x_n\rbrace $ 的无穷多项（否则两边各只含有限项，合起来也只有有限项，矛盾），记为 $[a_1, b_1]$，并在其中取一项 $x_{n_1}$。再等分 $[a_1, b_1]$ 重复此过程，得到闭区间套 $\lbrace [a_k, b_k]\rbrace $ 与子列 $\lbrace x_{n_k}\rbrace $，满足 $x_{n_k} \in [a_k, b_k]$ 且下标严格递增。由 [闭区间套定理](#nested-intervals)，$a_k \to c \leftarrow b_k$，夹逼得 $x_{n_k} \to c$。
 <a id="bolzano-weierstrass"></a>
@@ -219,14 +242,20 @@ $\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 
 </div>
 </details>
 
-**等价的"尾巴"说法**：$\lim\limits_{n \to \infty} a_n = l \iff$ 对 $l$ 的任意 $\varepsilon$ 邻域 $U(l, \varepsilon)$，**只有有限项** $a_n \notin U(l, \varepsilon)$。关键在"只有有限项"：极限只约束**最终**的行为，前面任意有限项都可以乱来。
-<a id="limit-tail"></a>
+<details class="callout definition" id="limit-tail" data-callout="definition" open>
+<summary class="callout-title">数列极限的等价刻画（"有限项"形式）</summary>
+<div class="callout-content" markdown="block">
+
+$\lim\limits_{n \to \infty} a_n = l \iff$ 对 $l$ 的任意 $\varepsilon$ 邻域 $U(l, \varepsilon)$，**只有有限项** $a_n \notin U(l, \varepsilon)$。
+
+</div>
+</details>
 
 **如果把"只有有限项在邻域外"改成"有无穷项在邻域外"，对吗？** 不对，两者含义恰好相反：收敛数列对每个邻域外只有有限项（条件不必要）；而满足"有无穷项在外"的数列可以完全不收敛（条件不充分），连无界数列 $n$ 都满足它（取 $l = 1$、$\varepsilon = 1$，$n \gt{} 2$ 的项全在外）。
 
 反例：$a_n = (-1)^{n} + \dfrac{1}{n}$，取 $l = 1$、$\varepsilon = \dfrac{1}{2}$。奇数项 $a_{2n-1} = -1 + \dfrac{1}{2n-1} \le 1 - \dfrac{1}{2}$ 全部落在邻域外，有无穷多项；但它不收敛 —— $a_{2n} \to 1$ 而 $a_{2n-1} \to -1$，由极限唯一性 $1 \neq -1$，矛盾。
 
-<details class="callout warning" id="limit-negation" data-callout="warning" open>
+<details class="callout keypoint" id="limit-negation" data-callout="keypoint" open>
 <summary class="callout-title">"不以 $A$ 为极限"怎么写</summary>
 <div class="callout-content" markdown="block">
 
@@ -239,7 +268,7 @@ $$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ |
 
 ### 4.2 $\varepsilon$–$N$ 证明的实践
 
-<details class="callout tip" data-callout="tip" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">自己的经验（保留）</summary>
 <div class="callout-content" markdown="block">
 
@@ -252,9 +281,14 @@ $$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ |
 
 **例**：$\lim\limits_{n \to \infty} \dfrac{1}{n} = 0$。对 $\forall \varepsilon \gt{} 0$，取 $N = \left\lceil \dfrac{1}{\varepsilon} \right\rceil$，当 $n \gt{} N$ 时 $\left\vert \dfrac{1}{n} - 0 \right\vert = \dfrac{1}{n} \lt{} \varepsilon$。
 
-**该记住的常见极限**：
+<details class="callout formula" data-callout="formula" open>
+<summary class="callout-title">该记住的常见极限</summary>
+<div class="callout-content" markdown="block">
 
 $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 1\ (k \gt{} 0), \qquad \lim_{n \to \infty} \frac{n^{k}}{2^{n}} = 0$$
+
+</div>
+</details>
 
 **思考**：若 $\lim\limits_{n \to \infty} a_n = a$，则 $\lim\limits_{n \to \infty} \dfrac{a_1 + a_2 + \cdots + a_n}{n} = a$。
 
@@ -286,7 +320,7 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 
 **思考**：把 $A \gt{} B$ 换成 $A \ge B$，还能得到"存在 $N$，当 $n \gt{} N$ 时 $a_n \ge b_n$"吗？不能，反例 $a_n = 0,\ b_n = \dfrac{1}{n}$：此时 $A = B = 0$，但 $a_n \lt{} b_n$ 对一切 $n$ 成立。严格的大小关系在取极限后会被"抹平"。
 
-<details class="callout warning" data-callout="warning" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">$a_n \le b_n$ 推不出"$a_n \le B$"</summary>
 <div class="callout-content" markdown="block">
 
@@ -298,7 +332,7 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 
 ### 4.4 四则运算与复合
 
-<details class="callout note" id="limit-arithmetic" data-callout="note" open>
+<details class="callout keypoint" id="limit-arithmetic" data-callout="keypoint" open>
 <summary class="callout-title">什么时候能拆</summary>
 <div class="callout-content" markdown="block">
 
@@ -315,7 +349,7 @@ $\lim a_n = a$ 与 $\lim b_n = b$ **都存在**时才能拆开运算，而且只
 
 ### 4.5 根式与幂的极限
 
-<details class="callout theorem" id="sqrt-limit" data-callout="theorem" open>
+<details class="callout lemma" id="sqrt-limit" data-callout="lemma" open>
 <summary class="callout-title">开方保持极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -332,11 +366,25 @@ $$|\sqrt{a_n} - \sqrt{a}| = \frac{|a_n - a|}{\sqrt{a_n} + \sqrt{a}} \le \frac{|a
 
 **两道"分母有理化"的题**：
 
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 1：分子分母同乘共轭</summary>
+<div class="callout-content" markdown="block">
+
 $$\lim_{n \to \infty} n\left(\sqrt{n^{2}+1} - \sqrt{n^{2}-1}\right) = \lim_{n \to \infty} \frac{2n}{\sqrt{n^{2}+1} + \sqrt{n^{2}-1}} = \lim_{n \to \infty} \frac{2}{\sqrt{1+\frac{1}{n^{2}}} + \sqrt{1-\frac{1}{n^{2}}}} = 1$$
+
+</div>
+</details>
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 2：同除最大底数 $5^{n}$</summary>
+<div class="callout-content" markdown="block">
 
 $$\lim_{n \to \infty} \frac{5^{n+1} - (-2)^{n}}{3 \times 5^{n} + 2 \times 3^{n}} = \lim_{n \to \infty} \frac{5 - \left(-\frac{2}{5}\right)^{n}}{3 + 2\left(\frac{3}{5}\right)^{n}} = \frac{5}{3}$$
 
-第二题的想法：分子分母同除最大的底数 $5^{n}$，其余项都趋于 $0$。
+</div>
+</details>
+
+第二题的做法：分子分母同除最大的底数 $5^{n}$，其余项都趋于 $0$。
 
 ### 4.6 夹逼定理
 
@@ -366,8 +414,8 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 
 **证明**：设 $\lbrace x_n\rbrace $ 单调增且有上界，由 [上确界](#sup-inf-def) 与 [确界原理](#completeness)，记 $a = \sup\lbrace x_n\rbrace $。对任意 $\varepsilon \gt{} 0$，$a - \varepsilon$ 不再是上界，故存在 $N$ 使 $x_N \gt{} a - \varepsilon$。由单调性，当 $n \gt{} N$ 时 $a - \varepsilon \lt{} x_N \le x_n \le a \lt{} a + \varepsilon$，即 $\mid{}x_n - a\mid{} \lt{} \varepsilon$，故 $x_n \to a$。
 
-<details class="callout tip" data-callout="tip" open>
-<summary class="callout-title">直观记法（保留自己的话）</summary>
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">直观记法</summary>
 <div class="callout-content" markdown="block">
 
 用小数表示看：$x_n = m_n + 0.a_1^{(n)} a_2^{(n)} \cdots$。单调增有上界保证整数部分 $m_n$ 最终不再变化；再看小数位，上一位一旦"锁定"，下一位只能从 $\lbrace 0, 1, \dots, 9\rbrace $ 中取，于是逐位锁定出一个小数 —— 它就是上确界。
@@ -375,14 +423,32 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 </div>
 </details>
 
-**例 1：Euler 常数 $\gamma$ 存在。** 记 $c_n = 1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n} - \ln n$，用不等式 $\dfrac{1}{n+1} \lt{} \ln\!\left(1 + \dfrac{1}{n}\right) \lt{} \dfrac{1}{n}$：
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 1：Euler 常数 $\gamma$ 存在</summary>
+<div class="callout-content" markdown="block">
+
+证明 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n} - \ln n\right)$ 存在。
+
+</div>
+</details>
+
+**解**：记 $c_n = 1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n} - \ln n$，用不等式 $\dfrac{1}{n+1} \lt{} \ln\!\left(1 + \dfrac{1}{n}\right) \lt{} \dfrac{1}{n}$：
 
 - **单调减**：$c_{n+1} - c_n = \dfrac{1}{n+1} - \ln\!\left(1 + \dfrac{1}{n}\right) \lt{} 0$；
 - **有下界**：$\ln n = \sum_{k=1}^{n-1} \ln\!\left(1 + \dfrac{1}{k}\right) \lt{} \sum_{k=1}^{n-1} \dfrac{1}{k} \lt{} 1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n}$，故 $c_n \gt{} 0$。
 
 由 [单调有界定理](#monotone-bounded)，$c_n$ 收敛，其极限记为 **Euler 常数 $\gamma$**。
 
-**例 2：$x_{n+1} = x_n(1 - x_n)$。** 设 $0 \lt{} x_1 \lt{} 1$，证明 (1) $\lbrace x_n\rbrace $ 收敛；(2) $\lim\limits_{n \to \infty} n x_n = 1$。
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 2：$x_{n+1} = x_n(1 - x_n)$</summary>
+<div class="callout-content" markdown="block">
+
+设 $0 \lt{} x_1 \lt{} 1$，证明：(1) $\lbrace x_n\rbrace $ 收敛；(2) $\lim\limits_{n \to \infty} n x_n = 1$。
+
+</div>
+</details>
+
+**解**：
 
 (1) $0 \lt{} x_{n+1} \lt{} x_n \lt{} 1$（因 $0 \lt{} 1 - x_n \lt{} 1$），单调减且有下界 $0$，故收敛；设极限为 $a$，则 $a = a(1 - a) \Rightarrow a = 0$。
 
@@ -390,7 +456,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 
 ### 4.8 子列
 
-<details class="callout theorem" id="subsequence" data-callout="theorem" open>
+<details class="callout lemma" id="subsequence" data-callout="lemma" open>
 <summary class="callout-title">子列继承极限</summary>
 <div class="callout-content" markdown="block">
 
@@ -426,7 +492,7 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 
 ### 4.10 无穷小量与无穷大量
 
-<details class="callout theorem" id="infinitesimal" data-callout="theorem" open>
+<details class="callout lemma" id="infinitesimal" data-callout="lemma" open>
 <summary class="callout-title">有界 $\times$ 无穷小 $=$ 无穷小</summary>
 <div class="callout-content" markdown="block">
 
@@ -437,7 +503,7 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 
 同号无穷大量之和仍是无穷大量；无穷大量 $\pm$ 有界量仍是无穷大量（按 $\mid{}a_n\mid{} \to \infty$ 的意义；若 $a_n \to +\infty$ 则 $a_n + b_n \to +\infty$）。
 
-<details class="callout warning" id="infinite-large" data-callout="warning" open>
+<details class="callout keypoint" id="infinite-large" data-callout="keypoint" open>
 <summary class="callout-title">无穷大量 $\neq$ 无界量</summary>
 <div class="callout-content" markdown="block">
 
@@ -449,17 +515,26 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 
 ### 4.11 两个"根号型"极限（补充）
 
-**$\lim\limits_{n \to \infty} \sqrt[n]{n} = 1$**：用 [AM–GM](#amgm)，取两个 $\sqrt{n}$ 与 $n - 2$ 个 $1$：
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">三个"根号型"极限</summary>
+<div class="callout-content" markdown="block">
+
+求 $\lim\limits_{n \to \infty} \sqrt[n]{n}$、$\lim\limits_{n \to \infty} \sqrt[n]{n!}$、$\lim\limits_{n \to \infty} \dfrac{\sqrt[n]{n!}}{n}$。
+
+</div>
+</details>
+
+**① $\lim\limits_{n \to \infty} \sqrt[n]{n} = 1$**：用 [AM–GM](#amgm)，取两个 $\sqrt{n}$ 与 $n - 2$ 个 $1$：
 
 $$\sqrt[n]{n} = \sqrt[n]{\sqrt{n}\cdot\sqrt{n}\cdot 1 \cdots 1} \le \frac{2\sqrt{n} + (n - 2)}{n} = 1 + \frac{2(\sqrt{n} - 1)}{n} \to 1$$
 
 又 $\sqrt[n]{n} \ge 1$，夹逼得极限为 $1$。
 
-**$\lim\limits_{n \to \infty} \sqrt[n]{n!} = +\infty$**：对 $k \gt{} \frac{n}{2}$ 有 $k \ge \frac{n}{2}$，这样的因子至少 $\frac{n}{2}$ 个，故
+**② $\lim\limits_{n \to \infty} \sqrt[n]{n!} = +\infty$**：对 $k \gt{} \frac{n}{2}$ 有 $k \ge \frac{n}{2}$，这样的因子至少 $\frac{n}{2}$ 个，故
 
 $$n! \ge \left(\frac{n}{2}\right)^{n/2} \quad \Longrightarrow \quad \sqrt[n]{n!} \ge \left(\frac{n}{2}\right)^{1/2} \to +\infty$$
 
-**$\lim\limits_{n \to \infty} \dfrac{\sqrt[n]{n!}}{n} = \dfrac{1}{e}$**：取对数后用 [Stolz 定理](#stolz)，
+**③ $\lim\limits_{n \to \infty} \dfrac{\sqrt[n]{n!}}{n} = \dfrac{1}{e}$**：取对数后用 [Stolz 定理](#stolz)，
 
 $$
 \lim_{n \to \infty} \frac{\ln n! - n\ln n}{n} \overset{\text{Stolz}}{=} \lim_{n \to \infty} (n-1)\ln\!\left(1 - \frac{1}{n}\right) = -1
@@ -499,7 +574,7 @@ $$\left(1 + \frac{1}{n}\right)^{n} \lt{} 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \
 
 由 [单调有界定理](#monotone-bounded)，极限存在，记为 $e$。
 
-<details class="callout tip" data-callout="tip" open>
+<details class="callout idea" data-callout="idea" open>
 <summary class="callout-title">另一个"很惊人的注意力"（保留）</summary>
 <div class="callout-content" markdown="block">
 
@@ -535,7 +610,7 @@ $$\sqrt[n+1]{\left(\frac{n}{n+1}\right)^{n+1} \cdot 1} \le \frac{\frac{n}{n+1}(n
 
 ### 5.3 $e$ 的级数表示
 
-<details class="callout theorem" id="e-series" data-callout="theorem" open>
+<details class="callout formula" id="e-series" data-callout="formula" open>
 <summary class="callout-title">$e = \sum\limits_{n=0}^{\infty} \frac{1}{n!}$</summary>
 <div class="callout-content" markdown="block">
 
@@ -573,7 +648,14 @@ $$0 \lt{} r \lt{} \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\r
 
 ### 5.5 与 $e$ 有关的几个极限
 
+<details class="callout formula" data-callout="formula" open>
+<summary class="callout-title">与 $e$ 有关的几个极限</summary>
+<div class="callout-content" markdown="block">
+
 若 $p_n \gt{} 0$ 是正无穷大量，则 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{p_n}\right)^{p_n} = e$。**证**：由 $\left(1+\frac1n\right)^n \to e$，$\exists N_1$ 使 $n \gt{} N_1$ 时 $\left\vert\left(1+\frac1n\right)^n - e\right\vert \lt{} \varepsilon$；又 $p_n \to +\infty$，$\exists N_2$ 使 $n \gt{} N_2$ 时 $p_n \gt{} N_1$，故 $n \gt{} N_2$ 时 $\left\vert\left(1+\frac{1}{p_n}\right)^{p_n} - e\right\vert \lt{} \varepsilon$。
+
+</div>
+</details>
 
 - $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{n^{2} + n}\right)^{n} = \lim\limits_{n \to \infty}\left[\left(1 + \dfrac{1}{n^{2}+n}\right)^{n^{2}+n}\right]^{\frac{n}{n^{2}+n}} = e^{0} = 1$；
 - $\lim\limits_{n \to \infty} a_n^{b_n} = a^{b}$（$\lim a_n = a \gt{} 0$，$\lim b_n = b$）：由 $\lim\limits_{n \to \infty} e^{b_n \ln a_n} = e^{b \ln a} = a^{b}$；
@@ -591,8 +673,15 @@ $X$ 是**定义域**，$f(X) = \lbrace f(x) \mid x \in X\rbrace $ 是**值域**�
 | Dirichlet 函数 | $D(x) = 1\ (x \in \mathbb{Q}),\ 0\ (x \in \mathbb{Q}^{c})$ | 每个有理数都是周期，无最小正周期 |
 | 双曲正弦/余弦 | $\operatorname{sh} x = \dfrac{e^{x} - e^{-x}}{2}$，$\operatorname{ch} x = \dfrac{e^{x} + e^{-x}}{2}$ | $\operatorname{ch}^{2} x - \operatorname{sh}^{2} x = 1$；$\operatorname{ch}' x = \operatorname{sh} x$，$\operatorname{sh}' x = \operatorname{ch} x$ |
 
-**周期函数**：若存在 $T \neq 0$，使 $\forall x \in X$ 都有 $x + T \in X$ 且 $f(x + T) = f(x)$，称 $f$ 为周期函数，$T$ 为一个周期。**周期函数不一定有最小正周期** —— 上表里的 Dirichlet 函数就是现成的例子（$\forall q \in \mathbb{Q}$，$D(x + q) = D(x)$）。
-<a id="periodic-function"></a>
+<details class="callout definition" id="periodic-function" data-callout="definition" open>
+<summary class="callout-title">周期函数</summary>
+<div class="callout-content" markdown="block">
+
+若存在 $T \neq 0$，使 $\forall x \in X$ 都有 $x + T \in X$ 且 $f(x + T) = f(x)$，称 $f$ 为周期函数，$T$ 为一个周期。
+**周期函数不一定有最小正周期** —— 上表里的 Dirichlet 函数就是现成的例子（$\forall q \in \mathbb{Q}$，$D(x + q) = D(x)$）。
+
+</div>
+</details>
 
 ---
 
@@ -632,13 +721,20 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 
 ### 7.3 性质
 
+<details class="callout theorem" data-callout="theorem" open>
+<summary class="callout-title">函数极限的基本性质</summary>
+<div class="callout-content" markdown="block">
+
 - **唯一性**：极限存在则唯一。
 - **局部有界性**：在某点附近有界（不是整体有界，与 [有界性定理](#boundedness-theorem) 里的"整体有界"对照着看），即 $\exists \delta$，当 $x \in U^{\circ}(x_0, \delta)$ 时 $\mid{}f(x)\mid{} \le M$。
 - **无穷小量**：$\lim\limits_{x \to a} f(x) = 0$ 时称 $f$ 为无穷小量，且 $\lim\limits_{x \to a} f(x) = L \iff \lim\limits_{x \to a} (f(x) - L) = 0$。
 - **有界 $\times$ 无穷小 $=$ 无穷小**：$x \to a$ 时 $\alpha(x) \to 0$，$h(x)$ 有界，则 $\alpha(x)h(x) \to 0$。
 - $\lim\limits_{x \to a} f(x) = \infty \iff \lim\limits_{x \to a} \dfrac{1}{f(x)} = 0$；若 $f(x) \neq 0$，则 $\lim\limits_{x \to a} f(x) = 0 \iff \lim\limits_{x \to a} \dfrac{1}{f(x)} = \infty$。
 
-<details class="callout warning" data-callout="warning" open>
+</div>
+</details>
+
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">无界 ≠ 无穷大（函数版）</summary>
 <div class="callout-content" markdown="block">
 
@@ -663,11 +759,23 @@ $$\lim_{x \to a}(f \pm g) = A \pm B,\quad \lim_{x \to a}(f g) = AB,\quad \lim_{x
 </div>
 </details>
 
-**例**：
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 1：多项式型</summary>
+<div class="callout-content" markdown="block">
 
 $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^{n-2} + \cdots + 1}{x^{m-1} + x^{m-2} + \cdots + 1} = \frac{n}{m}$$
 
-**例（证 $\lim\limits_{x \to 2} x^{2} = 4$）**：取 $\mid{}x - 2\mid{} \lt{} 1$，则 $\mid{}x + 2\mid{} \lt{} 5$，于是 $\mid{}x^{2} - 4\mid{} = \mid{}x - 2\mid{}\mid{}x + 2\mid{} \lt{} 5\mid{}x - 2\mid{}$；要它 $\lt{} \varepsilon$ 只需 $\mid{}x - 2\mid{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace 1, \dfrac{\varepsilon}{5}\right\rbrace $。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
+</div>
+</details>
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 2：$\varepsilon$–$\delta$ 模板（证 $\lim\limits_{x \to 2} x^{2} = 4$）</summary>
+<div class="callout-content" markdown="block">
+
+取 $\mid{}x - 2\mid{} \lt{} 1$，则 $\mid{}x + 2\mid{} \lt{} 5$，于是 $\mid{}x^{2} - 4\mid{} = \mid{}x - 2\mid{}\mid{}x + 2\mid{} \lt{} 5\mid{}x - 2\mid{}$；要它 $\lt{} \varepsilon$ 只需 $\mid{}x - 2\mid{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace 1, \dfrac{\varepsilon}{5}\right\rbrace $。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
+
+</div>
+</details>
 
 ### 7.4 夹逼与单调收敛（函数版）
 
@@ -712,7 +820,7 @@ $(a - \delta, a)$ 上单调有界 $\Rightarrow \lim\limits_{x \to a^{-}} f(x)$ �
 
 ### 7.6 两个重要极限
 
-<details class="callout tip" id="important-limits" data-callout="tip" open>
+<details class="callout formula" id="important-limits" data-callout="formula" open>
 <summary class="callout-title">基本款</summary>
 <div class="callout-content" markdown="block">
 
@@ -729,7 +837,14 @@ $$\lim_{x \to 0} \frac{\sin x}{x} = 1, \qquad \lim_{x \to \infty}\left(1 + \frac
 - $\lim\limits_{x \to 0^{+}}\left(1 + \dfrac{1}{x}\right)^{x} = \lim\limits_{t \to +\infty} (1 + t)^{\frac{1}{t}} = e^{\lim\limits_{t \to +\infty} \frac{\ln(1+t)}{t}} = e^{0} = 1$；
 - $\lim\limits_{x \to \infty} x^{\frac{1}{x}} = 1$，$\lim\limits_{x \to 0^{+}} x^{x} = 1$。
 
-**草稿：$\ln(1+t)/t \to 0$ 的放缩**。用 $\ln(1 + x) \lt{} x$ 与 $\ln(1 + t) = 2\ln\sqrt{1+t} \lt{} 2(\sqrt{1+t} - 1)$：
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">草稿</summary>
+<div class="callout-content" markdown="block">
+
+用 $\ln(1 + x) \lt{} x$ 与 $\ln(1 + t) = 2\ln\sqrt{1+t} \lt{} 2(\sqrt{1+t} - 1)$：
+
+</div>
+</details>
 
 $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t} + 1} \to 0$$
 
@@ -785,7 +900,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 - $\lim \dfrac{\alpha}{\beta} = c \neq 0$：**同阶**无穷小量；
 - $\lim \dfrac{\alpha}{\beta} = 1$：**等价**无穷小量，记 $\alpha \sim \beta$（等价关系，有传递性）。
 
-<details class="callout note" id="equivalent-infinitesimal" data-callout="note" open>
+<details class="callout definition" id="equivalent-infinitesimal" data-callout="definition" open>
 <summary class="callout-title">等价的一个刻画</summary>
 <div class="callout-content" markdown="block">
 
@@ -796,7 +911,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 
 ### 9.2 常用等价无穷小（$x \to 0$）
 
-<details class="callout tip" id="equivalent-infinitesimals" data-callout="tip" open>
+<details class="callout formula" id="equivalent-infinitesimals" data-callout="formula" open>
 <summary class="callout-title">背下来的一串</summary>
 <div class="callout-content" markdown="block">
 
@@ -811,7 +926,15 @@ $$a^{x} - 1 \sim x\ln a\ (a \gt{} 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \fra
 
 ### 9.3 替换的规则
 
-若 $\alpha \sim \beta$，且 $\alpha f$、$\beta f$ 的极限都存在，则 $\lim \alpha f = \lim \beta f$。**只能在"相乘"时替换**（乘除因子可以换），加减法里替换会丢掉高阶项，出错。
+<details class="callout keypoint" data-callout="keypoint" open>
+<summary class="callout-title">等价替换只能在"相乘"时用</summary>
+<div class="callout-content" markdown="block">
+
+若 $\alpha \sim \beta$，且 $\alpha f$、$\beta f$ 的极限都存在，则 $\lim \alpha f = \lim \beta f$。
+**只能在"相乘"时替换**（乘除因子可以换），加减法里替换会丢掉高阶项，出错。
+
+</div>
+</details>
 
 ---
 
@@ -819,7 +942,14 @@ $$a^{x} - 1 \sim x\ln a\ (a \gt{} 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \fra
 
 ### 10.1 $\mathrm{AM} \ge \mathrm{GM}$（柯西归纳法）
 
+<details class="callout theorem" data-callout="theorem" open>
+<summary class="callout-title">$\mathrm{AM} \ge \mathrm{GM}$（柯西归纳法）</summary>
+<div class="callout-content" markdown="block">
+
 $$\frac{1}{n}\sum_{i=1}^{n} a_i \ \ge\ \sqrt[n]{\prod_{i=1}^{n} a_i} \qquad (a_i \ge 0)$$
+
+</div>
+</details>
 
 **证**（对 $n$ 归纳：用"$n-1$ 成立 $\Rightarrow$ $n$ 成立"）：
 
@@ -834,7 +964,7 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 
 ### 10.2 放缩的经验
 
-<details class="callout tip" data-callout="tip" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">三条（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
@@ -846,6 +976,15 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 </details>
 
 ### 10.3 综合例：$\dfrac{(n!)^{\alpha}}{n^{n}}$ 的极限
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">综合例：讨论 $\dfrac{(n!)^{\alpha}}{n^{n}}$ 的极限</summary>
+<div class="callout-content" markdown="block">
+
+分别求 $\alpha \gt{} 1$ 与 $\alpha \le 1$ 时的极限。
+
+</div>
+</details>
 
 **当 $\alpha \gt{} 1$ 时，极限为 $+\infty$。** 看相邻两项之比：
 
@@ -877,9 +1016,17 @@ $$\lim_{\Delta x \to 0^{+}} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} = \lim_{
 </div>
 </details>
 
-**可导的必要条件：连续**。即 $f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。反之不成立（$\mid{}x\mid{}$ 在 $0$ 处连续但不可导）。
+<details class="callout keypoint" data-callout="keypoint" open>
+<summary class="callout-title">可导的必要条件：连续</summary>
+<div class="callout-content" markdown="block">
 
-<details class="callout warning" id="derivative-continuity-warning" data-callout="warning" open>
+$f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。
+反之不成立（$\mid{}x\mid{}$ 在 $0$ 处连续但不可导）。
+
+</div>
+</details>
+
+<details class="callout keypoint" id="derivative-continuity-warning" data-callout="keypoint" open>
 <summary class="callout-title">导函数不保证连续</summary>
 <div class="callout-content" markdown="block">
 
@@ -910,9 +1057,17 @@ f'(u(x_0)), & u(x) = u(x_0)
 \end{cases}
 $$
 
-为什么如此构造？**防止在 $x_0$ 的邻域内 $u(x) - u(x_0)$ 的零点极多**。$x \to u$ 映射，$u \to y$ 映射，**由外向内逐层求导**。
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">为什么如此构造</summary>
+<div class="callout-content" markdown="block">
 
-<details class="callout theorem" id="inverse-derivative" data-callout="theorem" open>
+**防止在 $x_0$ 的邻域内 $u(x) - u(x_0)$ 的零点极多**。
+$x \to u$ 映射，$u \to y$ 映射，**由外向内逐层求导**。
+
+</div>
+</details>
+
+<details class="callout formula" id="inverse-derivative" data-callout="formula" open>
 <summary class="callout-title">反函数求导</summary>
 <div class="callout-content" markdown="block">
 
@@ -925,7 +1080,7 @@ $$\left(f^{-1}\right)'(y) = \frac{1}{f'(x)} = \frac{1}{f'\big(f^{-1}(y)\big)}$$
 
 推导：由 $f^{-1}(f(x)) = x$ 两边对 $x$ 求导得 $\left(f^{-1}\right)'(f(x))\cdot f'(x) = 1$。最常见的例子是 $f(x) = e^{x}$ 与 $f^{-1}(x) = \ln x$。
 
-<details class="callout warning" data-callout="warning" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">反函数求导最常见的错</summary>
 <div class="callout-content" markdown="block">
 
@@ -965,7 +1120,14 @@ $$\frac{dy}{dx} = \frac{1}{\frac{dx}{dy}} = \frac{1}{\cos y} = \frac{1}{\cos(\ar
 
 ### 11.4 由两个重要极限导出的一组极限
 
+<details class="callout formula" data-callout="formula" open>
+<summary class="callout-title">由两个重要极限导出的一组极限</summary>
+<div class="callout-content" markdown="block">
+
 $\lim\limits_{x \to 0}\dfrac{\sin x}{x} = 1$（多项式与三角）导出
+
+</div>
+</details>
 
 $$\lim_{x \to 0} \frac{\sin x}{x} = \lim_{x \to 0} \frac{\tan x}{x} = \lim_{x \to 0} \frac{\arcsin x}{x} = \lim_{x \to 0} \frac{\arctan x}{x} = 1, \qquad \lim_{x \to 0} \frac{1 - \cos x}{x^{2}} = \frac{1}{2}$$
 
