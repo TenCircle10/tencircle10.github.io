@@ -191,14 +191,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 
 ### 3.4 Bolzano–Weierstrass 定理
 
-<details class="callout note" data-callout="note" open>
-<summary class="callout-title">Note</summary>
-<div class="callout-content" markdown="block">
-
 **有界序列必有收敛子列**：若 $a \le x_n \le b$（$n = 1, 2, \dots$），则 $\lbrace x_n\rbrace $ 有收敛子列。
-
-</div>
-</details>
 
 **证明**：把 $[a, b]$ 等分成两个小区间，必有一个含 $\lbrace x_n\rbrace $ 的无穷多项（否则两边各只含有限项，合起来也只有有限项，矛盾），记为 $[a_1, b_1]$，并在其中取一项 $x_{n_1}$。再等分 $[a_1, b_1]$ 重复此过程，得到闭区间套 $\lbrace [a_k, b_k]\rbrace $ 与子列 $\lbrace x_{n_k}\rbrace $，满足 $x_{n_k} \in [a_k, b_k]$ 且下标严格递增。由 [闭区间套定理](#nested-intervals)，$a_k \to c \leftarrow b_k$，夹逼得 $x_{n_k} \to c$。
 <a id="bolzano-weierstrass"></a>
