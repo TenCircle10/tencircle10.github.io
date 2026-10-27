@@ -447,12 +447,23 @@ _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], str]] = [
     # 这样既挡住斜体，又不让生成物里塞满无意义的实体。
     (re.compile(r"(?<![A-Za-z0-9\\])_"), r"&#95;"),
     (re.compile(r"(?<![A-Za-z0-9\\\s])\*"), r"&#42;"),
+    # 定界符优先处理：【行内公式里绝对不能留裸 |】
+    # kramdown 会把行内公式里的 | 当成表格列分隔符，直接把这一行切断，
+    # 导致定界符失效、后半段公式漏成源码。\left| / \right| / \left\| / \right\| 里的竖线
+    # 虽然 LaTeX 合法，但对 kramdown 来说仍是裸的 |，所以要一起换掉。
+    # \left\vert / \right\vert / \left\Vert / \right\Vert 都是合法定界符，视觉完全一致。
+    (re.compile(r"\\left\\\|"), r"\\left\\Vert"),
+    (re.compile(r"\\right\\\|"), r"\\right\\Vert"),
+    (re.compile(r"\\left\|"), r"\\left\\vert"),
+    (re.compile(r"\\right\|"), r"\\right\\vert"),
+    # 剩下的：独立的 \| 是范数 -> \Vert{}；裸 | -> \mid{}
+    (re.compile(r"\\\|"), r"\\Vert{}"),
+    (re.compile(r"(?<!\\)\|"), r"\\mid{}"),
     # 下面三条会替换成字母命令，用 {} 结尾而不是空格：
-    #   \lt{} \gt{} \vert{} \sim{}
+    #   \lt{} \gt{} \sim{}
     # 这样后面紧跟字母/数字时不会被当成更长的命令（\ltepsilon），
     # 也不会和原文里的空格叠加出双空格。
     # \left< / \right> / \left> / \right< 里的符号是定界符，必须原样保留。
-    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)\|"), r"\\vert{}"),
     (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)<"), r"\\lt{}"),
     (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)>"), r"\\gt{}"),
     (re.compile(r"(?<!\\)%"), r"\\%"),

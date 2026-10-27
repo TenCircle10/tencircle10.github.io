@@ -556,7 +556,7 @@ $$(A \mid I) \xrightarrow{\ \text{只做初等行变换}\ } (I \mid A^{-1})$$
 <summary class="callout-title">别记错名字</summary>
 <div class="callout-content" markdown="block">
 
-$[A \mid I] \to [I \mid A^{-1}]$ 是**初等行变换法**；**伴随矩阵法**是 $A^{-1} = \dfrac{1}{\vert{}A\vert{}} A^{&#42;}$，两者不是一回事。
+$[A \mid I] \to [I \mid A^{-1}]$ 是**初等行变换法**；**伴随矩阵法**是 $A^{-1} = \dfrac{1}{\mid{}A\mid{}} A^{&#42;}$，两者不是一回事。
 
 </div>
 </details>
@@ -571,7 +571,7 @@ $$(A - 2I)(X - I) = AX - A - 2X + 2I = A - A + 2I = 2I$$
 
 所以 $(A - 2I) \cdot \frac{1}{2}(X - I) = I$，由 [满秩与可逆](#full-rank-invertible) 得 $\frac{1}{2}(X - I) = (A - 2I)^{-1}$。
 
-**验证**：$A - 2I = \begin{bmatrix} 2 & 2 & 3 \\ 1 & -1 & 0 \\ -1 & 2 & 1 \end{bmatrix}$，$\vert{}A - 2I\vert{} = 2(-1) - 2(1) + 3(1) = -1 \neq 0$，故 $r(A - 2I) = 3$，确实可逆。
+**验证**：$A - 2I = \begin{bmatrix} 2 & 2 & 3 \\ 1 & -1 & 0 \\ -1 & 2 & 1 \end{bmatrix}$，$\mid{}A - 2I\mid{} = 2(-1) - 2(1) + 3(1) = -1 \neq 0$，故 $r(A - 2I) = 3$，确实可逆。
 <a id="example-inverse"></a>
 
 ---

@@ -14,7 +14,7 @@ render_with_liquid: false
 
 行内带花括号：$\left\lbrace  x \mid x \gt{} 0 \right\rbrace $
 
-行内绝对值：$\left| x \right|$
+行内绝对值：$\left\vert x \right\vert$
 
 块级测试：
 

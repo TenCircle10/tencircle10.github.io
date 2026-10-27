@@ -8,15 +8,15 @@ render_with_liquid: false
 
 # 公式转义 Bug 测试
 
-绝对值公式：已知 $f(x)$ 连续，且 $\left| f(x) - A \right| \lt{} \varepsilon$。
+绝对值公式：已知 $f(x)$ 连续，且 $\left\vert f(x) - A \right\vert \lt{} \varepsilon$。
 
 含有大于小于的公式：当 $n \gt{} N_1$ 且 $x \lt{} 0$ 时。
 
-行内多个公式同段：设 $a \lt{} b$，则 $f(a) \left| x \right| g(b) \gt{} h$，其中 $p \neq q$。
+行内多个公式同段：设 $a \lt{} b$，则 $f(a) \left\vert x \right\vert g(b) \gt{} h$，其中 $p \neq q$。
 
-嵌套括号：$f\left( \left| x \right| \right) = \left[ \left( a + b \right) \right]^{2}$。
+嵌套括号：$f\left( \left\vert x \right\vert \right) = \left[ \left( a + b \right) \right]^{2}$。
 
-范数：$\left\| x \right\|&#95;{2} + \left| y \right|$.
+范数：$\left\Vert x \right\Vert&#95;{2} + \left\vert y \right\vert$.
 
 下标与上标：$x_{n+1} = x_n^{2} + a_{ij}^{(k)}$。
 

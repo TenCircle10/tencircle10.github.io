@@ -214,13 +214,13 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 
 ### 4.1 定义与记号
 
-**数列**：按自然数 $1, 2, 3, \dots$ 编号依次排列的一列数 $x_1, x_2, x_3, \dots$，要点是 ① 无穷 ② 依次排列（即定义在 $\mathbb{N}^{&#42;}$ 上的函数）。**单调增**指 $x_n \le x_{n+1}$；**有界**指既有上界又有下界，等价地 $\exists M \gt{} 0,\ \forall n,\ \vert{}x_n\vert{} \le M$。
+**数列**：按自然数 $1, 2, 3, \dots$ 编号依次排列的一列数 $x_1, x_2, x_3, \dots$，要点是 ① 无穷 ② 依次排列（即定义在 $\mathbb{N}^{&#42;}$ 上的函数）。**单调增**指 $x_n \le x_{n+1}$；**有界**指既有上界又有下界，等价地 $\exists M \gt{} 0,\ \forall n,\ \mid{}x_n\mid{} \le M$。
 
 <details class="callout definition" id="sequence-limit" data-callout="definition" open>
 <summary class="callout-title">数列极限</summary>
 <div class="callout-content" markdown="block">
 
-$\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 就有 $\vert{}a_n - l\vert{} \lt{} \varepsilon$，则称 $l$ 为 $\lbrace a_n\rbrace $ 的极限，记作 $\lim\limits_{n \to \infty} a_n = l$。
+$\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 就有 $\mid{}a_n - l\mid{} \lt{} \varepsilon$，则称 $l$ 为 $\lbrace a_n\rbrace $ 的极限，记作 $\lim\limits_{n \to \infty} a_n = l$。
 几何意义：$n \gt{} N$ 时 $a_n$ 全部落在 $l$ 的 **$\varepsilon$ 邻域** $U(l, \varepsilon) = (l - \varepsilon, l + \varepsilon)$ 内。
 
 </div>
@@ -252,12 +252,12 @@ $$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ |
 
 - $\varepsilon$ 尽量**放成一次的**，$N$ 才好找；
 - 当"$n \gt{}$ 某值"时成立，**勿忘 $n \in \mathbb{N}$**（写 $N = \lceil \cdot \rceil$ 比写小数稳妥）；
-- 证明里写清 $\vert{}a_n - a\vert{} \lt{} \varepsilon$ 的目标式，一步一步凑到它。
+- 证明里写清 $\mid{}a_n - a\mid{} \lt{} \varepsilon$ 的目标式，一步一步凑到它。
 
 </div>
 </details>
 
-**例**：$\lim\limits_{n \to \infty} \dfrac{1}{n} = 0$。对 $\forall \varepsilon \gt{} 0$，取 $N = \left\lceil \dfrac{1}{\varepsilon} \right\rceil$，当 $n \gt{} N$ 时 $\left| \dfrac{1}{n} - 0 \right| = \dfrac{1}{n} \lt{} \varepsilon$。
+**例**：$\lim\limits_{n \to \infty} \dfrac{1}{n} = 0$。对 $\forall \varepsilon \gt{} 0$，取 $N = \left\lceil \dfrac{1}{\varepsilon} \right\rceil$，当 $n \gt{} N$ 时 $\left\vert \dfrac{1}{n} - 0 \right\vert = \dfrac{1}{n} \lt{} \varepsilon$。
 
 **该记住的常见极限**：
 
@@ -272,7 +272,7 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 <div class="callout-content" markdown="block">
 
 设 $\lbrace a_n\rbrace $ 收敛，$\lim\limits_{n \to \infty} a_n = A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} 0$。
-**证**：取 $\varepsilon = A$，存在 $N$，当 $n \gt{} N$ 时 $\vert{}a_n - A\vert{} \lt{} \varepsilon = A$，故 $a_n \gt{} A - \varepsilon = 0$。
+**证**：取 $\varepsilon = A$，存在 $N$，当 $n \gt{} N$ 时 $\mid{}a_n - A\mid{} \lt{} \varepsilon = A$，故 $a_n \gt{} A - \varepsilon = 0$。
 
 </div>
 </details>
@@ -335,7 +335,7 @@ $\lim a_n = a$ 与 $\lim b_n = b$ **都存在**时才能拆开运算，而且只
 
 $$|\sqrt{a_n} - \sqrt{a}| = \frac{|a_n - a|}{\sqrt{a_n} + \sqrt{a}} \le \frac{|a_n - a|}{\sqrt{a}} \to 0$$
 
-注意别把取完极限的分母提前代入写成 $\dfrac{0 \cdot \vert{}a_n - a\vert{}}{2\sqrt a}$；要保留上界 $\dfrac{\vert{}a_n - a\vert{}}{\sqrt a}$，再由 $a_n \to a$ 得结论。
+注意别把取完极限的分母提前代入写成 $\dfrac{0 \cdot \mid{}a_n - a\mid{}}{2\sqrt a}$；要保留上界 $\dfrac{\mid{}a_n - a\mid{}}{\sqrt a}$，再由 $a_n \to a$ 得结论。
 
 **两道"分母有理化"的题**：
 
@@ -371,7 +371,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 </div>
 </details>
 
-**证明**：设 $\lbrace x_n\rbrace $ 单调增且有上界，由 [上确界](#sup-inf-def) 与 [确界原理](#completeness)，记 $a = \sup\lbrace x_n\rbrace $。对任意 $\varepsilon \gt{} 0$，$a - \varepsilon$ 不再是上界，故存在 $N$ 使 $x_N \gt{} a - \varepsilon$。由单调性，当 $n \gt{} N$ 时 $a - \varepsilon \lt{} x_N \le x_n \le a \lt{} a + \varepsilon$，即 $\vert{}x_n - a\vert{} \lt{} \varepsilon$，故 $x_n \to a$。
+**证明**：设 $\lbrace x_n\rbrace $ 单调增且有上界，由 [上确界](#sup-inf-def) 与 [确界原理](#completeness)，记 $a = \sup\lbrace x_n\rbrace $。对任意 $\varepsilon \gt{} 0$，$a - \varepsilon$ 不再是上界，故存在 $N$ 使 $x_N \gt{} a - \varepsilon$。由单调性，当 $n \gt{} N$ 时 $a - \varepsilon \lt{} x_N \le x_n \le a \lt{} a + \varepsilon$，即 $\mid{}x_n - a\mid{} \lt{} \varepsilon$，故 $x_n \to a$。
 
 <details class="callout tip" data-callout="tip" open>
 <summary class="callout-title">直观记法（保留自己的话）</summary>
@@ -437,18 +437,18 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 <summary class="callout-title">有界 $\times$ 无穷小 $=$ 无穷小</summary>
 <div class="callout-content" markdown="block">
 
-若 $\lim\limits_{n \to \infty} a_n = 0$ 且 $\vert{}b_n\vert{} \le M$，则 $\lim\limits_{n \to \infty} a_n b_n = 0$。
+若 $\lim\limits_{n \to \infty} a_n = 0$ 且 $\mid{}b_n\mid{} \le M$，则 $\lim\limits_{n \to \infty} a_n b_n = 0$。
 
 </div>
 </details>
 
-同号无穷大量之和仍是无穷大量；无穷大量 $\pm$ 有界量仍是无穷大量（按 $\vert{}a_n\vert{} \to \infty$ 的意义；若 $a_n \to +\infty$ 则 $a_n + b_n \to +\infty$）。
+同号无穷大量之和仍是无穷大量；无穷大量 $\pm$ 有界量仍是无穷大量（按 $\mid{}a_n\mid{} \to \infty$ 的意义；若 $a_n \to +\infty$ 则 $a_n + b_n \to +\infty$）。
 
 <details class="callout warning" id="infinite-large" data-callout="warning" open>
 <summary class="callout-title">无穷大量 $\neq$ 无界量</summary>
 <div class="callout-content" markdown="block">
 
-无穷大量要求 $\vert{}a_n\vert{} \to +\infty$（整条数列都跑向无穷），无界量只要求"没有界"。
+无穷大量要求 $\mid{}a_n\mid{} \to +\infty$（整条数列都跑向无穷），无界量只要求"没有界"。
 例：$n$ 与 $\big((-1)^{n} + 1\big)n$。前者是无穷大量；后者无界（偶数项为 $0$，奇数项为 $2n$），但不是无穷大量。
 
 </div>
@@ -580,7 +580,7 @@ $$0 \lt{} r \lt{} \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\r
 
 ### 5.5 与 $e$ 有关的几个极限
 
-若 $p_n \gt{} 0$ 是正无穷大量，则 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{p_n}\right)^{p_n} = e$。**证**：由 $\left(1+\frac1n\right)^n \to e$，$\exists N_1$ 使 $n \gt{} N_1$ 时 $\left|\left(1+\frac1n\right)^n - e\right| \lt{} \varepsilon$；又 $p_n \to +\infty$，$\exists N_2$ 使 $n \gt{} N_2$ 时 $p_n \gt{} N_1$，故 $n \gt{} N_2$ 时 $\left|\left(1+\frac{1}{p_n}\right)^{p_n} - e\right| \lt{} \varepsilon$。
+若 $p_n \gt{} 0$ 是正无穷大量，则 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{p_n}\right)^{p_n} = e$。**证**：由 $\left(1+\frac1n\right)^n \to e$，$\exists N_1$ 使 $n \gt{} N_1$ 时 $\left\vert\left(1+\frac1n\right)^n - e\right\vert \lt{} \varepsilon$；又 $p_n \to +\infty$，$\exists N_2$ 使 $n \gt{} N_2$ 时 $p_n \gt{} N_1$，故 $n \gt{} N_2$ 时 $\left\vert\left(1+\frac{1}{p_n}\right)^{p_n} - e\right\vert \lt{} \varepsilon$。
 
 - $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{n^{2} + n}\right)^{n} = \lim\limits_{n \to \infty}\left[\left(1 + \dfrac{1}{n^{2}+n}\right)^{n^{2}+n}\right]^{\frac{n}{n^{2}+n}} = e^{0} = 1$；
 - $\lim\limits_{n \to \infty} a_n^{b_n} = a^{b}$（$\lim a_n = a \gt{} 0$，$\lim b_n = b$）：由 $\lim\limits_{n \to \infty} e^{b_n \ln a_n} = e^{b \ln a} = a^{b}$；
@@ -612,7 +612,7 @@ $X$ 是**定义域**，$f(X) = \lbrace f(x) \mid x \in X\rbrace $ 是**值域**�
 <div class="callout-content" markdown="block">
 
 **空心（去心）邻域**：$(x_0 - \delta, x_0 + \delta) \setminus \lbrace x_0\rbrace $，记 $U^{\circ}(x_0, \delta)$。
-**极限**：$\forall \varepsilon \gt{} 0,\ \exists \delta \gt{} 0$，当 $0 \lt{} \vert{}x - x_0\vert{} \lt{} \delta$ 时 $\vert{}f(x) - L\vert{} \lt{} \varepsilon$，记 $\lim\limits_{x \to x_0} f(x) = L$。
+**极限**：$\forall \varepsilon \gt{} 0,\ \exists \delta \gt{} 0$，当 $0 \lt{} \mid{}x - x_0\mid{} \lt{} \delta$ 时 $\mid{}f(x) - L\mid{} \lt{} \varepsilon$，记 $\lim\limits_{x \to x_0} f(x) = L$。
 
 - $\varepsilon$ 任选、$\delta$ 随 $\varepsilon$ 变动，动态地描述"要多小有多小"；
 - $\triangle$ **不要求 $f$ 在 $x_0$ 处有定义**。
@@ -622,7 +622,7 @@ $X$ 是**定义域**，$f(X) = \lbrace f(x) \mid x \in X\rbrace $ 是**值域**�
 
 **单侧极限**：在 $(x_0, x_0 + \delta)$ 或 $(x_0 - \delta, x_0)$ 上讨论，$\lim\limits_{x \to x_0} f(x) = L \iff \lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = L$。
 
-**在无穷远处的极限**：设 $f$ 在 $(-\infty, A) \cup (B, +\infty)$ 上有定义，若 $\forall \varepsilon \gt{} 0,\ \exists M \gt{} 0$，当 $\vert{}x\vert{} \gt{} M$ 时 $\vert{}f(x) - L\vert{} \lt{} \varepsilon$，则记 $\lim\limits_{x \to \infty} f(x) = L$。
+**在无穷远处的极限**：设 $f$ 在 $(-\infty, A) \cup (B, +\infty)$ 上有定义，若 $\forall \varepsilon \gt{} 0,\ \exists M \gt{} 0$，当 $\mid{}x\mid{} \gt{} M$ 时 $\mid{}f(x) - L\mid{} \lt{} \varepsilon$，则记 $\lim\limits_{x \to \infty} f(x) = L$。
 
 ### 7.2 Heine 定理
 
@@ -640,7 +640,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 ### 7.3 性质
 
 - **唯一性**：极限存在则唯一。
-- **局部有界性**：在某点附近有界（不是整体有界，与 [有界性定理](#boundedness-theorem) 里的"整体有界"对照着看），即 $\exists \delta$，当 $x \in U^{\circ}(x_0, \delta)$ 时 $\vert{}f(x)\vert{} \le M$。
+- **局部有界性**：在某点附近有界（不是整体有界，与 [有界性定理](#boundedness-theorem) 里的"整体有界"对照着看），即 $\exists \delta$，当 $x \in U^{\circ}(x_0, \delta)$ 时 $\mid{}f(x)\mid{} \le M$。
 - **无穷小量**：$\lim\limits_{x \to a} f(x) = 0$ 时称 $f$ 为无穷小量，且 $\lim\limits_{x \to a} f(x) = L \iff \lim\limits_{x \to a} (f(x) - L) = 0$。
 - **有界 $\times$ 无穷小 $=$ 无穷小**：$x \to a$ 时 $\alpha(x) \to 0$，$h(x)$ 有界，则 $\alpha(x)h(x) \to 0$。
 - $\lim\limits_{x \to a} f(x) = \infty \iff \lim\limits_{x \to a} \dfrac{1}{f(x)} = 0$；若 $f(x) \neq 0$，则 $\lim\limits_{x \to a} f(x) = 0 \iff \lim\limits_{x \to a} \dfrac{1}{f(x)} = \infty$。
@@ -650,7 +650,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 <div class="callout-content" markdown="block">
 
 无界只说明"没有界"，不能说"趋于无穷大"（数列版的例子见 [无穷大量 ≠ 无界量](#infinite-large)）。
-例：$f(x) = \dfrac{1}{x}\sin\dfrac{1}{x}$（$x \to 0$）。取 $x = \dfrac{1}{2n\pi}$ 时 $f(x) = 0$，而取 $x = \dfrac{1}{2n\pi + \pi/2}$ 时 $\vert{}f(x)\vert{} \to +\infty$，所以它无界，但极限不是 $\infty$。
+例：$f(x) = \dfrac{1}{x}\sin\dfrac{1}{x}$（$x \to 0$）。取 $x = \dfrac{1}{2n\pi}$ 时 $f(x) = 0$，而取 $x = \dfrac{1}{2n\pi + \pi/2}$ 时 $\mid{}f(x)\mid{} \to +\infty$，所以它无界，但极限不是 $\infty$。
 
 </div>
 </details>
@@ -661,7 +661,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 <summary class="callout-title">函数极限的保号性与四则运算</summary>
 <div class="callout-content" markdown="block">
 
-- **保号性**：$\lim\limits_{x \to a} f(x) = A \gt{} B$，取 $\varepsilon = A - B$，则存在 $\delta$，当 $x \in U^{\circ}(a, \delta)$ 时 $\vert{}f(x) - A\vert{} \lt{} A - B$，故 $f(x) \gt{} B$。
+- **保号性**：$\lim\limits_{x \to a} f(x) = A \gt{} B$，取 $\varepsilon = A - B$，则存在 $\delta$，当 $x \in U^{\circ}(a, \delta)$ 时 $\mid{}f(x) - A\mid{} \lt{} A - B$，故 $f(x) \gt{} B$。
 - **保序性**：在 $U^{\circ}(a, \delta)$ 上 $f(x) \ge g(x)$，若 $f \to A,\ g \to B$，则 $A \ge B$。
 - **四则运算**：各自极限存在时才可拆开，且 $B \neq 0$ 时
 
@@ -674,7 +674,7 @@ $$\lim_{x \to a}(f \pm g) = A \pm B,\quad \lim_{x \to a}(f g) = AB,\quad \lim_{x
 
 $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^{n-2} + \cdots + 1}{x^{m-1} + x^{m-2} + \cdots + 1} = \frac{n}{m}$$
 
-**例（证 $\lim\limits_{x \to 2} x^{2} = 4$）**：取 $\vert{}x - 2\vert{} \lt{} 1$，则 $\vert{}x + 2\vert{} \lt{} 5$，于是 $\vert{}x^{2} - 4\vert{} = \vert{}x - 2\vert{}\vert{}x + 2\vert{} \lt{} 5\vert{}x - 2\vert{}$；要它 $\lt{} \varepsilon$ 只需 $\vert{}x - 2\vert{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace 1, \dfrac{\varepsilon}{5}\right\rbrace $。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
+**例（证 $\lim\limits_{x \to 2} x^{2} = 4$）**：取 $\mid{}x - 2\mid{} \lt{} 1$，则 $\mid{}x + 2\mid{} \lt{} 5$，于是 $\mid{}x^{2} - 4\mid{} = \mid{}x - 2\mid{}\mid{}x + 2\mid{} \lt{} 5\mid{}x - 2\mid{}$；要它 $\lt{} \varepsilon$ 只需 $\mid{}x - 2\mid{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace 1, \dfrac{\varepsilon}{5}\right\rbrace $。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
 
 ### 7.4 夹逼与单调收敛（函数版）
 
@@ -749,7 +749,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 <div class="callout-content" markdown="block">
 
 闭区间 $[a, b]$ 上的连续函数必有界。
-**证（反证）**：若无界，则对每个 $n$ 存在 $x_n \in [a, b]$ 使 $\vert{}f(x_n)\vert{} \gt{} n$。由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有子列 $x_{n_k} \to \xi \in [a, b]$，由连续性 $f(x_{n_k}) \to f(\xi)$ 有界，与 $\vert{}f(x_{n_k})\vert{} \gt{} n_k \to \infty$ 矛盾。
+**证（反证）**：若无界，则对每个 $n$ 存在 $x_n \in [a, b]$ 使 $\mid{}f(x_n)\mid{} \gt{} n$。由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有子列 $x_{n_k} \to \xi \in [a, b]$，由连续性 $f(x_{n_k}) \to f(\xi)$ 有界，与 $\mid{}f(x_{n_k})\mid{} \gt{} n_k \to \infty$ 矛盾。
 
 </div>
 </details>
@@ -884,7 +884,7 @@ $$\lim_{\Delta x \to 0^{+}} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} = \lim_{
 </div>
 </details>
 
-**可导的必要条件：连续**。即 $f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。反之不成立（$\vert{}x\vert{}$ 在 $0$ 处连续但不可导）。
+**可导的必要条件：连续**。即 $f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。反之不成立（$\mid{}x\mid{}$ 在 $0$ 处连续但不可导）。
 
 <details class="callout warning" id="derivative-continuity-warning" data-callout="warning" open>
 <summary class="callout-title">导函数不保证连续</summary>
@@ -992,7 +992,7 @@ $$\frac{a^{x} - 1}{x} = \frac{e^{x\ln a} - 1}{x\ln a}\cdot\ln a \longrightarrow 
 <summary class="callout-title">连续的定义</summary>
 <div class="callout-content" markdown="block">
 
-$f$ 在 $x_0$ 处连续 $\iff \lim\limits_{x \to x_0} f(x) = f(x_0)$，即 $\forall \varepsilon \gt{} 0,\ \exists \delta \gt{} 0$，当 $\vert{}x - x_0\vert{} \lt{} \delta$ 时 $\vert{}f(x) - f(x_0)\vert{} \lt{} \varepsilon$。
+$f$ 在 $x_0$ 处连续 $\iff \lim\limits_{x \to x_0} f(x) = f(x_0)$，即 $\forall \varepsilon \gt{} 0,\ \exists \delta \gt{} 0$，当 $\mid{}x - x_0\mid{} \lt{} \delta$ 时 $\mid{}f(x) - f(x_0)\mid{} \lt{} \varepsilon$。
 三个条件：① $x_0$ 处有定义；② $\lim\limits_{x \to x_0} f(x)$ 存在；③ 二者相等。等价表述：$\lim\limits_{\Delta x \to 0} \Delta y = 0$。
 
 </div>
