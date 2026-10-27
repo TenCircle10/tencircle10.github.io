@@ -409,6 +409,16 @@ _INLINE_MATH_RE = re.compile(r"(?<![\\$])\$(?!\$)(.+?)(?<![\\$])\$(?!\$)", re.DO
 _MATH_PLACEHOLDER = "ZMATHPH{}Z"
 
 
+# 块级公式（$$...$$）只做一件事：把尖括号换成 \lt{} / \gt{}。
+# 其它字符（_ # & * % | ~）全部原样透传 —— 数学里它们都有语义，
+# 而且 _ 换成 &#95; 之后，实体里的 & 会被 MathJax 误当对齐符，直接报 Misplaced &。
+# \left< / \right> 里的尖括号是合法定界符，必须排除。
+_DISPLAY_LTGT_RULES: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)<"), r"\\lt{}"),
+    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)>"), r"\\gt{}"),
+]
+
+
 # 行内公式里会被 kramdown 抢先解释的字符 -> LaTeX 转义写法。
 # 每条都用 (?<!\\) 做负向断言，保证对已经转义过的内容幂等。
 #
@@ -513,11 +523,15 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
 
     def display(match: re.Match[str]) -> str:
         counts["math"] += 1
-        # 块级公式同样要做转义：kramdown 会先按 Markdown 解析 $$ 块的内容，
-        # 里面的 < 会被当成 HTML 标签开头，导致 $$ 定界符失效、公式漏成源码。
-        # escape_math_body 里的 & 规则已经删掉（矩阵对齐符不能转），
-        # | 规则已排除 \left| / \right|，_ 规则按需替换，所以对块级是安全的。
-        body = escape_math_body(restore_html_entities(match.group(1)))
+        # 块级公式里【只】把尖括号换成 \lt{} / \gt{}，其它字符一律原样透传。
+        # 原因：kramdown 不解析 $$ 块内部（math_engine 已关），内容原封不动交给 MathJax；
+        # 唯一会让 kramdown 误判的是 < / >（它会当成 HTML 标签开头）。
+        # 千万不要在这里调用 escape_math_body：
+        #   · _ 换成 &#95; 后，&#95; 里的 & 会被 MathJax 当成对齐符 → Misplaced & 崩溃
+        #   · # & * % 在数学里都有语义，转义即破坏
+        body = restore_html_entities(match.group(1))
+        body = _DISPLAY_LTGT_RULES[0][0].sub(_DISPLAY_LTGT_RULES[0][1], body)
+        body = _DISPLAY_LTGT_RULES[1][0].sub(_DISPLAY_LTGT_RULES[1][1], body)
         placeholder = stash("$$" + body + "$$")
         if is_block_math(text, match):
             # 前后各补一个换行，让 kramdown 把它当成独立的公式块
@@ -672,6 +686,11 @@ def convert_links(
         block_id = match.group(1)
         label = (match.group(2) or block_id).strip()
         counts["block_link"] += 1
+        # label 里含公式时改用原生 <a>：kramdown 对 [文本](url) 的 label 会做额外处理，
+        # 里面的 $...$ 经常渲染不出来。注意此时公式已被 protect_math 抽成
+        # ZMATHPHnZ 占位符，所以两种形式都要判断。
+        if "$" in label or "ZMATHPH" in label:
+            return '<a href="#%s">%s</a>' % (block_id, label)
         return "[%s](#%s)" % (label, block_id)
 
     def alias_link(match: re.Match[str]) -> str:
@@ -679,6 +698,8 @@ def convert_links(
         target = resolve_note_target(raw_target, slug_map)
         label = match.group(2).strip()
         counts["wikilink"] += 1
+        if "$" in label or "ZMATHPH" in label:
+            return '<a href="%s%s/">%s</a>' % (url_prefix, target, label)
         return "[%s](%s%s/)" % (label, url_prefix, target)
 
     def plain_link(match: re.Match[str]) -> str:

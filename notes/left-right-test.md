@@ -31,7 +31,7 @@ $$
 块级绝对值与范数：
 
 $$
-\left| \frac{a}{b} \right| + \left\| x \right\|&#95;{2}
+\left| \frac{a}{b} \right| + \left\| x \right\|_{2}
 $$
 
 ## 用户报告的真实公式（行内）
