@@ -591,6 +591,71 @@ console.log(s.position, s.top, s.right);
 | 切换主题评论框不变色 | iframe 还没加载（懒加载，需滚动到可见区）；或 postMessage 报错，看 Console |
 | 留言板和文章评论串了 | 检查映射方式：主页必须 `specific + term`，文章必须 `pathname` |
 
+### 5.7 数学公式渲染崩坏（kramdown 吃掉公式）
+
+公式出问题时，**症状和根因不是一一对应的**，按这张表查：
+
+| 症状 | 根因 | 修法 |
+|---|---|---|
+| **整行公式从中间断开**，后半段变成源码 | **行内公式里有裸 `\|`** —— kramdown 把它当成表格列分隔符，直接切断这一行 | 行内公式里的竖线**全部**要换：`\left\|`→`\left\vert`、`\right\|`→`\right\vert`、`\left\\\|`→`\left\Vert`、独立的 `\\\|`→`\Vert{}`、其余裸 `\|`→`\mid{}`。**块级 `$$...$$` 里不用换**（kramdown 不解析块内） |
+| `Misplaced &` | 块级公式里的 `_` 被转成 `&#95;`，实体中的 `&` 被 MathJax 当成对齐符 | **块级公式只转 `<` `>`**，其余字符（`_ # & * % \| ~`）一律原样透传 |
+| `Missing or unrecognized delimiter for \left` | `\left\{` 被转成 `\left\\{`（`\\` 是换行，不是定界符）；或 `\left\|` 被转成 `\left\mid`（`\mid` 不是 `\left` 的合法定界符） | `\{`→`\lbrace`、`\}`→`\rbrace`、`\|`→`\vert` |
+| 页面上直接显示 `SYNC_MATH_440` | 数学占位符含下划线，被 `clean_link_text` 的 `label.replace("_", "\\_")` 改坏，`restore_math` 再也匹配不上 | 占位符必须是**纯字母数字**（现在用 `ZMATHPH{}Z`） |
+| `$` 定界符失效、公式整段漏成源码 | 块级公式里的 `<` `>` 被 kramdown 当成 HTML 标签开头 | `display()` 分支把 `<`→`\lt{}`、`>`→`\gt{}` |
+| 链接文字里的公式不渲染 | `[文本](url)` 的 label 里的 `$...$` 被 kramdown 干扰 | label 含 `$` 或 `ZMATHPH` 时改用原生 `<a href="...">...</a>` |
+
+#### 为什么行内和块级要区别对待
+
+| | 行内 `$...$` | 块级 `$$...$$` |
+|---|---|---|
+| kramdown 是否解析内部 | **会**（当普通 Markdown 文本处理） | **不会**（`math_engine: ~` 之后原样透传给 MathJax） |
+| 要防 Markdown 斜体/粗体 | 是 → `_` `*` 按需换 `&#95;` `&#42;` | 否 → 原样保留 |
+| 要防表格列分隔 | **是 → `\|` 必须换 `\vert`** | 否 → 原样保留 |
+| 要防 HTML 标签 | 是 → `<` `>` 换 `\lt{}` `\gt{}` | **是 → 这是块级唯一需要处理的** |
+| 要防 `\left` 定界符被拆 | 是 → `\{`→`\lbrace`、`\|`→`\vert` | 否 |
+
+**一句话**：行内公式要"全面武装"（因为它会被 Markdown 解析），块级公式只防尖括号（其余原样）。
+
+#### 调试方法
+
+`restore_math()` 还原前后各查一次占位符残留，发现异常直接告警：
+
+```
+[warn] 有 N 个占位符没能还原（被流水线改坏了）：ZMATHPH123Z
+```
+
+开 `SYNC_DEBUG=1` 还能看到每条公式还原前的占位符数量：
+
+```powershell
+$env:SYNC_DEBUG = '1'
+python sync_notes.py
+$env:SYNC_DEBUG = ''
+```
+
+两个高频自检：
+
+```powershell
+# ① 行内公式里是否还有裸 |（先挖掉 $$ 块，避免误判块级和表格行）
+foreach ($f in Get-ChildItem notes/*.md) {
+  $x = [System.IO.File]::ReadAllText($f.FullName, [System.Text.Encoding]::UTF8)
+  $noDisp = [regex]::Replace($x, '(?s)\$\$.+?\$\$', '<DISP>')
+  foreach ($m in [regex]::Matches($noDisp, '\$[^$\n]+\$')) {
+    $chk = ($m.Value -replace '\\\\', '') -replace '\\\|', ''
+    if ($chk -match '\|') { Write-Output ($f.Name + ' -> ' + $m.Value) }
+  }
+}
+
+# ② 块级公式里是否有 HTML 实体（有就说明误用了 escape_math_body）
+foreach ($f in Get-ChildItem notes/*.md) {
+  $x = [System.IO.File]::ReadAllText($f.FullName, [System.Text.Encoding]::UTF8)
+  foreach ($m in [regex]::Matches($x, '(?s)\$\$(.+?)\$\$')) {
+    if ($m.Groups[1].Value -match '&#') { Write-Output ('块级公式里有实体: ' + $f.Name) }
+  }
+}
+```
+
+> ⚠️ 注意：Markdown **表格行**里的 `|` 是列分隔符，属于正常用法。上面的自检已用 `$$` 挖空 + 只在 `$...$` 内检查，不会误报表格。
+
 ---
 
 ## 附：目录速查
