@@ -12,7 +12,7 @@ render_with_liquid: false
 
 行内带左中括号：$\left[ a + b \right]$
 
-行内带花括号：$\left\lbrace  x \mid x \gt  0 \right\rbrace $
+行内带花括号：$\left\lbrace  x \mid x \gt{} 0 \right\rbrace $
 
 行内绝对值：$\left| x \right|$
 
@@ -37,5 +37,5 @@ $$
 ## 用户报告的真实公式（行内）
 
 - $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{n^{2} + n}\right)^{n} = \lim\limits_{n \to \infty}\left[\left(1 + \dfrac{1}{n^{2}+n}\right)^{n^{2}+n}\right]^{\frac{n}{n^{2}+n}} = e^{0} = 1$；
-- $\lim\limits_{n \to \infty} a_n^{b_n} = a^{b}$（$\lim a_n = a \gt  0$，$\lim b_n = b$）
+- $\lim\limits_{n \to \infty} a_n^{b_n} = a^{b}$（$\lim a_n = a \gt{} 0$，$\lim b_n = b$）
 - $\lim\limits_{x \to \infty}\left(1 + \dfrac{\alpha}{x}\right)^{\beta x} = e^{\alpha\beta}$

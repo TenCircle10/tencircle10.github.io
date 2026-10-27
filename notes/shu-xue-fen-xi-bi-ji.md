@@ -73,7 +73,7 @@ $$A \times B = \{(x, y) \mid x \in A,\ y \in B\}$$
 
 数域只需验证**封闭性**（及含 $0, 1$）：交换、结合、分配律从 $\mathbb{C}$ 继承，自动成立。
 
-$\mathbb{Q}$、$\mathbb{R}$ 是有序域；$\mathbb{C}$ **不是**：相容的序下必有 $a^{2} \ge 0$，于是 $-1 = i^{2} \ge 0$ 与 $1 = 1^{2} \gt  0$ 相加得 $0 \ge 1$，矛盾。
+$\mathbb{Q}$、$\mathbb{R}$ 是有序域；$\mathbb{C}$ **不是**：相容的序下必有 $a^{2} \ge 0$，于是 $-1 = i^{2} \ge 0$ 与 $1 = 1^{2} \gt{} 0$ 相加得 $0 \ge 1$，矛盾。
 
 ---
 
@@ -145,9 +145,9 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 设 $E \subset \mathbb{R}$ 且 $E \neq \varnothing$。称 $M$ 为 $E$ 的**上确界**（记 $M = \sup E$），若
 
 1. $M$ 是 $E$ 的上界：$\forall x \in E,\ x \le M$；
-2. $M$ 是**最小**的上界：$\forall \varepsilon \gt  0$，$M - \varepsilon$ 都不是 $E$ 的上界。
+2. $M$ 是**最小**的上界：$\forall \varepsilon \gt{} 0$，$M - \varepsilon$ 都不是 $E$ 的上界。
 
-**下确界**（记 $m = \inf E$）类似：$m$ 是下界，且 $\forall \varepsilon \gt  0$，$m + \varepsilon$ 不是 $E$ 的下界。
+**下确界**（记 $m = \inf E$）类似：$m$ 是下界，且 $\forall \varepsilon \gt{} 0$，$m + \varepsilon$ 不是 $E$ 的下界。
 
 </div>
 </details>
@@ -174,7 +174,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 </div>
 </details>
 
-**实数集"充满"整个数轴**，没有"洞"，对极限封闭。对 $\mathbb{Q}$ 不成立：$S = \lbrace x \in \mathbb{Q} \mid x^{2} \lt  2\rbrace $ 在 $\mathbb{Q}$ 中**没有上确界**（"应该在"的那个位置 $\sqrt{2}$ 不在 $\mathbb{Q}$ 里）；而 $S' = \lbrace x \in \mathbb{R} \mid x^{2} \lt  2\rbrace $ 有界，且 $\sup S' = \sqrt{2}$。
+**实数集"充满"整个数轴**，没有"洞"，对极限封闭。对 $\mathbb{Q}$ 不成立：$S = \lbrace x \in \mathbb{Q} \mid x^{2} \lt{} 2\rbrace $ 在 $\mathbb{Q}$ 中**没有上确界**（"应该在"的那个位置 $\sqrt{2}$ 不在 $\mathbb{Q}$ 里）；而 $S' = \lbrace x \in \mathbb{R} \mid x^{2} \lt{} 2\rbrace $ 有界，且 $\sup S' = \sqrt{2}$。
 
 有最值一定有界，有界不一定有最值（$(0,1)$ 有界但无最值）。
 
@@ -205,7 +205,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 
 ### 3.5 实数的小数表示
 
-把实数按小数截断：$x_n = m + 0.a_1 a_2 \cdots a_n$，则 $0 \le x - x_n \lt  \dfrac{1}{10^{n}}$。于是**任何实数（包括无理数）都是一列有理数的极限**：$\sqrt{2} = 1.4\cdots$ 就是 $1.4,\ 1.41,\ 1.414,\ \dots$ 的极限。
+把实数按小数截断：$x_n = m + 0.a_1 a_2 \cdots a_n$，则 $0 \le x - x_n \lt{} \dfrac{1}{10^{n}}$。于是**任何实数（包括无理数）都是一列有理数的极限**：$\sqrt{2} = 1.4\cdots$ 就是 $1.4,\ 1.41,\ 1.414,\ \dots$ 的极限。
 <a id="decimal-representation"></a>
 
 ---
@@ -214,14 +214,14 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 
 ### 4.1 定义与记号
 
-**数列**：按自然数 $1, 2, 3, \dots$ 编号依次排列的一列数 $x_1, x_2, x_3, \dots$，要点是 ① 无穷 ② 依次排列（即定义在 $\mathbb{N}^{&#42;}$ 上的函数）。**单调增**指 $x_n \le x_{n+1}$；**有界**指既有上界又有下界，等价地 $\exists M \gt  0,\ \forall n,\ \vert x_n\vert  \le M$。
+**数列**：按自然数 $1, 2, 3, \dots$ 编号依次排列的一列数 $x_1, x_2, x_3, \dots$，要点是 ① 无穷 ② 依次排列（即定义在 $\mathbb{N}^{&#42;}$ 上的函数）。**单调增**指 $x_n \le x_{n+1}$；**有界**指既有上界又有下界，等价地 $\exists M \gt{} 0,\ \forall n,\ \vert{}x_n\vert{} \le M$。
 
 <details class="callout definition" id="sequence-limit" data-callout="definition" open>
 <summary class="callout-title">数列极限</summary>
 <div class="callout-content" markdown="block">
 
-$\forall \varepsilon \gt  0$，$\exists N \in \mathbb{N}$，只要 $n \gt  N$ 就有 $\vert a_n - l\vert  \lt  \varepsilon$，则称 $l$ 为 $\lbrace a_n\rbrace $ 的极限，记作 $\lim\limits_{n \to \infty} a_n = l$。
-几何意义：$n \gt  N$ 时 $a_n$ 全部落在 $l$ 的 **$\varepsilon$ 邻域** $U(l, \varepsilon) = (l - \varepsilon, l + \varepsilon)$ 内。
+$\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 就有 $\vert{}a_n - l\vert{} \lt{} \varepsilon$，则称 $l$ 为 $\lbrace a_n\rbrace $ 的极限，记作 $\lim\limits_{n \to \infty} a_n = l$。
+几何意义：$n \gt{} N$ 时 $a_n$ 全部落在 $l$ 的 **$\varepsilon$ 邻域** $U(l, \varepsilon) = (l - \varepsilon, l + \varepsilon)$ 内。
 
 </div>
 </details>
@@ -229,7 +229,7 @@ $\forall \varepsilon \gt  0$，$\exists N \in \mathbb{N}$，只要 $n \gt  N$ �
 **等价的"尾巴"说法**：$\lim\limits_{n \to \infty} a_n = l \iff$ 对 $l$ 的任意 $\varepsilon$ 邻域 $U(l, \varepsilon)$，**只有有限项** $a_n \notin U(l, \varepsilon)$。关键在"只有有限项"：极限只约束**最终**的行为，前面任意有限项都可以乱来。
 <a id="limit-tail"></a>
 
-**如果把"只有有限项在邻域外"改成"有无穷项在邻域外"，对吗？** 不对，两者含义恰好相反：收敛数列对每个邻域外只有有限项（条件不必要）；而满足"有无穷项在外"的数列可以完全不收敛（条件不充分），连无界数列 $n$ 都满足它（取 $l = 1$、$\varepsilon = 1$，$n \gt  2$ 的项全在外）。
+**如果把"只有有限项在邻域外"改成"有无穷项在邻域外"，对吗？** 不对，两者含义恰好相反：收敛数列对每个邻域外只有有限项（条件不必要）；而满足"有无穷项在外"的数列可以完全不收敛（条件不充分），连无界数列 $n$ 都满足它（取 $l = 1$、$\varepsilon = 1$，$n \gt{} 2$ 的项全在外）。
 
 反例：$a_n = (-1)^{n} + \dfrac{1}{n}$，取 $l = 1$、$\varepsilon = \dfrac{1}{2}$。奇数项 $a_{2n-1} = -1 + \dfrac{1}{2n-1} \le 1 - \dfrac{1}{2}$ 全部落在邻域外，有无穷多项；但它不收敛 —— $a_{2n} \to 1$ 而 $a_{2n-1} \to -1$，由极限唯一性 $1 \neq -1$，矛盾。
 
@@ -251,13 +251,13 @@ $$\exists \varepsilon > 0,\ \forall N \in \mathbb{N},\ \exists n > N,\ |a_n - A|
 <div class="callout-content" markdown="block">
 
 - $\varepsilon$ 尽量**放成一次的**，$N$ 才好找；
-- 当"$n \gt $ 某值"时成立，**勿忘 $n \in \mathbb{N}$**（写 $N = \lceil \cdot \rceil$ 比写小数稳妥）；
-- 证明里写清 $\vert a_n - a\vert  \lt  \varepsilon$ 的目标式，一步一步凑到它。
+- 当"$n \gt{}$ 某值"时成立，**勿忘 $n \in \mathbb{N}$**（写 $N = \lceil \cdot \rceil$ 比写小数稳妥）；
+- 证明里写清 $\vert{}a_n - a\vert{} \lt{} \varepsilon$ 的目标式，一步一步凑到它。
 
 </div>
 </details>
 
-**例**：$\lim\limits_{n \to \infty} \dfrac{1}{n} = 0$。对 $\forall \varepsilon \gt  0$，取 $N = \left\lceil \dfrac{1}{\varepsilon} \right\rceil$，当 $n \gt  N$ 时 $\left| \dfrac{1}{n} - 0 \right| = \dfrac{1}{n} \lt  \varepsilon$。
+**例**：$\lim\limits_{n \to \infty} \dfrac{1}{n} = 0$。对 $\forall \varepsilon \gt{} 0$，取 $N = \left\lceil \dfrac{1}{\varepsilon} \right\rceil$，当 $n \gt{} N$ 时 $\left| \dfrac{1}{n} - 0 \right| = \dfrac{1}{n} \lt{} \varepsilon$。
 
 **该记住的常见极限**：
 
@@ -271,34 +271,34 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 <summary class="callout-title">保号性</summary>
 <div class="callout-content" markdown="block">
 
-设 $\lbrace a_n\rbrace $ 收敛，$\lim\limits_{n \to \infty} a_n = A \gt  0$，则存在 $N$，当 $n \gt  N$ 时 $a_n \gt  0$。
-**证**：取 $\varepsilon = A$，存在 $N$，当 $n \gt  N$ 时 $\vert a_n - A\vert  \lt  \varepsilon = A$，故 $a_n \gt  A - \varepsilon = 0$。
+设 $\lbrace a_n\rbrace $ 收敛，$\lim\limits_{n \to \infty} a_n = A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} 0$。
+**证**：取 $\varepsilon = A$，存在 $N$，当 $n \gt{} N$ 时 $\vert{}a_n - A\vert{} \lt{} \varepsilon = A$，故 $a_n \gt{} A - \varepsilon = 0$。
 
 </div>
 </details>
 
-**推论 1**：$\lbrace a_n\rbrace $ 收敛于 $A$，若存在 $N$ 使 $n \gt  N$ 时 $a_n \ge 0$，则 $A \ge 0$。**推论 2**：$\lbrace a_n\rbrace $ 收敛于 $A \gt  0$，则存在 $N$，当 $n \gt  N$ 时 $a_n \ge \dfrac{A}{2}$。
+**推论 1**：$\lbrace a_n\rbrace $ 收敛于 $A$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \ge 0$，则 $A \ge 0$。**推论 2**：$\lbrace a_n\rbrace $ 收敛于 $A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \ge \dfrac{A}{2}$。
 
 <details class="callout theorem" id="order-preserving" data-callout="theorem" open>
 <summary class="callout-title">保序性</summary>
 <div class="callout-content" markdown="block">
 
-设 $\lbrace a_n\rbrace , \lbrace b_n\rbrace $ 收敛，极限分别为 $A, B$。若 $A \gt  B$，则存在 $N$，当 $n \gt  N$ 时 $a_n \gt  b_n$。
-**证**：取 $\varepsilon = \dfrac{A - B}{2} \gt  0$。由 $a_n \to A$ 得 $n \gt  N_1$ 时 $a_n \gt  A - \varepsilon = \dfrac{A + B}{2}$；由 $b_n \to B$ 得 $n \gt  N_2$ 时 $b_n \lt  B + \varepsilon = \dfrac{A + B}{2}$。取 $N = \max\lbrace N_1, N_2\rbrace $，当 $n \gt  N$ 时 $b_n \lt  \dfrac{A+B}{2} \lt  a_n$。
+设 $\lbrace a_n\rbrace , \lbrace b_n\rbrace $ 收敛，极限分别为 $A, B$。若 $A \gt{} B$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} b_n$。
+**证**：取 $\varepsilon = \dfrac{A - B}{2} \gt{} 0$。由 $a_n \to A$ 得 $n \gt{} N_1$ 时 $a_n \gt{} A - \varepsilon = \dfrac{A + B}{2}$；由 $b_n \to B$ 得 $n \gt{} N_2$ 时 $b_n \lt{} B + \varepsilon = \dfrac{A + B}{2}$。取 $N = \max\lbrace N_1, N_2\rbrace $，当 $n \gt{} N$ 时 $b_n \lt{} \dfrac{A+B}{2} \lt{} a_n$。
 
 </div>
 </details>
 
-**推论 3**：$\lbrace a_n\rbrace , \lbrace b_n\rbrace $ 收敛于 $A, B$，若存在 $N$ 使 $n \gt  N$ 时 $a_n \le b_n$，则 $A \le B$。
+**推论 3**：$\lbrace a_n\rbrace , \lbrace b_n\rbrace $ 收敛于 $A, B$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \le b_n$，则 $A \le B$。
 
-**思考**：把 $A \gt  B$ 换成 $A \ge B$，还能得到"存在 $N$，当 $n \gt  N$ 时 $a_n \ge b_n$"吗？不能，反例 $a_n = 0,\ b_n = \dfrac{1}{n}$：此时 $A = B = 0$，但 $a_n \lt  b_n$ 对一切 $n$ 成立。严格的大小关系在取极限后会被"抹平"。
+**思考**：把 $A \gt{} B$ 换成 $A \ge B$，还能得到"存在 $N$，当 $n \gt{} N$ 时 $a_n \ge b_n$"吗？不能，反例 $a_n = 0,\ b_n = \dfrac{1}{n}$：此时 $A = B = 0$，但 $a_n \lt{} b_n$ 对一切 $n$ 成立。严格的大小关系在取极限后会被"抹平"。
 
 <details class="callout warning" data-callout="warning" open>
 <summary class="callout-title">$a_n \le b_n$ 推不出"$a_n \le B$"</summary>
 <div class="callout-content" markdown="block">
 
-已知 $a_n \le b_n\ (n \gt  N)$、$\lbrace a_n\rbrace  \to A$、$\lbrace b_n\rbrace  \to B$，能得到的只有 $A \le B$；**得不到**"存在 $N$，当 $n \gt  N$ 时 $a_n \le B$"。
-反例：$a_n = b_n = \dfrac{1}{n}$，则 $A = B = 0$，但 $a_n = \dfrac{1}{n} \gt  0 = B$ 对一切 $n$ 成立。
+已知 $a_n \le b_n\ (n \gt{} N)$、$\lbrace a_n\rbrace  \to A$、$\lbrace b_n\rbrace  \to B$，能得到的只有 $A \le B$；**得不到**"存在 $N$，当 $n \gt{} N$ 时 $a_n \le B$"。
+反例：$a_n = b_n = \dfrac{1}{n}$，则 $A = B = 0$，但 $a_n = \dfrac{1}{n} \gt{} 0 = B$ 对一切 $n$ 成立。
 
 </div>
 </details>
@@ -331,11 +331,11 @@ $\lim a_n = a$ 与 $\lim b_n = b$ **都存在**时才能拆开运算，而且只
 </div>
 </details>
 
-**证**：分两种情形。若 $a = 0$，由 $a_n \to 0$，$\forall \varepsilon \gt  0$ 当 $n$ 充分大时 $0 \le a_n \lt  \varepsilon^{2}$，于是 $\sqrt{a_n} \lt  \varepsilon$。若 $a \gt  0$，$n$ 充分大时 $a_n \gt  \dfrac{a}{2} \gt  0$，且
+**证**：分两种情形。若 $a = 0$，由 $a_n \to 0$，$\forall \varepsilon \gt{} 0$ 当 $n$ 充分大时 $0 \le a_n \lt{} \varepsilon^{2}$，于是 $\sqrt{a_n} \lt{} \varepsilon$。若 $a \gt{} 0$，$n$ 充分大时 $a_n \gt{} \dfrac{a}{2} \gt{} 0$，且
 
 $$|\sqrt{a_n} - \sqrt{a}| = \frac{|a_n - a|}{\sqrt{a_n} + \sqrt{a}} \le \frac{|a_n - a|}{\sqrt{a}} \to 0$$
 
-注意别把取完极限的分母提前代入写成 $\dfrac{0 \cdot \vert a_n - a\vert }{2\sqrt a}$；要保留上界 $\dfrac{\vert a_n - a\vert }{\sqrt a}$，再由 $a_n \to a$ 得结论。
+注意别把取完极限的分母提前代入写成 $\dfrac{0 \cdot \vert{}a_n - a\vert{}}{2\sqrt a}$；要保留上界 $\dfrac{\vert{}a_n - a\vert{}}{\sqrt a}$，再由 $a_n \to a$ 得结论。
 
 **两道"分母有理化"的题**：
 
@@ -351,12 +351,12 @@ $$\lim_{n \to \infty} \frac{5^{n+1} - (-2)^{n}}{3 \times 5^{n} + 2 \times 3^{n}}
 <summary class="callout-title">夹逼定理</summary>
 <div class="callout-content" markdown="block">
 
-若存在 $N$，当 $n \gt  N$ 时 $c_n \le a_n \le b_n$，且 $\lim\limits_{n \to \infty} b_n = \lim\limits_{n \to \infty} c_n = l$，则 $\lim\limits_{n \to \infty} a_n = l$。
+若存在 $N$，当 $n \gt{} N$ 时 $c_n \le a_n \le b_n$，且 $\lim\limits_{n \to \infty} b_n = \lim\limits_{n \to \infty} c_n = l$，则 $\lim\limits_{n \to \infty} a_n = l$。
 
 </div>
 </details>
 
-技巧：可以构造**常数列**来夹逼。常用结论（$a, b \gt  0$）：
+技巧：可以构造**常数列**来夹逼。常用结论（$a, b \gt{} 0$）：
 
 $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to \infty} \sqrt[n]{a^{n} + k b^{n}} = \max\{a, b\}\ \ (k > 0)$$
 
@@ -371,7 +371,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 </div>
 </details>
 
-**证明**：设 $\lbrace x_n\rbrace $ 单调增且有上界，由 [上确界](#sup-inf-def) 与 [确界原理](#completeness)，记 $a = \sup\lbrace x_n\rbrace $。对任意 $\varepsilon \gt  0$，$a - \varepsilon$ 不再是上界，故存在 $N$ 使 $x_N \gt  a - \varepsilon$。由单调性，当 $n \gt  N$ 时 $a - \varepsilon \lt  x_N \le x_n \le a \lt  a + \varepsilon$，即 $\vert x_n - a\vert  \lt  \varepsilon$，故 $x_n \to a$。
+**证明**：设 $\lbrace x_n\rbrace $ 单调增且有上界，由 [上确界](#sup-inf-def) 与 [确界原理](#completeness)，记 $a = \sup\lbrace x_n\rbrace $。对任意 $\varepsilon \gt{} 0$，$a - \varepsilon$ 不再是上界，故存在 $N$ 使 $x_N \gt{} a - \varepsilon$。由单调性，当 $n \gt{} N$ 时 $a - \varepsilon \lt{} x_N \le x_n \le a \lt{} a + \varepsilon$，即 $\vert{}x_n - a\vert{} \lt{} \varepsilon$，故 $x_n \to a$。
 
 <details class="callout tip" data-callout="tip" open>
 <summary class="callout-title">直观记法（保留自己的话）</summary>
@@ -382,16 +382,16 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 </div>
 </details>
 
-**例 1：Euler 常数 $\gamma$ 存在。** 记 $c_n = 1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n} - \ln n$，用不等式 $\dfrac{1}{n+1} \lt  \ln\!\left(1 + \dfrac{1}{n}\right) \lt  \dfrac{1}{n}$：
+**例 1：Euler 常数 $\gamma$ 存在。** 记 $c_n = 1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n} - \ln n$，用不等式 $\dfrac{1}{n+1} \lt{} \ln\!\left(1 + \dfrac{1}{n}\right) \lt{} \dfrac{1}{n}$：
 
-- **单调减**：$c_{n+1} - c_n = \dfrac{1}{n+1} - \ln\!\left(1 + \dfrac{1}{n}\right) \lt  0$；
-- **有下界**：$\ln n = \sum_{k=1}^{n-1} \ln\!\left(1 + \dfrac{1}{k}\right) \lt  \sum_{k=1}^{n-1} \dfrac{1}{k} \lt  1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n}$，故 $c_n \gt  0$。
+- **单调减**：$c_{n+1} - c_n = \dfrac{1}{n+1} - \ln\!\left(1 + \dfrac{1}{n}\right) \lt{} 0$；
+- **有下界**：$\ln n = \sum_{k=1}^{n-1} \ln\!\left(1 + \dfrac{1}{k}\right) \lt{} \sum_{k=1}^{n-1} \dfrac{1}{k} \lt{} 1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n}$，故 $c_n \gt{} 0$。
 
 由 [单调有界定理](#monotone-bounded)，$c_n$ 收敛，其极限记为 **Euler 常数 $\gamma$**。
 
-**例 2：$x_{n+1} = x_n(1 - x_n)$。** 设 $0 \lt  x_1 \lt  1$，证明 (1) $\lbrace x_n\rbrace $ 收敛；(2) $\lim\limits_{n \to \infty} n x_n = 1$。
+**例 2：$x_{n+1} = x_n(1 - x_n)$。** 设 $0 \lt{} x_1 \lt{} 1$，证明 (1) $\lbrace x_n\rbrace $ 收敛；(2) $\lim\limits_{n \to \infty} n x_n = 1$。
 
-(1) $0 \lt  x_{n+1} \lt  x_n \lt  1$（因 $0 \lt  1 - x_n \lt  1$），单调减且有下界 $0$，故收敛；设极限为 $a$，则 $a = a(1 - a) \Rightarrow a = 0$。
+(1) $0 \lt{} x_{n+1} \lt{} x_n \lt{} 1$（因 $0 \lt{} 1 - x_n \lt{} 1$），单调减且有下界 $0$，故收敛；设极限为 $a$，则 $a = a(1 - a) \Rightarrow a = 0$。
 
 (2) 记 $y_n = \dfrac{1}{x_n}$，则 $y_{n+1} = \dfrac{y_n}{1 - x_n}$，于是 $y_{n+1} - y_n = \dfrac{1}{x_n}\left(\dfrac{1}{1 - x_n} - 1\right) = \dfrac{1}{1 - x_n} \longrightarrow 1$。由 [Stolz 定理](#stolz)，$\dfrac{y_n}{n} \to 1$，即 $n x_n \to 1$。
 
@@ -437,18 +437,18 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 <summary class="callout-title">有界 $\times$ 无穷小 $=$ 无穷小</summary>
 <div class="callout-content" markdown="block">
 
-若 $\lim\limits_{n \to \infty} a_n = 0$ 且 $\vert b_n\vert  \le M$，则 $\lim\limits_{n \to \infty} a_n b_n = 0$。
+若 $\lim\limits_{n \to \infty} a_n = 0$ 且 $\vert{}b_n\vert{} \le M$，则 $\lim\limits_{n \to \infty} a_n b_n = 0$。
 
 </div>
 </details>
 
-同号无穷大量之和仍是无穷大量；无穷大量 $\pm$ 有界量仍是无穷大量（按 $\vert a_n\vert  \to \infty$ 的意义；若 $a_n \to +\infty$ 则 $a_n + b_n \to +\infty$）。
+同号无穷大量之和仍是无穷大量；无穷大量 $\pm$ 有界量仍是无穷大量（按 $\vert{}a_n\vert{} \to \infty$ 的意义；若 $a_n \to +\infty$ 则 $a_n + b_n \to +\infty$）。
 
 <details class="callout warning" id="infinite-large" data-callout="warning" open>
 <summary class="callout-title">无穷大量 $\neq$ 无界量</summary>
 <div class="callout-content" markdown="block">
 
-无穷大量要求 $\vert a_n\vert  \to +\infty$（整条数列都跑向无穷），无界量只要求"没有界"。
+无穷大量要求 $\vert{}a_n\vert{} \to +\infty$（整条数列都跑向无穷），无界量只要求"没有界"。
 例：$n$ 与 $\big((-1)^{n} + 1\big)n$。前者是无穷大量；后者无界（偶数项为 $0$，奇数项为 $2n$），但不是无穷大量。
 
 </div>
@@ -462,7 +462,7 @@ $$\sqrt[n]{n} = \sqrt[n]{\sqrt{n}\cdot\sqrt{n}\cdot 1 \cdots 1} \le \frac{2\sqrt
 
 又 $\sqrt[n]{n} \ge 1$，夹逼得极限为 $1$。
 
-**$\lim\limits_{n \to \infty} \sqrt[n]{n!} = +\infty$**：对 $k \gt  \frac{n}{2}$ 有 $k \ge \frac{n}{2}$，这样的因子至少 $\frac{n}{2}$ 个，故
+**$\lim\limits_{n \to \infty} \sqrt[n]{n!} = +\infty$**：对 $k \gt{} \frac{n}{2}$ 有 $k \ge \frac{n}{2}$，这样的因子至少 $\frac{n}{2}$ 个，故
 
 $$n! \ge \left(\frac{n}{2}\right)^{n/2} \quad \Longrightarrow \quad \sqrt[n]{n!} \ge \left(\frac{n}{2}\right)^{1/2} \to +\infty$$
 
@@ -496,13 +496,13 @@ $$\left(1 + \frac{1}{n}\right)^{n} = 1 + 1 + \sum_{k=2}^{n} \frac{1}{k!}\left(1 
 
 $$\left(1 + \frac{1}{n+1}\right)^{n+1} = 1 + 1 + \sum_{k=2}^{n} \frac{1}{k!}\left(1 - \frac{1}{n+1}\right)\cdots\left(1 - \frac{k-1}{n+1}\right) + \left(\frac{1}{n+1}\right)^{n+1}$$
 
-逐项比对（因子满足 $1 - \frac{j}{n+1} \gt  1 - \frac{j}{n}$，且第二式还多了正项），得 $\left(1 + \frac{1}{n}\right)^{n} \lt  \left(1 + \frac{1}{n+1}\right)^{n+1}$。
+逐项比对（因子满足 $1 - \frac{j}{n+1} \gt{} 1 - \frac{j}{n}$，且第二式还多了正项），得 $\left(1 + \frac{1}{n}\right)^{n} \lt{} \left(1 + \frac{1}{n+1}\right)^{n+1}$。
 
 **② 有界**：
 
 $$\left(1 + \frac{1}{n}\right)^{n} < 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \cdots + \frac{1}{n!} < 1 + 1 + \frac{1}{2!} + \frac{1}{3\times2} + \frac{1}{4\times3} + \cdots + \frac{1}{n(n-1)}$$
 
-而 $1 + 1 + \dfrac{1}{2!} + \displaystyle\sum_{k=3}^{n} \frac{1}{k(k-1)} = 2 + \frac{1}{2} + \left(\frac{1}{2} - \frac{1}{n}\right) = 3 - \frac{1}{n} \lt  3$，故有上界。
+而 $1 + 1 + \dfrac{1}{2!} + \displaystyle\sum_{k=3}^{n} \frac{1}{k(k-1)} = 2 + \frac{1}{2} + \left(\frac{1}{2} - \frac{1}{n}\right) = 3 - \frac{1}{n} \lt{} 3$，故有上界。
 
 由 [单调有界定理](#monotone-bounded)，极限存在，记为 $e$。
 
@@ -528,7 +528,7 @@ $n$ 越大，所得的界越精确。
 </div>
 </details>
 
-**证法一（拉格朗日中值定理）**：对 $0 \lt  a \lt  b$，$n \in \mathbb{N}^{&#42;}$，用 $f(x) = x^{n+1}$ 得 $(n+1)a^{n} \lt  \dfrac{b^{n+1} - a^{n+1}}{b - a} \lt  (n+1)b^{n}$；取 $a = 1 + \dfrac{1}{n+1}$、$b = 1 + \dfrac{1}{n}$ 即得。
+**证法一（拉格朗日中值定理）**：对 $0 \lt{} a \lt{} b$，$n \in \mathbb{N}^{&#42;}$，用 $f(x) = x^{n+1}$ 得 $(n+1)a^{n} \lt{} \dfrac{b^{n+1} - a^{n+1}}{b - a} \lt{} (n+1)b^{n}$；取 $a = 1 + \dfrac{1}{n+1}$、$b = 1 + \dfrac{1}{n}$ 即得。
 
 **证法二（初等解法，AM–GM）**：
 
@@ -551,7 +551,7 @@ $$e = \lim_{n \to \infty} \sum_{k=0}^{n} \frac{1}{k!}$$
 </div>
 </details>
 
-**两边夹**：一方面，5.1 的 ② 已证 $\left(1 + \frac{1}{n}\right)^{n} \lt  \sum_{k=0}^{n} \frac{1}{k!}$，故 $e \le \lim\limits_{n \to \infty} \sum\limits_{k=0}^{n} \frac{1}{k!}$。
+**两边夹**：一方面，5.1 的 ② 已证 $\left(1 + \frac{1}{n}\right)^{n} \lt{} \sum_{k=0}^{n} \frac{1}{k!}$，故 $e \le \lim\limits_{n \to \infty} \sum\limits_{k=0}^{n} \frac{1}{k!}$。
 
 另一方面，对**取定**的 $k$，
 
@@ -573,17 +573,17 @@ $$e \cdot q! = \underbrace{\left(1 + 1 + \frac{1}{2!} + \cdots + \frac{1}{q!}\ri
 
 $$0 < r < \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\right)^{2} + \cdots + \left(\frac{1}{q+1}\right)^{n}\right] \le \frac{1}{q}$$
 
-又 $e \in (2, 3)$ 不是整数，故 $q \ge 2$，从而 $0 \lt  r \lt  \dfrac{1}{q} \le \dfrac{1}{2} \lt  1$，与"$r$ 是整数"矛盾。故 $e$ 为无理数。
+又 $e \in (2, 3)$ 不是整数，故 $q \ge 2$，从而 $0 \lt{} r \lt{} \dfrac{1}{q} \le \dfrac{1}{2} \lt{} 1$，与"$r$ 是整数"矛盾。故 $e$ 为无理数。
 
 </div>
 </details>
 
 ### 5.5 与 $e$ 有关的几个极限
 
-若 $p_n \gt  0$ 是正无穷大量，则 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{p_n}\right)^{p_n} = e$。**证**：由 $\left(1+\frac1n\right)^n \to e$，$\exists N_1$ 使 $n \gt  N_1$ 时 $\left|\left(1+\frac1n\right)^n - e\right| \lt  \varepsilon$；又 $p_n \to +\infty$，$\exists N_2$ 使 $n \gt  N_2$ 时 $p_n \gt  N_1$，故 $n \gt  N_2$ 时 $\left|\left(1+\frac{1}{p_n}\right)^{p_n} - e\right| \lt  \varepsilon$。
+若 $p_n \gt{} 0$ 是正无穷大量，则 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{p_n}\right)^{p_n} = e$。**证**：由 $\left(1+\frac1n\right)^n \to e$，$\exists N_1$ 使 $n \gt{} N_1$ 时 $\left|\left(1+\frac1n\right)^n - e\right| \lt{} \varepsilon$；又 $p_n \to +\infty$，$\exists N_2$ 使 $n \gt{} N_2$ 时 $p_n \gt{} N_1$，故 $n \gt{} N_2$ 时 $\left|\left(1+\frac{1}{p_n}\right)^{p_n} - e\right| \lt{} \varepsilon$。
 
 - $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{n^{2} + n}\right)^{n} = \lim\limits_{n \to \infty}\left[\left(1 + \dfrac{1}{n^{2}+n}\right)^{n^{2}+n}\right]^{\frac{n}{n^{2}+n}} = e^{0} = 1$；
-- $\lim\limits_{n \to \infty} a_n^{b_n} = a^{b}$（$\lim a_n = a \gt  0$，$\lim b_n = b$）：由 $\lim\limits_{n \to \infty} e^{b_n \ln a_n} = e^{b \ln a} = a^{b}$；
+- $\lim\limits_{n \to \infty} a_n^{b_n} = a^{b}$（$\lim a_n = a \gt{} 0$，$\lim b_n = b$）：由 $\lim\limits_{n \to \infty} e^{b_n \ln a_n} = e^{b \ln a} = a^{b}$；
 - $\lim\limits_{x \to \infty}\left(1 + \dfrac{\alpha}{x}\right)^{\beta x} = e^{\alpha\beta}$（函数版推广，见下章）。
 
 ---
@@ -594,7 +594,7 @@ $X$ 是**定义域**，$f(X) = \lbrace f(x) \mid x \in X\rbrace $ 是**值域**�
 
 | 名称 | 定义 | 备注 |
 | --- | --- | --- |
-| 符号函数 | $\operatorname{sgn} x = 1\ (x\gt 0),\ 0\ (x=0),\ -1\ (x\lt 0)$ | 分段常值，$x = 0$ 处不连续 |
+| 符号函数 | $\operatorname{sgn} x = 1\ (x\gt{}0),\ 0\ (x=0),\ -1\ (x\lt{}0)$ | 分段常值，$x = 0$ 处不连续 |
 | Dirichlet 函数 | $D(x) = 1\ (x \in \mathbb{Q}),\ 0\ (x \in \mathbb{Q}^{c})$ | 每个有理数都是周期，无最小正周期 |
 | 双曲正弦/余弦 | $\operatorname{sh} x = \dfrac{e^{x} - e^{-x}}{2}$，$\operatorname{ch} x = \dfrac{e^{x} + e^{-x}}{2}$ | $\operatorname{ch}^{2} x - \operatorname{sh}^{2} x = 1$；$\operatorname{ch}' x = \operatorname{sh} x$，$\operatorname{sh}' x = \operatorname{ch} x$ |
 
@@ -612,7 +612,7 @@ $X$ 是**定义域**，$f(X) = \lbrace f(x) \mid x \in X\rbrace $ 是**值域**�
 <div class="callout-content" markdown="block">
 
 **空心（去心）邻域**：$(x_0 - \delta, x_0 + \delta) \setminus \lbrace x_0\rbrace $，记 $U^{\circ}(x_0, \delta)$。
-**极限**：$\forall \varepsilon \gt  0,\ \exists \delta \gt  0$，当 $0 \lt  \vert x - x_0\vert  \lt  \delta$ 时 $\vert f(x) - L\vert  \lt  \varepsilon$，记 $\lim\limits_{x \to x_0} f(x) = L$。
+**极限**：$\forall \varepsilon \gt{} 0,\ \exists \delta \gt{} 0$，当 $0 \lt{} \vert{}x - x_0\vert{} \lt{} \delta$ 时 $\vert{}f(x) - L\vert{} \lt{} \varepsilon$，记 $\lim\limits_{x \to x_0} f(x) = L$。
 
 - $\varepsilon$ 任选、$\delta$ 随 $\varepsilon$ 变动，动态地描述"要多小有多小"；
 - $\triangle$ **不要求 $f$ 在 $x_0$ 处有定义**。
@@ -622,7 +622,7 @@ $X$ 是**定义域**，$f(X) = \lbrace f(x) \mid x \in X\rbrace $ 是**值域**�
 
 **单侧极限**：在 $(x_0, x_0 + \delta)$ 或 $(x_0 - \delta, x_0)$ 上讨论，$\lim\limits_{x \to x_0} f(x) = L \iff \lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = L$。
 
-**在无穷远处的极限**：设 $f$ 在 $(-\infty, A) \cup (B, +\infty)$ 上有定义，若 $\forall \varepsilon \gt  0,\ \exists M \gt  0$，当 $\vert x\vert  \gt  M$ 时 $\vert f(x) - L\vert  \lt  \varepsilon$，则记 $\lim\limits_{x \to \infty} f(x) = L$。
+**在无穷远处的极限**：设 $f$ 在 $(-\infty, A) \cup (B, +\infty)$ 上有定义，若 $\forall \varepsilon \gt{} 0,\ \exists M \gt{} 0$，当 $\vert{}x\vert{} \gt{} M$ 时 $\vert{}f(x) - L\vert{} \lt{} \varepsilon$，则记 $\lim\limits_{x \to \infty} f(x) = L$。
 
 ### 7.2 Heine 定理
 
@@ -640,7 +640,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 ### 7.3 性质
 
 - **唯一性**：极限存在则唯一。
-- **局部有界性**：在某点附近有界（不是整体有界，与 [有界性定理](#boundedness-theorem) 里的"整体有界"对照着看），即 $\exists \delta$，当 $x \in U^{\circ}(x_0, \delta)$ 时 $\vert f(x)\vert  \le M$。
+- **局部有界性**：在某点附近有界（不是整体有界，与 [有界性定理](#boundedness-theorem) 里的"整体有界"对照着看），即 $\exists \delta$，当 $x \in U^{\circ}(x_0, \delta)$ 时 $\vert{}f(x)\vert{} \le M$。
 - **无穷小量**：$\lim\limits_{x \to a} f(x) = 0$ 时称 $f$ 为无穷小量，且 $\lim\limits_{x \to a} f(x) = L \iff \lim\limits_{x \to a} (f(x) - L) = 0$。
 - **有界 $\times$ 无穷小 $=$ 无穷小**：$x \to a$ 时 $\alpha(x) \to 0$，$h(x)$ 有界，则 $\alpha(x)h(x) \to 0$。
 - $\lim\limits_{x \to a} f(x) = \infty \iff \lim\limits_{x \to a} \dfrac{1}{f(x)} = 0$；若 $f(x) \neq 0$，则 $\lim\limits_{x \to a} f(x) = 0 \iff \lim\limits_{x \to a} \dfrac{1}{f(x)} = \infty$。
@@ -650,7 +650,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 <div class="callout-content" markdown="block">
 
 无界只说明"没有界"，不能说"趋于无穷大"（数列版的例子见 [无穷大量 ≠ 无界量](#infinite-large)）。
-例：$f(x) = \dfrac{1}{x}\sin\dfrac{1}{x}$（$x \to 0$）。取 $x = \dfrac{1}{2n\pi}$ 时 $f(x) = 0$，而取 $x = \dfrac{1}{2n\pi + \pi/2}$ 时 $\vert f(x)\vert  \to +\infty$，所以它无界，但极限不是 $\infty$。
+例：$f(x) = \dfrac{1}{x}\sin\dfrac{1}{x}$（$x \to 0$）。取 $x = \dfrac{1}{2n\pi}$ 时 $f(x) = 0$，而取 $x = \dfrac{1}{2n\pi + \pi/2}$ 时 $\vert{}f(x)\vert{} \to +\infty$，所以它无界，但极限不是 $\infty$。
 
 </div>
 </details>
@@ -661,7 +661,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 <summary class="callout-title">函数极限的保号性与四则运算</summary>
 <div class="callout-content" markdown="block">
 
-- **保号性**：$\lim\limits_{x \to a} f(x) = A \gt  B$，取 $\varepsilon = A - B$，则存在 $\delta$，当 $x \in U^{\circ}(a, \delta)$ 时 $\vert f(x) - A\vert  \lt  A - B$，故 $f(x) \gt  B$。
+- **保号性**：$\lim\limits_{x \to a} f(x) = A \gt{} B$，取 $\varepsilon = A - B$，则存在 $\delta$，当 $x \in U^{\circ}(a, \delta)$ 时 $\vert{}f(x) - A\vert{} \lt{} A - B$，故 $f(x) \gt{} B$。
 - **保序性**：在 $U^{\circ}(a, \delta)$ 上 $f(x) \ge g(x)$，若 $f \to A,\ g \to B$，则 $A \ge B$。
 - **四则运算**：各自极限存在时才可拆开，且 $B \neq 0$ 时
 
@@ -674,7 +674,7 @@ $$\lim_{x \to a}(f \pm g) = A \pm B,\quad \lim_{x \to a}(f g) = AB,\quad \lim_{x
 
 $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^{n-2} + \cdots + 1}{x^{m-1} + x^{m-2} + \cdots + 1} = \frac{n}{m}$$
 
-**例（证 $\lim\limits_{x \to 2} x^{2} = 4$）**：取 $\vert x - 2\vert  \lt  1$，则 $\vert x + 2\vert  \lt  5$，于是 $\vert x^{2} - 4\vert  = \vert x - 2\vert \vert x + 2\vert  \lt  5\vert x - 2\vert $；要它 $\lt  \varepsilon$ 只需 $\vert x - 2\vert  \lt  \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace 1, \dfrac{\varepsilon}{5}\right\rbrace $。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
+**例（证 $\lim\limits_{x \to 2} x^{2} = 4$）**：取 $\vert{}x - 2\vert{} \lt{} 1$，则 $\vert{}x + 2\vert{} \lt{} 5$，于是 $\vert{}x^{2} - 4\vert{} = \vert{}x - 2\vert{}\vert{}x + 2\vert{} \lt{} 5\vert{}x - 2\vert{}$；要它 $\lt{} \varepsilon$ 只需 $\vert{}x - 2\vert{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace 1, \dfrac{\varepsilon}{5}\right\rbrace $。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
 
 ### 7.4 夹逼与单调收敛（函数版）
 
@@ -687,7 +687,7 @@ $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^
 </div>
 </details>
 
-**例**：$\lim\limits_{x \to \infty} \dfrac{[x]}{x} = 1$。由 $x - 1 \lt  [x] \le x$，$x \gt  0$ 时 $1 - \dfrac{1}{x} \lt  \dfrac{[x]}{x} \le 1$；$x \lt  0$ 时 $1 - \dfrac{1}{x} \gt  \dfrac{[x]}{x} \ge 1$（除以负数，不等号反向）。两边取极限即得 $1$。
+**例**：$\lim\limits_{x \to \infty} \dfrac{[x]}{x} = 1$。由 $x - 1 \lt{} [x] \le x$，$x \gt{} 0$ 时 $1 - \dfrac{1}{x} \lt{} \dfrac{[x]}{x} \le 1$；$x \lt{} 0$ 时 $1 - \dfrac{1}{x} \gt{} \dfrac{[x]}{x} \ge 1$（除以负数，不等号反向）。两边取极限即得 $1$。
 
 <details class="callout theorem" id="function-monotone" data-callout="theorem" open>
 <summary class="callout-title">单调收敛（单侧）</summary>
@@ -698,7 +698,7 @@ $(a - \delta, a)$ 上单调有界 $\Rightarrow \lim\limits_{x \to a^{-}} f(x)$ �
 </div>
 </details>
 
-**注意 $\triangle$**：双侧不行 —— $f$ 在 $(a - \delta, a + \delta)$ 内单调有界，$\lim\limits_{x \to a} f(x)$ **不一定存在**。例：$f(x) = x\ (0 \lt  x \lt  1)$，$f(x) = 2x\ (1 \le x \lt  2)$，在 $x = 1$ 处左右极限分别是 $1$ 与 $2$。
+**注意 $\triangle$**：双侧不行 —— $f$ 在 $(a - \delta, a + \delta)$ 内单调有界，$\lim\limits_{x \to a} f(x)$ **不一定存在**。例：$f(x) = x\ (0 \lt{} x \lt{} 1)$，$f(x) = 2x\ (1 \le x \lt{} 2)$，在 $x = 1$ 处左右极限分别是 $1$ 与 $2$。
 
 ### 7.5 复合函数与变量替换
 
@@ -714,8 +714,8 @@ $(a - \delta, a)$ 上单调有界 $\Rightarrow \lim\limits_{x \to a^{-}} f(x)$ �
 若 $g(x) \equiv u_0$，相当于只求 $f(u_0)$，但极限的本质是去心邻域，此时不能直接代入。常见推论：
 
 - $\lim\limits_{x \to \infty} \operatorname{sgn}\!\left(\dfrac{1}{x^{2}}\right) = \lim\limits_{u \to 0^{+}} \operatorname{sgn}(u) = 1$；
-- $\lim\limits_{x \to x_0} f(x) = A \Rightarrow \lim\limits_{x \to x_0} e^{f(x)} = e^{A}$；若 $A \gt  0$，则 $\lim\limits_{x \to x_0} \ln f(x) = \ln A$；
-- $\lim\limits_{x \to x_0} f(x)^{g(x)} = A^{B}$（$A \gt  0$）。
+- $\lim\limits_{x \to x_0} f(x) = A \Rightarrow \lim\limits_{x \to x_0} e^{f(x)} = e^{A}$；若 $A \gt{} 0$，则 $\lim\limits_{x \to x_0} \ln f(x) = \ln A$；
+- $\lim\limits_{x \to x_0} f(x)^{g(x)} = A^{B}$（$A \gt{} 0$）。
 
 ### 7.6 两个重要极限
 
@@ -736,7 +736,7 @@ $$\lim_{x \to 0} \frac{\sin x}{x} = 1, \qquad \lim_{x \to \infty}\left(1 + \frac
 - $\lim\limits_{x \to 0^{+}}\left(1 + \dfrac{1}{x}\right)^{x} = \lim\limits_{t \to +\infty} (1 + t)^{\frac{1}{t}} = e^{\lim\limits_{t \to +\infty} \frac{\ln(1+t)}{t}} = e^{0} = 1$；
 - $\lim\limits_{x \to \infty} x^{\frac{1}{x}} = 1$，$\lim\limits_{x \to 0^{+}} x^{x} = 1$。
 
-**草稿：$\ln(1+t)/t \to 0$ 的放缩**。用 $\ln(1 + x) \lt  x$ 与 $\ln(1 + t) = 2\ln\sqrt{1+t} \lt  2(\sqrt{1+t} - 1)$：
+**草稿：$\ln(1+t)/t \to 0$ 的放缩**。用 $\ln(1 + x) \lt{} x$ 与 $\ln(1 + t) = 2\ln\sqrt{1+t} \lt{} 2(\sqrt{1+t} - 1)$：
 
 $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t} + 1} \to 0$$
 
@@ -749,14 +749,14 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 <div class="callout-content" markdown="block">
 
 闭区间 $[a, b]$ 上的连续函数必有界。
-**证（反证）**：若无界，则对每个 $n$ 存在 $x_n \in [a, b]$ 使 $\vert f(x_n)\vert  \gt  n$。由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有子列 $x_{n_k} \to \xi \in [a, b]$，由连续性 $f(x_{n_k}) \to f(\xi)$ 有界，与 $\vert f(x_{n_k})\vert  \gt  n_k \to \infty$ 矛盾。
+**证（反证）**：若无界，则对每个 $n$ 存在 $x_n \in [a, b]$ 使 $\vert{}f(x_n)\vert{} \gt{} n$。由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有子列 $x_{n_k} \to \xi \in [a, b]$，由连续性 $f(x_{n_k}) \to f(\xi)$ 有界，与 $\vert{}f(x_{n_k})\vert{} \gt{} n_k \to \infty$ 矛盾。
 
 </div>
 </details>
 
 ### 8.1 最值定理
 
-设 $f$ 在 $[a, b]$ 上连续，则 $f([a, b])$ 有上、下确界。以最小值为例，设下确界为 $m$，由 [确界](#sup-inf-def) 的定义，存在 $\lbrace x_n\rbrace  \subset [a, b]$ 使 $m \le f(x_n) \lt  m + \dfrac{1}{n}$，故 $f(x_n) \to m$。
+设 $f$ 在 $[a, b]$ 上连续，则 $f([a, b])$ 有上、下确界。以最小值为例，设下确界为 $m$，由 [确界](#sup-inf-def) 的定义，存在 $\lbrace x_n\rbrace  \subset [a, b]$ 使 $m \le f(x_n) \lt{} m + \dfrac{1}{n}$，故 $f(x_n) \to m$。
 
 <details class="callout theorem" id="extreme-value" data-callout="theorem" open>
 <summary class="callout-title">最值定理</summary>
@@ -774,7 +774,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 <summary class="callout-title">介值定理（零点存在定理）</summary>
 <div class="callout-content" markdown="block">
 
-若 $f$ 在 $[a, b]$ 上连续，$f(a)f(b) \lt  0$，则存在 $\xi \in (a, b)$ 使 $f(\xi) = 0$。
+若 $f$ 在 $[a, b]$ 上连续，$f(a)f(b) \lt{} 0$，则存在 $\xi \in (a, b)$ 使 $f(\xi) = 0$。
 **证明思路**：二分法。不断把含变号的区间对半缩小，构造 [闭区间套](#nested-intervals)，公共点 $\xi$ 处由连续性得 $f(\xi) = 0$。
 
 </div>
@@ -854,11 +854,11 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 
 ### 10.3 综合例：$\dfrac{(n!)^{\alpha}}{n^{n}}$ 的极限
 
-**当 $\alpha \gt  1$ 时，极限为 $+\infty$。** 看相邻两项之比：
+**当 $\alpha \gt{} 1$ 时，极限为 $+\infty$。** 看相邻两项之比：
 
 $$\frac{\frac{((n+1)!)^{\alpha}}{(n+1)^{n+1}}}{\frac{(n!)^{\alpha}}{n^{n}}} = \frac{(n+1)^{\alpha-1}}{\left(1 + \frac{1}{n}\right)^{n}} \longrightarrow \frac{(n+1)^{\alpha-1}}{e} \longrightarrow +\infty$$
 
-比值趋于 $+\infty$，故数列本身趋于 $+\infty$（$\alpha \gt  1$ 时分子是 $n$ 的正幂次，压过常数 $e$）。
+比值趋于 $+\infty$，故数列本身趋于 $+\infty$（$\alpha \gt{} 1$ 时分子是 $n$ 的正幂次，压过常数 $e$）。
 
 **当 $\alpha \le 1$ 时，极限为 $0$。** 此时 $(n!)^{\alpha} \le n!$（因 $n! \ge 1$），故
 
@@ -884,7 +884,7 @@ $$\lim_{\Delta x \to 0^{+}} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} = \lim_{
 </div>
 </details>
 
-**可导的必要条件：连续**。即 $f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。反之不成立（$\vert x\vert $ 在 $0$ 处连续但不可导）。
+**可导的必要条件：连续**。即 $f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。反之不成立（$\vert{}x\vert{}$ 在 $0$ 处连续但不可导）。
 
 <details class="callout warning" id="derivative-continuity-warning" data-callout="warning" open>
 <summary class="callout-title">导函数不保证连续</summary>
@@ -943,7 +943,7 @@ $$\left(f^{-1}\right)'(y) = \frac{1}{f'(x)} = \frac{1}{f'\big(f^{-1}(y)\big)}$$
 
 **隐函数求导**：设 $f(x, y) = 0$ 确定了 $x \mapsto y$ 的规则。当 $y$ 难以被 $x$ 显式表示时，把 $y$ 看成 $x$ 的函数、两边对 $x$ 求导，再解出 $y'$，就能研究 $y$ 的变化率。
 
-**对数求导法 / 幂指函数**：对 $y = u(x)^{v(x)}$（$u \gt  0$，$u, v$ 可导），取对数 $\ln y = v\ln u$，两边求导得 $\dfrac{y'}{y} = v'\ln u + \dfrac{u'}{u}v$，即
+**对数求导法 / 幂指函数**：对 $y = u(x)^{v(x)}$（$u \gt{} 0$，$u, v$ 可导），取对数 $\ln y = v\ln u$，两边求导得 $\dfrac{y'}{y} = v'\ln u + \dfrac{u'}{u}v$，即
 
 $$y' = u^{v}\left(v'\ln u + \frac{u' v}{u}\right)$$
 
@@ -956,16 +956,16 @@ $$y' = u^{v}\left(v'\ln u + \frac{u' v}{u}\right)$$
 
 $$\frac{dy}{dx} = \frac{1}{\frac{dx}{dy}} = \frac{1}{\cos y} = \frac{1}{\cos(\arcsin x)}$$
 
-由 $\sin(\arcsin x) = x$ 与 $\cos(\arcsin x) = \sqrt{1 - x^{2}}$（$y \in (-\pi/2, \pi/2)$ 上 $\cos y \gt  0$），得 $(\arcsin x)' = \dfrac{1}{\sqrt{1 - x^{2}}}$。
+由 $\sin(\arcsin x) = x$ 与 $\cos(\arcsin x) = \sqrt{1 - x^{2}}$（$y \in (-\pi/2, \pi/2)$ 上 $\cos y \gt{} 0$），得 $(\arcsin x)' = \dfrac{1}{\sqrt{1 - x^{2}}}$。
 
 | 函数 | 导数 | 适用范围 |
 | --- | --- | --- |
-| $\arcsin x$ | $\dfrac{1}{\sqrt{1 - x^{2}}}$ | $\lvert x \rvert \lt  1$ |
-| $\arccos x$ | $-\dfrac{1}{\sqrt{1 - x^{2}}}$ | $\lvert x \rvert \lt  1$ |
+| $\arcsin x$ | $\dfrac{1}{\sqrt{1 - x^{2}}}$ | $\lvert x \rvert \lt{} 1$ |
+| $\arccos x$ | $-\dfrac{1}{\sqrt{1 - x^{2}}}$ | $\lvert x \rvert \lt{} 1$ |
 | $\arctan x$ | $\dfrac{1}{1 + x^{2}}$ | $x \in \mathbb{R}$ |
 | $\operatorname{arccot} x$ | $-\dfrac{1}{1 + x^{2}}$ | $x \in \mathbb{R}$ |
-| $\operatorname{arcsec} x$ | $\dfrac{1}{\lvert x \rvert\sqrt{x^{2} - 1}}$ | $\lvert x \rvert \gt  1$ |
-| $\operatorname{arccsc} x$ | $-\dfrac{1}{\lvert x \rvert\sqrt{x^{2} - 1}}$ | $\lvert x \rvert \gt  1$ |
+| $\operatorname{arcsec} x$ | $\dfrac{1}{\lvert x \rvert\sqrt{x^{2} - 1}}$ | $\lvert x \rvert \gt{} 1$ |
+| $\operatorname{arccsc} x$ | $-\dfrac{1}{\lvert x \rvert\sqrt{x^{2} - 1}}$ | $\lvert x \rvert \gt{} 1$ |
 
 辅助式：$\cos(\operatorname{arcsec} x) = \dfrac{1}{x}$，$\sin(\operatorname{arcsec} x) = \dfrac{\sqrt{x^{2} - 1}}{\lvert x \rvert}$。三角恒等式备用：[积化和差 和差化积](/notes/积化和差 和差化积/)。
 <a id="inverse-trig-derivatives"></a>
@@ -992,7 +992,7 @@ $$\frac{a^{x} - 1}{x} = \frac{e^{x\ln a} - 1}{x\ln a}\cdot\ln a \longrightarrow 
 <summary class="callout-title">连续的定义</summary>
 <div class="callout-content" markdown="block">
 
-$f$ 在 $x_0$ 处连续 $\iff \lim\limits_{x \to x_0} f(x) = f(x_0)$，即 $\forall \varepsilon \gt  0,\ \exists \delta \gt  0$，当 $\vert x - x_0\vert  \lt  \delta$ 时 $\vert f(x) - f(x_0)\vert  \lt  \varepsilon$。
+$f$ 在 $x_0$ 处连续 $\iff \lim\limits_{x \to x_0} f(x) = f(x_0)$，即 $\forall \varepsilon \gt{} 0,\ \exists \delta \gt{} 0$，当 $\vert{}x - x_0\vert{} \lt{} \delta$ 时 $\vert{}f(x) - f(x_0)\vert{} \lt{} \varepsilon$。
 三个条件：① $x_0$ 处有定义；② $\lim\limits_{x \to x_0} f(x)$ 存在；③ 二者相等。等价表述：$\lim\limits_{\Delta x \to 0} \Delta y = 0$。
 
 </div>

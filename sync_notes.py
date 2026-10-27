@@ -428,15 +428,16 @@ _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], str]] = [
     # 这样既挡住斜体，又不让生成物里塞满无意义的实体。
     (re.compile(r"(?<![A-Za-z0-9\\])_"), r"&#95;"),
     (re.compile(r"(?<![A-Za-z0-9\\\s])\*"), r"&#42;"),
-    # 下面三条会替换成字母命令（\vert \lt \gt \sim），必须补一个尾随空格；
-    # 否则紧跟字母/数字时 TeX 会把它合并成 \vertb、\ltc、\gtd 这类未定义命令。
-    # 数学模式下空格本身被忽略，所以不会影响渲染间距。
+    # 下面三条会替换成字母命令，用 {} 结尾而不是空格：
+    #   \lt{} \gt{} \vert{} \sim{}
+    # 这样后面紧跟字母/数字时不会被当成更长的命令（\ltepsilon），
+    # 也不会和原文里的空格叠加出双空格。
     # \left< / \right> / \left> / \right< 里的符号是定界符，必须原样保留。
-    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)\|"), r"\\vert "),
-    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)<"), r"\\lt "),
-    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)>"), r"\\gt "),
+    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)\|"), r"\\vert{}"),
+    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)<"), r"\\lt{}"),
+    (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)>"), r"\\gt{}"),
     (re.compile(r"(?<!\\)%"), r"\\%"),
-    (re.compile(r"(?<!\\)~"), r"\\sim "),
+    (re.compile(r"(?<!\\)~"), r"\\sim{}"),
 ]
 
 
