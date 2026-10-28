@@ -8,8 +8,8 @@ render_with_liquid: false
 
 # 线性代数
 
-<details class="callout motivation" data-callout="motivation" open>
-<summary class="callout-title">学习路线（保留自己的话）</summary>
+<details class="callout abstract" data-callout="abstract" open>
+<summary class="callout-title">学习路线</summary>
 <div class="callout-content" markdown="block">
 
 ① **线性过程：先图式化，暂时抛弃形式化**，走"形象 $\to$ 抽象 $\to$ 结构"的路。两条腿：**严格**（写得出证明）、**直观**（画得出图式）。

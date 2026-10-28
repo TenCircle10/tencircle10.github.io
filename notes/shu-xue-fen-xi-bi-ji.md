@@ -575,7 +575,7 @@ $$\left(1 + \frac{1}{n}\right)^{n} \lt{} 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \
 由 [单调有界定理](#monotone-bounded)，极限存在，记为 $e$。
 
 <details class="callout idea" data-callout="idea" open>
-<summary class="callout-title">另一个"很惊人的注意力"（保留）</summary>
+<summary class="callout-title">另一个"很惊人的注意力"</summary>
 <div class="callout-content" markdown="block">
 
 也可以直接看 $(1 + \frac{1}{n})^{n+1}$：它**单调递减**且有下界 $1$，所以也有极限。两条序列刚好从两侧逼近 $e$（见下）。
@@ -611,7 +611,7 @@ $$\sqrt[n+1]{\left(\frac{n}{n+1}\right)^{n+1} \cdot 1} \le \frac{\frac{n}{n+1}(n
 ### 5.3 $e$ 的级数表示
 
 <details class="callout formula" id="e-series" data-callout="formula" open>
-<summary class="callout-title">$e = \sum\limits_{n=0}^{\infty} \frac{1}{n!}$</summary>
+<summary class="callout-title">$e$的级数表示</summary>
 <div class="callout-content" markdown="block">
 
 $$e = \lim_{n \to \infty} \sum_{k=0}^{n} \frac{1}{k!}$$
@@ -697,7 +697,7 @@ $X$ 是**定义域**，$f(X) = \lbrace f(x) \mid x \in X\rbrace $ 是**值域**�
 **极限**：$\forall \varepsilon \gt{} 0,\ \exists \delta \gt{} 0$，当 $0 \lt{} \mid{}x - x_0\mid{} \lt{} \delta$ 时 $\mid{}f(x) - L\mid{} \lt{} \varepsilon$，记 $\lim\limits_{x \to x_0} f(x) = L$。
 
 - $\varepsilon$ 任选、$\delta$ 随 $\varepsilon$ 变动，动态地描述"要多小有多小"；
-- $\triangle$ **不要求 $f$ 在 $x_0$ 处有定义**。
+- **不要求 $f$ 在 $x_0$ 处有定义**。
 
 </div>
 </details>
@@ -799,7 +799,7 @@ $(a - \delta, a)$ 上单调有界 $\Rightarrow \lim\limits_{x \to a^{-}} f(x)$ �
 </div>
 </details>
 
-**注意 $\triangle$**：双侧不行 —— $f$ 在 $(a - \delta, a + \delta)$ 内单调有界，$\lim\limits_{x \to a} f(x)$ **不一定存在**。例：$f(x) = x\ (0 \lt{} x \lt{} 1)$，$f(x) = 2x\ (1 \le x \lt{} 2)$，在 $x = 1$ 处左右极限分别是 $1$ 与 $2$。
+**注意**：双侧不行 —— $f$ 在 $(a - \delta, a + \delta)$ 内单调有界，$\lim\limits_{x \to a} f(x)$ **不一定存在**。例：$f(x) = x\ (0 \lt{} x \lt{} 1)$，$f(x) = 2x\ (1 \le x \lt{} 2)$，在 $x = 1$ 处左右极限分别是 $1$ 与 $2$。
 
 ### 7.5 复合函数与变量替换
 
