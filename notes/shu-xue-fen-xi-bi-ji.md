@@ -27,7 +27,7 @@ render_with_liquid: false
 
 **例子**：$1 \in \lbrace 1\rbrace $，而 $1 \neq \lbrace 1\rbrace $（元素不等于集合）；$\varnothing \subseteq A$ 对任何集合 $A$ 成立（$A$ 允许为空集）。
 
-<details class="callout warning" data-callout="warning" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">一个容易混的符号</summary>
 <div class="callout-content" markdown="block">
 
@@ -181,6 +181,8 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 </div>
 </details>
 
+对 $\mathbb{Q}$ 不成立：$S = \lbrace x \in \mathbb{Q} \mid x^{2} \lt{} 2\rbrace $ 在 $\mathbb{Q}$ 中**没有上确界**（"应该在"的那个位置 $\sqrt{2}$ 不在 $\mathbb{Q}$ 里）；而 $S' = \lbrace x \in \mathbb{R} \mid x^{2} \lt{} 2\rbrace $ 有界，且 $\sup S' = \sqrt{2}$。
+
 <details class="callout understand" data-callout="understand" open>
 <summary class="callout-title">理解</summary>
 <div class="callout-content" markdown="block">
@@ -189,8 +191,6 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 
 </div>
 </details>
-
-对 $\mathbb{Q}$ 不成立：$S = \lbrace x \in \mathbb{Q} \mid x^{2} \lt{} 2\rbrace $ 在 $\mathbb{Q}$ 中**没有上确界**（"应该在"的那个位置 $\sqrt{2}$ 不在 $\mathbb{Q}$ 里）；而 $S' = \lbrace x \in \mathbb{R} \mid x^{2} \lt{} 2\rbrace $ 有界，且 $\sup S' = \sqrt{2}$。
 
 有最值一定有界，有界不一定有最值（$(0,1)$ 有界但无最值）。
 
@@ -241,6 +241,8 @@ $\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 
 
 </div>
 </details>
+
+去掉有限项不改变敛散性，所以极限只约束**尾部**。
 
 <details class="callout definition" id="limit-tail" data-callout="definition" open>
 <summary class="callout-title">数列极限的等价刻画（"有限项"形式）</summary>
@@ -299,10 +301,11 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 <div class="callout-content" markdown="block">
 
 设 $\lbrace a_n\rbrace $ 收敛，$\lim\limits_{n \to \infty} a_n = A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} 0$。
-**证**：取 $\varepsilon = A$，存在 $N$，当 $n \gt{} N$ 时 $\mid{}a_n - A\mid{} \lt{} \varepsilon = A$，故 $a_n \gt{} A - \varepsilon = 0$。
 
 </div>
 </details>
+
+**证**：取 $\varepsilon = A$，存在 $N$，当 $n \gt{} N$ 时 $\mid{}a_n - A\mid{} \lt{} \varepsilon = A$，故 $a_n \gt{} A - \varepsilon = 0$。
 
 **推论 1**：$\lbrace a_n\rbrace $ 收敛于 $A$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \ge 0$，则 $A \ge 0$。**推论 2**：$\lbrace a_n\rbrace $ 收敛于 $A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \ge \dfrac{A}{2}$。
 
@@ -311,10 +314,11 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 <div class="callout-content" markdown="block">
 
 设 $\lbrace a_n\rbrace , \lbrace b_n\rbrace $ 收敛，极限分别为 $A, B$。若 $A \gt{} B$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} b_n$。
-**证**：取 $\varepsilon = \dfrac{A - B}{2} \gt{} 0$。由 $a_n \to A$ 得 $n \gt{} N_1$ 时 $a_n \gt{} A - \varepsilon = \dfrac{A + B}{2}$；由 $b_n \to B$ 得 $n \gt{} N_2$ 时 $b_n \lt{} B + \varepsilon = \dfrac{A + B}{2}$。取 $N = \max\lbrace N_1, N_2\rbrace $，当 $n \gt{} N$ 时 $b_n \lt{} \dfrac{A+B}{2} \lt{} a_n$。
 
 </div>
 </details>
+
+**证**：取 $\varepsilon = \dfrac{A - B}{2} \gt{} 0$。由 $a_n \to A$ 得 $n \gt{} N_1$ 时 $a_n \gt{} A - \varepsilon = \dfrac{A + B}{2}$；由 $b_n \to B$ 得 $n \gt{} N_2$ 时 $b_n \lt{} B + \varepsilon = \dfrac{A + B}{2}$。取 $N = \max\lbrace N_1, N_2\rbrace $，当 $n \gt{} N$ 时 $b_n \lt{} \dfrac{A+B}{2} \lt{} a_n$。
 
 **推论 3**：$\lbrace a_n\rbrace , \lbrace b_n\rbrace $ 收敛于 $A, B$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \le b_n$，则 $A \le B$。
 
@@ -332,8 +336,8 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 
 ### 4.4 四则运算与复合
 
-<details class="callout keypoint" id="limit-arithmetic" data-callout="keypoint" open>
-<summary class="callout-title">什么时候能拆</summary>
+<details class="callout theorem" id="limit-arithmetic" data-callout="theorem" open>
+<summary class="callout-title">四则运算法则（何时能拆）</summary>
 <div class="callout-content" markdown="block">
 
 $\lim a_n = a$ 与 $\lim b_n = b$ **都存在**时才能拆开运算，而且只对**有限次**运算生效。
@@ -370,21 +374,27 @@ $$|\sqrt{a_n} - \sqrt{a}| = \frac{|a_n - a|}{\sqrt{a_n} + \sqrt{a}} \le \frac{|a
 <summary class="callout-title">例 1：分子分母同乘共轭</summary>
 <div class="callout-content" markdown="block">
 
-$$\lim_{n \to \infty} n\left(\sqrt{n^{2}+1} - \sqrt{n^{2}-1}\right) = \lim_{n \to \infty} \frac{2n}{\sqrt{n^{2}+1} + \sqrt{n^{2}-1}} = \lim_{n \to \infty} \frac{2}{\sqrt{1+\frac{1}{n^{2}}} + \sqrt{1-\frac{1}{n^{2}}}} = 1$$
+求 $\lim\limits_{n \to \infty} n\left(\sqrt{n^{2}+1} - \sqrt{n^{2}-1}\right)$。
 
 </div>
 </details>
+
+**解**：
+
+$$\lim_{n \to \infty} n\left(\sqrt{n^{2}+1} - \sqrt{n^{2}-1}\right) = \lim_{n \to \infty} \frac{2n}{\sqrt{n^{2}+1} + \sqrt{n^{2}-1}} = \lim_{n \to \infty} \frac{2}{\sqrt{1+\frac{1}{n^{2}}} + \sqrt{1-\frac{1}{n^{2}}}} = 1$$
 
 <details class="callout example" data-callout="example" open>
 <summary class="callout-title">例 2：同除最大底数 $5^{n}$</summary>
 <div class="callout-content" markdown="block">
 
-$$\lim_{n \to \infty} \frac{5^{n+1} - (-2)^{n}}{3 \times 5^{n} + 2 \times 3^{n}} = \lim_{n \to \infty} \frac{5 - \left(-\frac{2}{5}\right)^{n}}{3 + 2\left(\frac{3}{5}\right)^{n}} = \frac{5}{3}$$
+求 $\lim\limits_{n \to \infty} \dfrac{5^{n+1} - (-2)^{n}}{3 \times 5^{n} + 2 \times 3^{n}}$。
 
 </div>
 </details>
 
-第二题的做法：分子分母同除最大的底数 $5^{n}$，其余项都趋于 $0$。
+**解**：分子分母同除最大的底数 $5^{n}$，其余项都趋于 $0$：
+
+$$\lim_{n \to \infty} \frac{5^{n+1} - (-2)^{n}}{3 \times 5^{n} + 2 \times 3^{n}} = \lim_{n \to \infty} \frac{5 - \left(-\frac{2}{5}\right)^{n}}{3 + 2\left(\frac{3}{5}\right)^{n}} = \frac{5}{3}$$
 
 ### 4.6 夹逼定理
 
@@ -422,6 +432,8 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 
 </div>
 </details>
+
+这种"逐位锁定"只保证收得住，不给出值得多少 —— $\gamma$ 就是这类量。
 
 <details class="callout example" data-callout="example" open>
 <summary class="callout-title">例 1：Euler 常数 $\gamma$ 存在</summary>
@@ -513,7 +525,7 @@ $$\lim_{n \to \infty} \frac{\sum_{i=1}^{n} i^{k}}{n^{k+1}} = \lim_{n \to \infty}
 </div>
 </details>
 
-### 4.11 两个"根号型"极限（补充）
+### 4.11 三个"根号型"极限（补充）
 
 <details class="callout example" data-callout="example" open>
 <summary class="callout-title">三个"根号型"极限</summary>
@@ -611,7 +623,7 @@ $$\sqrt[n+1]{\left(\frac{n}{n+1}\right)^{n+1} \cdot 1} \le \frac{\frac{n}{n+1}(n
 ### 5.3 $e$ 的级数表示
 
 <details class="callout formula" id="e-series" data-callout="formula" open>
-<summary class="callout-title">$e$的级数表示</summary>
+<summary class="callout-title">$e$ 的级数表示</summary>
 <div class="callout-content" markdown="block">
 
 $$e = \lim_{n \to \infty} \sum_{k=0}^{n} \frac{1}{k!}$$
@@ -633,6 +645,11 @@ $$e = \lim_{n \to \infty}\left(1 + 1 + \sum_{i=2}^{n} \frac{1}{i!}\left(1 - \fra
 <summary class="callout-title">$e$ 是无理数</summary>
 <div class="callout-content" markdown="block">
 
+$e$ 不能写成 $\dfrac{p}{q}$（$p, q \in \mathbb{N}$）。
+
+</div>
+</details>
+
 **证（反证）**：设 $e = \dfrac{p}{q}$，$p, q \in \mathbb{N}$ 且互质。由 <a href="#e-series">$e$ 的级数表示</a>，
 
 $$e \cdot q! = \underbrace{\left(1 + 1 + \frac{1}{2!} + \cdots + \frac{1}{q!}\right)q!}_{\text{整数}} + \underbrace{\lim_{n \to \infty}\left[\frac{1}{(q+1)!} + \frac{1}{(q+2)!} + \cdots + \frac{1}{(q+n)!}\right]}_{\text{记为 } r}$$
@@ -643,19 +660,18 @@ $$0 \lt{} r \lt{} \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\r
 
 又 $e \in (2, 3)$ 不是整数，故 $q \ge 2$，从而 $0 \lt{} r \lt{} \dfrac{1}{q} \le \dfrac{1}{2} \lt{} 1$，与"$r$ 是整数"矛盾。故 $e$ 为无理数。
 
-</div>
-</details>
-
 ### 5.5 与 $e$ 有关的几个极限
 
 <details class="callout formula" data-callout="formula" open>
 <summary class="callout-title">与 $e$ 有关的几个极限</summary>
 <div class="callout-content" markdown="block">
 
-若 $p_n \gt{} 0$ 是正无穷大量，则 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{p_n}\right)^{p_n} = e$。**证**：由 $\left(1+\frac1n\right)^n \to e$，$\exists N_1$ 使 $n \gt{} N_1$ 时 $\left\vert\left(1+\frac1n\right)^n - e\right\vert \lt{} \varepsilon$；又 $p_n \to +\infty$，$\exists N_2$ 使 $n \gt{} N_2$ 时 $p_n \gt{} N_1$，故 $n \gt{} N_2$ 时 $\left\vert\left(1+\frac{1}{p_n}\right)^{p_n} - e\right\vert \lt{} \varepsilon$。
+若 $p_n \gt{} 0$ 是正无穷大量，则 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{p_n}\right)^{p_n} = e$。
 
 </div>
 </details>
+
+**证**：由 $\left(1+\frac1n\right)^n \to e$，$\exists N_1$ 使 $n \gt{} N_1$ 时 $\left\vert\left(1+\frac1n\right)^n - e\right\vert \lt{} \varepsilon$；又 $p_n \to +\infty$，$\exists N_2$ 使 $n \gt{} N_2$ 时 $p_n \gt{} N_1$，故 $n \gt{} N_2$ 时 $\left\vert\left(1+\frac{1}{p_n}\right)^{p_n} - e\right\vert \lt{} \varepsilon$。
 
 - $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{n^{2} + n}\right)^{n} = \lim\limits_{n \to \infty}\left[\left(1 + \dfrac{1}{n^{2}+n}\right)^{n^{2}+n}\right]^{\frac{n}{n^{2}+n}} = e^{0} = 1$；
 - $\lim\limits_{n \to \infty} a_n^{b_n} = a^{b}$（$\lim a_n = a \gt{} 0$，$\lim b_n = b$）：由 $\lim\limits_{n \to \infty} e^{b_n \ln a_n} = e^{b \ln a} = a^{b}$；
@@ -678,10 +694,11 @@ $X$ 是**定义域**，$f(X) = \lbrace f(x) \mid x \in X\rbrace $ 是**值域**�
 <div class="callout-content" markdown="block">
 
 若存在 $T \neq 0$，使 $\forall x \in X$ 都有 $x + T \in X$ 且 $f(x + T) = f(x)$，称 $f$ 为周期函数，$T$ 为一个周期。
-**周期函数不一定有最小正周期** —— 上表里的 Dirichlet 函数就是现成的例子（$\forall q \in \mathbb{Q}$，$D(x + q) = D(x)$）。
 
 </div>
 </details>
+
+**周期函数不一定有最小正周期** —— 上表里的 Dirichlet 函数就是现成的例子（$\forall q \in \mathbb{Q}$，$D(x + q) = D(x)$）。
 
 ---
 
@@ -734,15 +751,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 </div>
 </details>
 
-<details class="callout keypoint" data-callout="keypoint" open>
-<summary class="callout-title">无界 ≠ 无穷大（函数版）</summary>
-<div class="callout-content" markdown="block">
-
-无界只说明"没有界"，不能说"趋于无穷大"（数列版的例子见 [无穷大量 ≠ 无界量](#infinite-large)）。
-例：$f(x) = \dfrac{1}{x}\sin\dfrac{1}{x}$（$x \to 0$）。取 $x = \dfrac{1}{2n\pi}$ 时 $f(x) = 0$，而取 $x = \dfrac{1}{2n\pi + \pi/2}$ 时 $\mid{}f(x)\mid{} \to +\infty$，所以它无界，但极限不是 $\infty$。
-
-</div>
-</details>
+**无界 ≠ 无穷大（函数版）**：无界只说明"没有界"，不能说"趋于无穷大"（数列版的例子见 [无穷大量 ≠ 无界量](#infinite-large)）。例：$f(x) = \dfrac{1}{x}\sin\dfrac{1}{x}$（$x \to 0$）。取 $x = \dfrac{1}{2n\pi}$ 时 $f(x) = 0$，而取 $x = \dfrac{1}{2n\pi + \pi/2}$ 时 $\mid{}f(x)\mid{} \to +\infty$，所以它无界，但极限不是 $\infty$。
 
 若 $\lim\limits_{x \to a} f(x) = A \neq 0$，则 $f$ 在 $a$ 的某去心邻域内与 $A$ **同号**（取 $B = \dfrac{A}{2}$）。
 
@@ -750,7 +759,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 <summary class="callout-title">函数极限的保号性与四则运算</summary>
 <div class="callout-content" markdown="block">
 
-- **保号性**：$\lim\limits_{x \to a} f(x) = A \gt{} B$，取 $\varepsilon = A - B$，则存在 $\delta$，当 $x \in U^{\circ}(a, \delta)$ 时 $\mid{}f(x) - A\mid{} \lt{} A - B$，故 $f(x) \gt{} B$。
+- **保号性**：设 $\lim\limits_{x \to a} f(x) = A \gt{} B$，则存在 $\delta \gt{} 0$，当 $x \in U^{\circ}(a, \delta)$ 时 $f(x) \gt{} B$。
 - **保序性**：在 $U^{\circ}(a, \delta)$ 上 $f(x) \ge g(x)$，若 $f \to A,\ g \to B$，则 $A \ge B$。
 - **四则运算**：各自极限存在时才可拆开，且 $B \neq 0$ 时
 
@@ -759,23 +768,22 @@ $$\lim_{x \to a}(f \pm g) = A \pm B,\quad \lim_{x \to a}(f g) = AB,\quad \lim_{x
 </div>
 </details>
 
-<details class="callout example" data-callout="example" open>
-<summary class="callout-title">例 1：多项式型</summary>
-<div class="callout-content" markdown="block">
+**证（保号性）**：取 $\varepsilon = A - B \gt{} 0$，则存在 $\delta$，当 $x \in U^{\circ}(a, \delta)$ 时 $\mid{}f(x) - A\mid{} \lt{} A - B$，故 $f(x) \gt{} B$。
+
+**例 1（多项式型）**：
 
 $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^{n-2} + \cdots + 1}{x^{m-1} + x^{m-2} + \cdots + 1} = \frac{n}{m}$$
 
-</div>
-</details>
-
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">例 2：$\varepsilon$–$\delta$ 模板（证 $\lim\limits_{x \to 2} x^{2} = 4$）</summary>
+<summary class="callout-title">例 2：$\varepsilon$–$\delta$ 模板</summary>
 <div class="callout-content" markdown="block">
 
-取 $\mid{}x - 2\mid{} \lt{} 1$，则 $\mid{}x + 2\mid{} \lt{} 5$，于是 $\mid{}x^{2} - 4\mid{} = \mid{}x - 2\mid{}\mid{}x + 2\mid{} \lt{} 5\mid{}x - 2\mid{}$；要它 $\lt{} \varepsilon$ 只需 $\mid{}x - 2\mid{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace 1, \dfrac{\varepsilon}{5}\right\rbrace $。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
+用定义证明 $\lim\limits_{x \to 2} x^{2} = 4$。
 
 </div>
 </details>
+
+**解**：取 $\mid{}x - 2\mid{} \lt{} 1$，则 $\mid{}x + 2\mid{} \lt{} 5$，于是 $\mid{}x^{2} - 4\mid{} = \mid{}x - 2\mid{}\mid{}x + 2\mid{} \lt{} 5\mid{}x - 2\mid{}$；要它 $\lt{} \varepsilon$ 只需 $\mid{}x - 2\mid{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace 1, \dfrac{\varepsilon}{5}\right\rbrace $。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
 
 ### 7.4 夹逼与单调收敛（函数版）
 
@@ -843,10 +851,10 @@ $$\lim_{x \to 0} \frac{\sin x}{x} = 1, \qquad \lim_{x \to \infty}\left(1 + \frac
 
 用 $\ln(1 + x) \lt{} x$ 与 $\ln(1 + t) = 2\ln\sqrt{1+t} \lt{} 2(\sqrt{1+t} - 1)$：
 
+$$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t} + 1} \to 0$$
+
 </div>
 </details>
-
-$$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t} + 1} \to 0$$
 
 ---
 
@@ -857,10 +865,11 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 <div class="callout-content" markdown="block">
 
 闭区间 $[a, b]$ 上的连续函数必有界。
-**证（反证）**：若无界，则对每个 $n$ 存在 $x_n \in [a, b]$ 使 $\mid{}f(x_n)\mid{} \gt{} n$。由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有子列 $x_{n_k} \to \xi \in [a, b]$，由连续性 $f(x_{n_k}) \to f(\xi)$ 有界，与 $\mid{}f(x_{n_k})\mid{} \gt{} n_k \to \infty$ 矛盾。
 
 </div>
 </details>
+
+**证（反证）**：若无界，则对每个 $n$ 存在 $x_n \in [a, b]$ 使 $\mid{}f(x_n)\mid{} \gt{} n$。由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有子列 $x_{n_k} \to \xi \in [a, b]$，由连续性 $f(x_{n_k}) \to f(\xi)$ 有界，与 $\mid{}f(x_{n_k})\mid{} \gt{} n_k \to \infty$ 矛盾。
 
 ### 8.1 最值定理
 
@@ -871,10 +880,11 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 <div class="callout-content" markdown="block">
 
 闭区间上的连续函数可取到最大值与最小值。
-**证**：接上，由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有收敛子列 $x_{n_k} \to \xi$，其中 $\xi \in [a, b]$（闭区间的极限点还在区间内，注意这一点）。由连续性 $f(\xi) = \lim\limits_{k \to \infty} f(x_{n_k}) = m$，即最小值可以取到。上确界同理。
 
 </div>
 </details>
+
+**证**：接上，由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有收敛子列 $x_{n_k} \to \xi$，其中 $\xi \in [a, b]$（闭区间的极限点还在区间内，注意这一点）。由连续性 $f(\xi) = \lim\limits_{k \to \infty} f(x_{n_k}) = m$，即最小值可以取到。上确界同理。
 
 ### 8.2 介值定理
 
@@ -883,10 +893,11 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 <div class="callout-content" markdown="block">
 
 若 $f$ 在 $[a, b]$ 上连续，$f(a)f(b) \lt{} 0$，则存在 $\xi \in (a, b)$ 使 $f(\xi) = 0$。
-**证明思路**：二分法。不断把含变号的区间对半缩小，构造 [闭区间套](#nested-intervals)，公共点 $\xi$ 处由连续性得 $f(\xi) = 0$。
 
 </div>
 </details>
+
+**证明思路**：二分法。不断把含变号的区间对半缩小，构造 [闭区间套](#nested-intervals)，公共点 $\xi$ 处由连续性得 $f(\xi) = 0$。
 
 ---
 
@@ -935,6 +946,17 @@ $$a^{x} - 1 \sim x\ln a\ (a \gt{} 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \fra
 
 </div>
 </details>
+
+### 9.4 $O$ 记号与阶
+
+**$O$ 记号**：$\mid{}\alpha(x)\mid{} \le C\mid{}\beta(x)\mid{}$（$x$ 在某个范围里）记作 $\alpha(x) = O(\beta(x))$。
+
+**$k$ 阶无穷小**：$x \to a$ 时若 $\alpha \sim (x - a)^{k}$，称 $\alpha$ 是 $k$ 阶无穷小。
+
+**同阶的等价写法**：$\dfrac{\beta}{\alpha} \to k \neq 0 \iff \beta = k\alpha + o(\alpha)$。
+
+- 必要：$\dfrac{\beta}{\alpha} \to k$ 时 $\dfrac{\beta - k\alpha}{\alpha} = \dfrac{\beta}{\alpha} - k \to 0$，即 $\beta - k\alpha = o(\alpha)$；
+- 充分：$\beta = k\alpha + o(\alpha)$ 时 $\lim \dfrac{\beta}{\alpha} = \lim \dfrac{k\alpha + o(\alpha)}{\alpha} = k$。
 
 ---
 
@@ -1016,15 +1038,7 @@ $$\lim_{\Delta x \to 0^{+}} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} = \lim_{
 </div>
 </details>
 
-<details class="callout keypoint" data-callout="keypoint" open>
-<summary class="callout-title">可导的必要条件：连续</summary>
-<div class="callout-content" markdown="block">
-
-$f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。
-反之不成立（$\mid{}x\mid{}$ 在 $0$ 处连续但不可导）。
-
-</div>
-</details>
+**可导的必要条件：连续**。$f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。反之不成立（$\mid{}x\mid{}$ 在 $0$ 处连续但不可导）。
 
 <details class="callout keypoint" id="derivative-continuity-warning" data-callout="keypoint" open>
 <summary class="callout-title">导函数不保证连续</summary>
@@ -1067,6 +1081,8 @@ $x \to u$ 映射，$u \to y$ 映射，**由外向内逐层求导**。
 </div>
 </details>
 
+由 $f^{-1}(f(x)) = x$ 两边对 $x$ 求导得 $\left(f^{-1}\right)'(f(x))\cdot f'(x) = 1$，即
+
 <details class="callout formula" id="inverse-derivative" data-callout="formula" open>
 <summary class="callout-title">反函数求导</summary>
 <div class="callout-content" markdown="block">
@@ -1078,7 +1094,7 @@ $$\left(f^{-1}\right)'(y) = \frac{1}{f'(x)} = \frac{1}{f'\big(f^{-1}(y)\big)}$$
 </div>
 </details>
 
-推导：由 $f^{-1}(f(x)) = x$ 两边对 $x$ 求导得 $\left(f^{-1}\right)'(f(x))\cdot f'(x) = 1$。最常见的例子是 $f(x) = e^{x}$ 与 $f^{-1}(x) = \ln x$。
+最常见的例子是 $f(x) = e^{x}$ 与 $f^{-1}(x) = \ln x$。
 
 <details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">反函数求导最常见的错</summary>
@@ -1164,9 +1180,180 @@ $$C[a, b] = \{f(x) \mid f(x) \text{ 在 } [a, b] \text{ 上连续}\}$$
 
 ---
 
+## 12 微分
+
+### 12.1 可微与微分
+
+<details class="callout definition" id="differentiability" data-callout="definition" open>
+<summary class="callout-title">可微与微分</summary>
+<div class="callout-content" markdown="block">
+
+记 $\Delta y = f(x_0 + \Delta x) - f(x_0)$。若存在**与 $\Delta x$ 无关**（只与 $x_0$ 有关）的 $A$，使
+
+$$\Delta y = A\,\Delta x + o(\Delta x)\quad(\Delta x \to 0)$$
+
+则称 $f$ 在 $x_0$ 处**可微**，$A\,\Delta x$ 称为 $f$ 在 $x_0$ 处的**微分**（线性主部），记 $dy\big\mid{}&#95;{x=x_0}$ 或 $df(x_0)$。
+若 $f$ 在区间 $I$ 内处处可微，称 $f$ 为**可微函数**。
+
+</div>
+</details>
+
+记 $dx = \Delta x$，但 $dy \neq \Delta y$：$\Delta y - dy = o(\Delta x)$。由定义立刻得到 $dy = f'(x)\,dx$，即 $\dfrac{dy}{dx} = f'(x)$ —— 导数就是两个微分之比。$A = f'(x_0) \neq 0$ 时 $dy \sim \Delta y$。
+
+### 12.2 可导与可微
+
+<details class="callout theorem" id="differentiable-iff-derivable" data-callout="theorem" open>
+<summary class="callout-title">一元函数：可导 $\iff$ 可微</summary>
+<div class="callout-content" markdown="block">
+
+$f$ 在 $x_0$ 处可导 $\iff$ $f$ 在 $x_0$ 处可微；此时 $A = f'(x_0)$，$dy = f'(x_0)\,\Delta x$。
+
+</div>
+</details>
+
+**证**。**可导 $\Rightarrow$ 可微**：$\dfrac{\Delta y}{\Delta x} \to f'(x_0)$，令 $\alpha = \dfrac{\Delta y}{\Delta x} - f'(x_0) \to 0$，则 $\Delta y = f'(x_0)\Delta x + \alpha \Delta x$，而 $\alpha \Delta x = o(\Delta x)$。
+**可微 $\Rightarrow$ 可导**：$\Delta y = A\Delta x + o(\Delta x)$ 两边除以 $\Delta x$，得 $\dfrac{\Delta y}{\Delta x} = A + \dfrac{o(\Delta x)}{\Delta x} \to A$。
+
+**多元不同**：可微 $\Rightarrow$ 可导（各偏导存在），反过来不成立。
+
+### 12.3 微分法则与局部线性化
+
+<details class="callout formula" id="differential-rules" data-callout="formula" open>
+<summary class="callout-title">微分法则（同求导法则）</summary>
+<div class="callout-content" markdown="block">
+
+$$d(u \pm v) = du \pm dv, \qquad d(uv) = v\,du + u\,dv, \qquad d(Cu) = C\,du, \qquad d\!\left(\frac{u}{v}\right) = \frac{v\,du - u\,dv}{v^{2}}\quad(C \text{ 为常数})$$
+
+</div>
+</details>
+
+**局部线性化**：拿 $dy$ 代替 $\Delta y$，就是 $y - y_0 = f'(x_0)(x - x_0)$ —— 在 $x_0$ 附近用切线代替曲线。
+
+**近似计算**：$\Delta y\big\mid{}&#95;{x=x_0} \approx dy\big\mid{}&#95;{x=x_0}$。
+
+---
+
+## 13 高阶导数与高阶微分
+
+### 13.1 高阶导数
+
+<details class="callout definition" id="higher-derivative" data-callout="definition" open>
+<summary class="callout-title">高阶导数</summary>
+<div class="callout-content" markdown="block">
+
+$n \ge 2$ 时，$f^{(n)}(x) = \left(f^{(n-1)}(x)\right)'$，记 $\dfrac{d^{n}y}{dx^{n}}$。
+
+</div>
+</details>
+
+$m$ 次多项式求 $m+1$ 阶导即得 $0$：$f(x) = a_m x^{m} + \cdots + a_1 x + a_0$ 时 $f^{(m+1)} \equiv 0$。
+
+<details class="callout formula" id="nth-derivative-formulas" data-callout="formula" open>
+<summary class="callout-title">常用 $n$ 阶导</summary>
+<div class="callout-content" markdown="block">
+
+$$(x^{\alpha})^{(n)} = \frac{\alpha!}{(\alpha-n)!}x^{\alpha-n} = \binom{\alpha}{n}n!\,x^{\alpha-n}$$
+
+$$(\sin x)^{(n)} = \sin\left(x + \frac{n\pi}{2}\right), \qquad (\cos x)^{(n)} = \cos\left(x + \frac{n\pi}{2}\right)$$
+
+$$(e^{ax})^{(n)} = a^{n}e^{ax}, \qquad (\sin bx)^{(n)} = b^{n}\sin\left(bx + \frac{n\pi}{2}\right)$$
+
+$$y = e^{ax}\sin bx:\quad y^{(n)} = (a^{2} + b^{2})^{\frac{n}{2}}e^{ax}\sin(bx + n\varphi),\qquad \tan\varphi = \frac{b}{a}$$
+
+</div>
+</details>
+
+$\alpha$ 为非负整数时 $\dfrac{\alpha!}{(\alpha-n)!} = \alpha(\alpha-1)\cdots(\alpha-n+1)$，$n \gt{} \alpha$ 时为 $0$。
+
+### 13.2 Leibniz 公式
+
+<details class="callout theorem" id="leibniz" data-callout="theorem" open>
+<summary class="callout-title">Leibniz 公式</summary>
+<div class="callout-content" markdown="block">
+
+若 $f, g$ 都有 $n$ 阶导，则
+
+$$[f(x)g(x)]^{(n)} = \sum_{k=0}^{n}\binom{n}{k}f^{(k)}(x)\,g^{(n-k)}(x)$$
+
+</div>
+</details>
+
+类同二项式定理。若 $f$ 是 $m$ 次多项式，则 $k \gt{} m$ 时 $f^{(k)} \equiv 0$，和式只剩前 $m+1$ 项。求商的 $n$ 阶导时写 $\left[\dfrac{f}{g}\right]^{(n)} = \left[f\cdot\dfrac{1}{g}\right]^{(n)}$，把问题转成乘积。
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例：$y = \arctan x$，求 $y^{(n)}(0)$</summary>
+<div class="callout-content" markdown="block">
+
+求 $y = \arctan x$ 在 $x = 0$ 处的 $n$ 阶导数。
+
+</div>
+</details>
+
+**解**：$y' = \dfrac{1}{1 + x^{2}}$，即 $(1 + x^{2})y' = 1$。两边用 [Leibniz 公式](#leibniz) 求 $n$ 阶导 —— $1 + x^{2}$ 只有三项，得
+
+$$(1 + x^{2})y^{(n+1)} + n\cdot 2x\,y^{(n)} + \frac{n(n-1)}{2}\cdot 2\,y^{(n-1)} = 0$$
+
+令 $x = 0$：$y^{(n+1)}(0) = -n(n-1)\,y^{(n-1)}(0)$。由 $y(0) = 0$、$y'(0) = 1$，偶数阶导在 $0$ 处全为 $0$，奇数阶逐次递推得
+
+$$y^{(2k+1)}(0) = (-1)^{k}(2k)!$$
+
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">理解：为何如此构造？</summary>
+<div class="callout-content" markdown="block">
+
+利用隐函数求导，去掉分式结构，找到递推。
+
+</div>
+</details>
+
+### 13.3 高阶微分与形式不变性
+
+**高阶微分**：$d^{n}y = d\left(d^{n-1}y\right)$。两种写法要分清 —— $d(x^{n}) = nx^{n-1}dx$ 是求微分，$(dx)^{n}$ 记作 $dx^{n}$ 是微分的乘幂。
+
+<details class="callout keypoint" id="higher-differential" data-callout="keypoint" open>
+<summary class="callout-title">一阶有形式不变性，高阶没有</summary>
+<div class="callout-content" markdown="block">
+
+$dy = f'(x)dx$ 在 $x$ 为自变量时成立，在 $x = \varphi(t)$ 为中间变量时同样成立：$dy = f'(x)\varphi'(t)\,dt$。二阶起不成立，$d^{2}y = f''(x)(dx)^{2}$ 只在 $x$ 为自变量时对。
+
+</div>
+</details>
+
+形式不变性的用处：① 积分变量替换；② 求复合微分。
+
+### 13.4 反函数与参数方程
+
+**反函数的高阶导**：$\dfrac{dx}{dy} = \dfrac{1}{f'(x)}$。再对 $y$ 求导时 $x$ 是 $y$ 的函数，要补一个 $\dfrac{dx}{dy}$：
+
+$$\frac{d^{2}x}{dy^{2}} = \frac{d}{dy}\left(\frac{1}{f'(x)}\right) = \frac{d}{dx}\left(\frac{1}{f'(x)}\right)\cdot\frac{dx}{dy} = -\frac{f''(x)}{f'(x)^{3}}$$
+
+**参数方程**：$x = x(t)$，$y = y(t)$ 时 $\dfrac{dy}{dx} = \dfrac{y'(t)\,dt}{x'(t)\,dt} = \dfrac{y'(t)}{x'(t)}$（$x'(t) \neq 0$）。
+<a id="parametric-derivative"></a>
+
+---
+
+## 14 三个病态函数
+
+连续与可导的反例集中在这一节，证明单开，主线只留结论。
+
+| 函数 | 连续 | 可导 | 备注 |
+| --- | --- | --- | --- |
+| $f(x) = e^{-\frac{1}{x}}\ (x \gt{} 0)$，$0\ (x \le 0)$ | $\mathbb{R}$ 上连续 | $\mathbb{R}$ 上无穷次可导 | 各阶导在 $0$ 处为 $0$，但各阶导不恒为 $0$ |
+| Dirichlet $D(x)$ | 处处不连续 | 处处不可导 | 非零有理数都是周期，无最小正周期 |
+| Thomae $R(x)$ | 无理点连续、有理点不连续 | 处处不可导 | 周期 $1$；无理点处极限为 $0$ |
+
+**$e^{-1/x}$**：$x \gt{} 0$ 时 $f^{(n)}(x) = P_n\!\left(\frac{1}{x}\right)e^{-\frac{1}{x}}$，$P_n$ 为多项式，$P_1(t) = t^{2}$，$P_{n+1}(t) = t^{2}\left(P_n(t) - P_n'(t)\right)$。$t^{m}e^{-t} \to 0$ 给出 $f^{(n)}(0) = 0$，于是它在 $0$ 处的泰勒级数恒为 $0$，与函数本身不符。通项与证明见 [e的负x分之一次方的无穷次可导性](/notes/e的负x分之一次方的无穷次可导性/)。
+
+**Dirichlet 函数**：$D(x) = 1\ (x \in \mathbb{Q})$，$0\ (x \notin \mathbb{Q})$。$T \in \mathbb{Q}$、$T \neq 0$ 时 $D(x + T) = D(x)$，故每个非零有理数都是周期；**无理数不是周期**（$x$ 与 $x + T$ 的有理性相反）。任一点取有理数列与无理数列逼近，$D$ 的极限分别是 $1$ 与 $0$，故极限处处不存在。
+
+**Thomae 函数**：$R(x) = \dfrac{1}{q}\ (x = \dfrac{p}{q}\ \text{既约},\ q \gt{} 0)$，$0\ (x \notin \mathbb{Q})$。分母越大值越小，所以有理点的稠密不破坏它在无理点收敛到 $0$。但连续救不了可导：差商沿无理方向恒为 $0$，沿贴着 $x_0$ 的有理方向 $\gt{} q \to \infty$，两条路对不上，故无理点也不可导。证明见 [Thomae 函数的连续性](/notes/Thomae 函数的连续性/)、[[Thomae 函数的连续性#^thomae-nondiff|处处不可导]]。
+
+---
+
 ## 相关笔记
 
 - 主线：[线性代数笔记](/notes/xian-xing-dai-shu-bi-ji/)
 - 极限与证明细节：[Stolz定理的证明](/notes/Stolz定理的证明/)
 - 集合、求和与三角工具：[集合运算律](/notes/集合运算律/)、[∑求和运算律](/notes/∑求和运算律/)、[积化和差 和差化积](/notes/积化和差 和差化积/)
 - 可列集专题：[无限可列集等势证明](/notes/infinite-countable-equivalence/)、[实数集与无理数集不可列证明](/notes/real-irrational-uncountable/)
+- 病态函数：[e的负x分之一次方的无穷次可导性](/notes/e的负x分之一次方的无穷次可导性/)、[Thomae 函数的连续性](/notes/Thomae 函数的连续性/)

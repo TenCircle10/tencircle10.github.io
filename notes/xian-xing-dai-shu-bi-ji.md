@@ -104,6 +104,8 @@ $a_{ij}$ 表示第 $i$ 行第 $j$ 列的元素；矩阵用大写 $A, B, C$，元
 </div>
 </details>
 
+矩阵相等按元素定义：同型，且每个对应位置的元素都相等。
+
 <details class="callout understand" data-callout="understand" open>
 <summary class="callout-title">理解</summary>
 <div class="callout-content" markdown="block">
@@ -120,9 +122,7 @@ $$C_{ij} = \sum_{k=1}^{p} a_{ik} b_{kj}, \qquad A_{m \times p} \, B_{p \times n}
 
 也就是说：$A$ 的第 $i$ 行 $\times$ $B$ 的第 $j$ 列 $\Rightarrow C_{ij}$。
 
-<details class="callout example" data-callout="example" open>
-<summary class="callout-title">矩阵乘法（$3 \times 2$ 乘 $2 \times 4$ 得 $3 \times 4$）</summary>
-<div class="callout-content" markdown="block">
+**算例**（$3 \times 2$ 乘 $2 \times 4$ 得 $3 \times 4$）：
 
 $$
 \begin{bmatrix} 3 & 2 \\ -2 & 1 \\ 0 & 1 \end{bmatrix}
@@ -130,9 +130,6 @@ $$
 =
 \begin{bmatrix} 7 & 14 & 11 & 9 \\ 0 & 0 & -5 & 1 \\ 2 & 4 & 1 & 3 \end{bmatrix}
 $$
-
-</div>
-</details>
 
 <details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">口诀</summary>
@@ -274,14 +271,7 @@ $$(A+B)^{n} = \sum_{k=0}^{n} C_n^{k} A^{k} B^{n-k}$$
 </div>
 </details>
 
-<details class="callout keypoint" data-callout="keypoint" open>
-<summary class="callout-title">前提：可交换</summary>
-<div class="callout-content" markdown="block">
-
-否则 $(A+B)^{2} = A^{2} + AB + BA + B^{2} \neq A^{2} + 2AB + B^{2}$。
-
-</div>
-</details>
+**前提：可交换**。否则 $(A+B)^{2} = A^{2} + AB + BA + B^{2} \neq A^{2} + 2AB + B^{2}$。
 
 ### 3.1 二阶若尔当块
 
@@ -438,14 +428,7 @@ $$
 </div>
 </details>
 
-<details class="callout lemma" data-callout="lemma" open>
-<summary class="callout-title">阶梯形右乘不增加非零行</summary>
-<div class="callout-content" markdown="block">
-
-阶梯形矩阵 $T$（$r(T) = r$）右乘任何矩阵，非零行数不会增加 —— $T$ 有 $m - r$ 个零行，零行右乘仍是零行，故 $r(TQ) \le r$。
-
-</div>
-</details>
+**引理（阶梯形右乘不增加非零行）**：阶梯形矩阵 $T$（$r(T) = r$）右乘任何矩阵，非零行数不会增加 —— $T$ 有 $m - r$ 个零行，零行右乘仍是零行，故 $r(TQ) \le r$。
 
 **证明**：设 $P_s \cdots P_1 A = T$（$P_i$ 为初等矩阵），则 $A = P_1^{-1} \cdots P_s^{-1} T$，于是
 
@@ -483,12 +466,14 @@ $$A \cong B \iff r(A) = r(B)$$
 <summary class="callout-title">$r(A) = r(A^{T})$</summary>
 <div class="callout-content" markdown="block">
 
-设 $P_s \cdots P_1 A Q_1 \cdots Q_t = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}&#95;{m \times n}$，两边转置得
-
-$$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{n \times m}$$
+对任意 $m \times n$ 矩阵 $A$，有 $r(A^{T}) = r(A)$。
 
 </div>
 </details>
+
+**证**：设 $P_s \cdots P_1 A Q_1 \cdots Q_t = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}&#95;{m \times n}$，两边转置得
+
+$$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{n \times m}$$
 
 左边是"可逆矩阵乘 $A^{T}$ 再乘可逆矩阵"，不改变秩；右边的秩为 $r$，故 $r(A^{T}) = r(A) = r$。
 
