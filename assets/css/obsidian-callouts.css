@@ -2,16 +2,17 @@
    Obsidian Callout 样式（v5：纯 SVG + mask，零字体依赖）
 
    图标：全部来自 data.json 里各类型配置的 icon 字段
-        lucide 21 个 · material 1 个（definition）· tabler 1 个（keypoint）
+        lucide 17 个 · material(rounded) 2 个 · tabler(outline) 4 个 · octicons 1 个
         一律内联为 Base64 SVG，用 mask-image 上色（background-color: currentColor）
         **不再依赖 Font Awesome / Lucide 字体，也不需要加载任何图标 JS**
-   颜色：12 个数学类用 Tailwind 700-900（亮）/ 400（暗）；13 个内置类沿用原配色
+   颜色：12 个数学类用 Tailwind 700-900（亮）/ 400（暗）；12 个内置类沿用原配色
    背景：rgba(R, G, B, 0.08) 亮 / 0.15 暗（显式写死）
    说明：项目根目录 callout-for-web.md，技术细节见 TECH_GUIDE.md §4.5
 
    设计要点：
      1. 每个类型 3 个变量：--callout-color（主色）、--callout-bg（背景）、--callout-icon（Base64 SVG）
-     2. 图标统一 1.2em 方框、vertical-align: middle、margin-right: 0.4em，标题起始位置对齐
+     2. 标题行 flex + align-items:center 做垂直居中（图标 1.2em 方框、margin-right 0.4em）；
+        inline-block + vertical-align:middle 在中文里会偏下，已弃用
      3. 暗色只覆盖变量，不重复 Base64（体积只有一份）
    ========================================================================== */
 
@@ -26,23 +27,28 @@
   border-radius: 6px;
 }
 
-/* 标题行：故意不用 flex（<summary> 上 display:flex 与 ::marker 在 Chrome/Safari 行为不一致） */
+/* 标题行：flex + align-items:center —— 图标与中文垂直居中的唯一可靠做法
+   （inline-block + vertical-align:middle 会以「小写字母中线」对齐，中文字身更高，所以图标看起来偏下）
+   历史坑：<summary> 用 flex 时原生 ::marker 在 Chrome/Safari 行为不一致，
+   所以下面两处必须保留 —— list-style:none（这里）+ ::-webkit-details-marker / ::marker 屏蔽（文末）。 */
 .callout-title {
-  display: block;
+  display: flex;
+  align-items: center;
   font-weight: 700;
   color: var(--callout-color);
   margin-bottom: 8px;
   list-style: none;
 }
 
-/* 图标：mask 上色，颜色由 currentColor 继承标题色（亮暗自动跟随） */
+/* 图标：mask 上色，颜色由 currentColor 继承标题色（亮暗自动跟随）
+   flex 下不需要 vertical-align；flex: 0 0 auto 保证图标不被长标题压缩 */
 .callout-title::before {
   content: "";
   display: inline-block;
+  flex: 0 0 auto;
   width: 1.2em;
   height: 1.2em;
   margin-right: 0.4em;
-  vertical-align: middle;
   background-color: currentColor;
   -webkit-mask-image: var(--callout-icon);
   mask-image: var(--callout-icon);
@@ -322,12 +328,13 @@ html[data-theme="dark"] .callout[data-callout="key point"] { --callout-color: #f
 .callout > summary.callout-title::-webkit-details-marker { display: none; }
 .callout > summary.callout-title::marker { content: ""; }
 
+/* 折叠指示三角：flex 布局下用 margin-left:auto 顶到最右（float 在 flex 容器里会失效） */
 .callout > summary.callout-title::after {
   content: "";
-  float: right;
+  flex: 0 0 auto;
+  margin-left: auto;
   width: 0;
   height: 0;
-  margin-top: 0.55em;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid currentColor;
