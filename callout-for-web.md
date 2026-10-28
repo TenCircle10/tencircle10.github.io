@@ -5,37 +5,39 @@
 >
 > **数据源**：`data.json`（最后修改 2026-10-27，33 条定义 / 25 条可用）
 > **写笔记时怎么选类型**：见 `TECH_GUIDE.md` §4.5「Callout 语义映射规范」
-> **图标库版本**：12 个数学类用 **Font Awesome 6.4.2**（`_layouts/note.html` 已 CDN 引入 `all.min.css`）；其余类型用 Lucide `lucide-static@1.61.0` · Tabler `@tabler/icons@3.49.0` · Octicons `@primer/octicons@19.42.0` · Material Symbols（缓存在 `_icon-src/`，不入库）
+> **图标库版本**：Lucide `lucide-static@1.61.0`（17 个）· Tabler `@tabler/icons@3.49.0`（4 个）· Material `@material-symbols/svg-400@0.48.1` rounded（2 个）· Octicons `@primer/octicons@19.42.0`（1 个）。全部转成 Base64 SVG 内联，**零字体依赖**（缓存在 `_icon-src/`，不入库）
 
 ---
 
-## v4 变更（当前线上实现）
+## v5 变更（当前线上实现）
 
-`assets/css/obsidian-callouts.css` 现在是双轨制：
+`assets/css/obsidian-callouts.css` 现在**全部 24 个类型都用 SVG + `mask`**，不含任何字体图标：
 
-- **12 个数学类**（`theorem` `definition` `conclusion` `corollary` `lemma` `formula` `context` `seealso` `idea` `motivation` `keypoint` `understand`）
-  图标改用 **Font Awesome 6 字形**：`content: var(--callout-icon-glyph)` + `font-family: "Font Awesome 6 Free"; font-weight: 900`；
-  背景改成**显式 `rgba()`**（亮 0.08 / 暗 0.15），不再依赖 `color-mix`。
-- **其余类型**：原样保留 v3 的 `mask + Base64 SVG`，一行没动。
-- `corollary` / `lemma` / `understand` 是 v4 新增类型（v3 文档里没有）。
+- 图标：每个类型一个 `--callout-icon: url("data:image/svg+xml;base64,…")`，
+  配 `mask-image / mask-size: contain / mask-repeat: no-repeat / mask-position: center`，
+  再用 `background-color: currentColor` 上色 —— 颜色完全跟随 `--callout-color`，亮暗自动切换。
+- **不再需要 Font Awesome 字体**（首页社交图标的 FA 仍然保留，两者互不影响）。
+- 背景：`rgba(R,G,B,0.08)` 亮 / `0.15` 暗，24 个类型全部显式写死。
+- 已删除：`highlight`（弃用）、`bot` / `capacities-*`（模板残留，网页端不渲染）。
 
-| ID | 显示名 | 图标 | 码点 | 语义 | 亮色 | 暗色 |
-|---|---|---|---|---|---|---|
-| `theorem` | Theorem | FA solid | `\f698` | 平方根 | `#1e3a8a` | `#60a5fa` |
-| `definition` | Definition | FA solid | `\f02d` | 书本 | `#15803d` | `#4ade80` |
-| `conclusion` | Conclusion | FA solid | `\f058` | 对勾 | `#10b981` | `#34d399` |
-| `corollary` | Corollary | FA solid | `\f126` | 分支 | `#6b21a8` | `#c084fc` |
-| `lemma` | Lemma | FA solid | `\f12e` | 拼图 | `#475569` | `#94a3b8` |
-| `formula` | Formula | FA solid | `\f1ec` | 计算器 | `#0284c7` | `#38bdf8` |
-| `context` | Context | FA solid | `\f276` | 定位 | `#0d9488` | `#2dd4bf` |
-| `seealso` | Seealso | FA solid | `\f0c1` | 链接 | `#475569` | `#94a3b8` |
-| `idea` | Idea | FA solid | `\f0eb` | 灯泡 | `#d97706` | `#fbbf24` |
-| `motivation` | Motivation | FA solid | `\f14e` | 指南针 | `#f97316` | `#fb923c` |
-| `keypoint` | Keypoint | FA solid | `\f140` | 靶心 | `#dc2626` | `#f87171` |
-| `understand` | Understand | FA solid | `\e2ca` | 星火 | `#c026d3` | `#e879f9` |
+| ID | 显示名 | 图标库 | 图标名 | 亮色 | 暗色 |
+|---|---|---|---|---|---|
+| `theorem` | Theorem | lucide | `function-square` | `#1e3a8a` | `#60a5fa` |
+| `definition` | Definition | material (rounded) | `book_ribbon` | `#15803d` | `#4ade80` |
+| `conclusion` | Conclusion | lucide | `badge-check` | `#10b981` | `#34d399` |
+| `corollary` | Corollary | lucide | `corner-down-right` | `#6b21a8` | `#c084fc` |
+| `lemma` | Lemma | tabler (outline) | `puzzle` | `#475569` | `#94a3b8` |
+| `formula` | Formula | tabler (outline) | `math-function` | `#0284c7` | `#38bdf8` |
+| `context` | Context | lucide | `map-pin` | `#0d9488` | `#2dd4bf` |
+| `seealso` | Seealso | tabler (outline) | `zoom-scan` | `#475569` | `#94a3b8` |
+| `idea` | Idea | lucide | `lightbulb` | `#d97706` | `#fbbf24` |
+| `motivation` | Motivation | material (rounded) | `explore` | `#f97316` | `#fb923c` |
+| `keypoint` | Keypoint | tabler (outline) | `target-arrow` | `#dc2626` | `#f87171` |
+| `understand` | Understand | octicons | `sparkles-fill` | `#c026d3` | `#e879f9` |
 
-> `understand` 原计划用 `\f890`，但 FA 6.4.2 的私有区里没有这个字形（会渲染成豆腐块），改用同语义的 `\e2ca`（`wand-magic-sparkles`）。
-> 下文 Part A 的表格仍是 **v3** 的 mask / base64 记录；凡涉及上面 12 个数学类，以本表为准。
+> 另有 12 个内置类型（`abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning`），
+> 图标分别取 Lucide 的 `clipboard-list` `zap` `list` `x` `info` `pencil` `help-circle` `quote` `check` `flame` `check-circle-2` `alert-triangle`，配色沿用原值。
+> 下文 Part A 的表格仍是 **v3** 的记录（当时 21 个类型）；现在的权威清单以上表 + `TECH_GUIDE.md` §4.5 为准。
 
 ---
 
@@ -691,14 +693,18 @@ html[data-theme="light"] .callout[data-callout="keypoint"] { --callout-color: #f
 
 ### C.6 与本站现有文件的对应关系
 
-本仓库里已有的 `assets/css/obsidian-callouts.css` 是早期手写的版本（用 Font Awesome 字体图标 + 硬编码颜色）。本文档的 Part C 是它的**升级版**：
+本仓库的 `assets/css/obsidian-callouts.css` 已经迭代到 **v5**，与本文档 Part C 的设计一致（甚至更严格）：
 
-| 项目 | 旧版（`obsidian-callouts.css`） | 本文档 Part C |
+| 项目 | 早期版本（已废弃） | 现在（v5） |
 |---|---|---|
-| 图标 | Font Awesome 字体字符（`content: "\f05a"`） | 官方 SVG + `mask` |
-| 颜色 | 每个类型写死 4 处（边框/背景/图标/暗色） | 只写 1 个 `--callout-color` |
-| 暗色 | 需要重复整段规则 | 只覆盖颜色变量 |
-| 新增类型成本 | 要写 4~6 行 + 找 FA 对应字符 | 只写 2 行（颜色 + 图标） |
+| 图标 | Font Awesome 字体字符（`content: "\f05a"`） | 官方 SVG → Base64 → `mask-image`，**零字体依赖** |
+| 图标着色 | 字形用 `color` | `background-color: currentColor`（继承标题色） |
+| 颜色 | 每个类型写死 4 处（边框/背景/图标/暗色） | 每类 3 个变量：`--callout-color` / `--callout-bg` / `--callout-icon` |
+| 背景 | 硬编码或 `color-mix` | 显式 `rgba(R,G,B,0.08)` 亮 / `0.15` 暗 |
+| 暗色 | 需要重复整段规则 | 只覆盖颜色变量（Base64 不重复） |
+| 新增类型成本 | 4~6 行 + 找 FA 字符码 | 3 行（颜色 + 背景 + 一个 Base64 图标） |
+
+> 注意：`highlight` 已弃用并删除；`bot` / `capacities-*` 是模板残留，网页端不渲染。
 
 ---
 

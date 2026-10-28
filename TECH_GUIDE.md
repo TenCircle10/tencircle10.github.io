@@ -71,7 +71,7 @@ gem "webrick", "~> 1.8"
 | 返回顶部按钮 | `_layouts/note.html` + `assets/css/notes.css` | Uiverse 展开式（vinodjangid07 版），滚动 300px 后出现 |
 | 霞鹜文楷字体 | `assets/css/publications.css` 第 1 行 `@import` | 只用于侧边栏「每日一言」 |
 | Giscus 评论 | `_includes/giscus.html` + `notes.css` / `publications.css` | 主页留言板 + 每篇文章独立评论区 |
-| Callout 样式 | `assets/css/obsidian-callouts.css` | Obsidian Callout Studio 的 25 种类型：12 个数学类用 Font Awesome 字形、13 个内置类用 SVG mask + Base64，详见 `callout-for-web.md` |
+| Callout 样式 | `assets/css/obsidian-callouts.css` | 24 种类型，**全部 SVG + mask（Base64 内联，零字体依赖）**，详见 `callout-for-web.md` |
 | 目录侧边栏 | `_layouts/note.html` + `assets/css/notes.css` | Tocbot 4.18.2；桌面 sticky 250px，≤900px 变右侧抽屉，规范见 4.6 |
 
 ---
@@ -253,20 +253,20 @@ python sync_notes.py --src other --dest out    # 自定义目录
 
 ### 4.5 Obsidian Callout 渲染
 
-**数据来源**：`PaperBell/.obsidian/plugins/callout-studio/data.json`
+**数据来源**：`TenCircle10/.obsidian/plugins/callout-studio/data.json`（`PaperBell` 库已弃用，不再同步）
 **完整手册**：项目根目录 `callout-for-web.md`（含每种类型的 base64 图标和原始 SVG path）
 
-**支持的类型（25 种：内置 12 + 自建 13）**
+**支持的类型（24 种）**
 
 | 分组 | 类型 |
 |---|---|
+| 数学类 12 种 | `theorem` `definition` `conclusion` `corollary` `lemma` `formula` `context` `seealso` `idea` `motivation` `keypoint` `understand` |
 | 内置 12 种 | `abstract` `danger` `example` `failure` `info` `note` `question` `quote` `success` `tip` `todo` `warning` |
-| 自建 13 种 | `highlight` `definition` `conclusion` `seealso` `idea` `motivation` `theorem` `context` `formula` `keypoint` `corollary` `lemma` `understand` |
 
-> 版本沿革：`conclusion` 是 2026-10-24 新增；`corollary` / `lemma` / `understand` 是 2026-10-27 v4 新增（同时把 `seealso` 从 fallback 转为自建并配成石板灰 + `link` 图标）。
+> 版本沿革：`conclusion` 2026-10-24 新增；`corollary` / `lemma` / `understand` 2026-10-27 新增。
+> `highlight` 已弃用并删除；`bot`、`capacities-*` 是模板残留，网页端一律不渲染。
 >
-> **12 个"数学类"改走 Font Awesome 字形**：`theorem` `definition` `conclusion` `corollary` `lemma` `formula` `context` `seealso` `idea` `motivation` `keypoint` `understand`。
-> 其余 13 个（含 `highlight`）继续用 `mask + Base64 SVG`。
+> **全部 24 个类型都用 SVG + `mask`，零字体依赖**（不加载 Font Awesome / 任何图标字体）。
 
 **渲染链路**
 
@@ -282,22 +282,21 @@ Obsidian 里写：  > [!theorem] 定理 1.0.1
 网页显示：       左边框 + 淡色背景 + 彩色图标 + 标题
 ```
 
-**技术方案（v4，2026-10-27：双轨制）**
+**技术方案（v5，2026-10-27：全 SVG，零字体依赖）**
 
-| 项目 | v2（旧） | v4（现在） |
+| 项目 | v4（已废弃） | v5（现在） |
 |---|---|---|
-| 图标（12 个数学类） | SVG + `mask` + Base64 | **Font Awesome 6 字形**：`content: var(--callout-icon-glyph)` + `font-family: "Font Awesome 6 Free"; font-weight: 900` |
-| 图标（其余 13 类） | SVG + `mask` + Base64 | 不变 |
-| 背景 | `color-mix(in srgb, var(--callout-color) 8%, transparent)` | 12 类**显式 `rgba(R,G,B,0.08)` 亮 / `0.15` 暗**；其余仍用 `color-mix`（`var(--callout-bg, color-mix(...))` 兜底） |
-| 颜色 | 每类 1 个 `--callout-color` | 不变（12 类同时写 `--callout-bg`） |
-| 暗色 | 只覆盖 `--callout-color` | 12 类覆盖 `--callout-color` + `--callout-bg` |
-| 主题覆盖 | `@media (prefers-color-scheme: dark)` | **三套**：同一 media 区块 + `html[data-theme="dark"]` + `html[data-theme="light"]`（站点有手动切换，缺一套就会串色） |
-| 新增类型成本 | 2 行 | 3 行（`--callout-color` / `--callout-bg` / `--callout-icon-glyph`） |
+| 图标 | 12 类用 FA 字形 + 13 类 mask | **24 类全部 SVG + `mask`**，Base64 内联 |
+| 上色 | 字形用 `color`；mask 用 `background-color` | 统一 `background-color: currentColor`（继承标题色，亮暗自动跟随） |
+| 字体依赖 | 需要 `Font Awesome 6 Free` | **无**（字体只在首页社交图标等其他地方用，与 Callout 无关） |
+| 背景 | 12 类 rgba + 其余 color-mix | **24 类全部显式 `rgba(R,G,B,0.08)` 亮 / `0.15` 暗** |
+| 主题覆盖 | 三套 | 三套（`@media` + `html[data-theme="dark"]` + `html[data-theme="light"]`） |
+| 新增类型成本 | 3 行 | 3 行（`--callout-color` / `--callout-bg` / `--callout-icon`，图标从 `_icon-src/` 转 Base64） |
 
-> 字体依赖：`_layouts/note.html` 已从 cdnjs 引入 `font-awesome/6.4.2/css/all.min.css`，所以字形可用；
-> **不要**在 `font-family` 里写 `"Font Awesome 5 Free"`，也不要省略 `font-weight: 900`（缺了只显示豆腐块）。
+> 图标几何统一：`content:""; display:inline-block; width:1.2em; height:1.2em; margin-right:0.4em; vertical-align:middle;`
+> 再配 `mask-image / mask-size: contain / mask-repeat: no-repeat / mask-position: center`。
 >
-> ⚠️ FA 6.4.2 **没有** `\f890` 这个码点（U+F890 是私有区空位，写了就是豆腐块）；`understand` 用的是 `\e2ca`（`wand-magic-sparkles`）。加新图标前先确认码点存在。
+> 颜色全部走 `--callout-color` 一个变量：`currentColor` 让图标自动跟随亮/暗切换，无需第二份 Base64。
 
 **Callout 语义映射规范（写笔记时按这个选类型）**
 
@@ -369,60 +368,49 @@ Select-String -Path notes/*.md -Pattern '&#95;' | Measure-Object
   background-color: var(--callout-bg, color-mix(in srgb, var(--callout-color) 8%, transparent));
 }
 
-/* 兜底图标：mask 上色（13 个保留类型走这条） */
+/* 图标：mask 上色，颜色由 currentColor 继承标题色（亮暗自动跟随） */
 .callout-title::before {
   content: "";
-  width: 1.1em; height: 1.1em;
-  background-color: var(--callout-color);
-  -webkit-mask: var(--callout-icon) center / contain no-repeat;
-          mask: var(--callout-icon) center / contain no-repeat;
+  display: inline-block;
+  width: 1.2em; height: 1.2em;
+  margin-right: 0.4em;
+  vertical-align: middle;
+  background-color: currentColor;
+  -webkit-mask-image: var(--callout-icon);
+  mask-image: var(--callout-icon);
+  -webkit-mask-size: contain;   mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center;  mask-position: center;
 }
 
-/* 12 个数学类：颜色 + 背景 + 字形，一个类型 3 行 */
+/* 每个类型 3 行：主色 + 背景 + Base64 图标（24 个类型同一写法） */
 .callout[data-callout="theorem"] {
   --callout-color: #1e3a8a;
   --callout-bg: rgba(30, 58, 138, 0.08);
-  --callout-icon-glyph: "\f698";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2Zy…");
 }
 
-/* 这 12 类统一把 mask 换成 FA 字形（一条 :is() 规则，别逐个抄） */
-.callout:is(
-  [data-callout="theorem"], [data-callout="definition"], [data-callout="conclusion"],
-  [data-callout="corollary"], [data-callout="lemma"], [data-callout="formula"],
-  [data-callout="context"], [data-callout="seealso"], [data-callout="idea"],
-  [data-callout="motivation"], [data-callout="keypoint"], [data-callout="understand"],
-  [data-callout="key point"]
-) > .callout-title::before {
-  content: var(--callout-icon-glyph);
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  width: 1.2em; height: auto;
-  margin-right: 8px;
-  vertical-align: -0.12em;
-  text-align: center;
-  background: none;            /* 必须清掉，否则残留色块 */
-  -webkit-mask: none;
-          mask: none;
-}
-
-/* 暗色：12 类要同时换主色和背景；其余只换主色 */
+/* 暗色：只换主色与背景，Base64 不重复 */
 @media (prefers-color-scheme: dark) {
   .callout[data-callout="theorem"] { --callout-color: #60a5fa; --callout-bg: rgba(96, 165, 250, 0.15); }
-  .callout[data-callout="note"]    { --callout-color: #027aff; }
+  .callout[data-callout="note"]    { --callout-color: #027aff; --callout-bg: rgba(2, 122, 255, 0.15); }
 }
 /* 站点支持手动切主题，这两套不能省（否则手动切换时颜色串掉） */
 html[data-theme="dark"] .callout[data-callout="theorem"] { --callout-color: #60a5fa; --callout-bg: rgba(96, 165, 250, 0.15); }
 html[data-theme="light"] .callout[data-callout="theorem"] { --callout-color: #1e3a8a; --callout-bg: rgba(30, 58, 138, 0.08); }
 ```
 
-**图标来源**
+**图标来源（全部取自 TenCircle10 的 `data.json`，本地 `_icon-src/` 有缓存）**
 
-| 图标库 | 版本 | 用到的图标 |
+| 图标库 | 数量 | 类型 → 图标 |
 |---|---|---|
-| **Font Awesome 6** | 6.4.2（`note.html` CDN 引入 `all.min.css`） | 12 个字形：`\f698` 平方根（theorem）`\f02d` 书本（definition）`\f058` 对勾（conclusion）`\f126` 分支（corollary）`\f12e` 拼图（lemma）`\f1ec` 计算器（formula）`\f276` 定位（context）`\f0c1` 链接（seealso）`\f0eb` 灯泡（idea）`\f14e` 指南针（motivation）`\f140` 靶心（keypoint）`\e2ca` 星火（understand） |
-| Lucide | `lucide-static@1.61.0` | 12 个（走 mask 的内置类型）：`clipboard-list` `zap` `list` `x` `info` `pencil` `help-circle` `quote` `check` `flame` `check-circle-2` `alert-triangle` |
-| Octicons | `@primer/octicons@19.42.0` | `sparkles-fill`（highlight） |
-| Tabler / Material | — | v4 起不再使用（keypoint 的 `target-arrow`、definition 的 `book_ribbon` 已换成 FA 字形） |
+| Lucide | 17 | `theorem`→function-square · `conclusion`→badge-check · `corollary`→corner-down-right · `context`→map-pin · `idea`→lightbulb · `abstract`→clipboard-list · `danger`→zap · `example`→list · `failure`→x · `info`→info · `note`→pencil · `question`→help-circle · `quote`→quote · `success`→check · `tip`→flame · `todo`→check-circle-2 · `warning`→alert-triangle |
+| Material（rounded / weight 300） | 2 | `definition`→book_ribbon · `motivation`→explore |
+| Tabler（outline） | 4 | `lemma`→puzzle · `formula`→math-function · `seealso`→zoom-scan · `keypoint`→target-arrow |
+| Octicons | 1 | `understand`→sparkles-fill |
+
+> 取源规则：`material` 必须按 `icon.style` 选变体（本库是 `rounded`，不是 `outlined`），`tabler-outline` 取 `icons/outline/`，
+> `octicons` 取 24px 版。转换脚本见 `_icon-src/README.md` 里的清理流程，**只清 `<svg>` 开标签的 class/width/height**，内部 `<rect>`/`<circle>` 的尺寸必须保留。
 
 **图标源包本地缓存**
 
@@ -459,7 +447,7 @@ $s = [regex]::Replace($s, '>\s+<', '><').Trim()
 ```
 
 > ⚠️ 不要直接用原始的 base64 —— Lucide 的 SVG 开头带 `<!-- @license lucide-static ... -->` 注释，
-> 虽然浏览器多数能容忍，但不规范且白白增大体积。现有 CSS 里走 mask 的 **13 个图标已全部清理干净**（12 个数学类改用 Font Awesome 字形，不再需要 SVG）。
+> 虽然浏览器多数能容忍，但不规范且白白增大体积。现有 CSS 里 **24 个图标已全部清理干净**（无一例外，全部走 mask）。
 >
 > ⚠️ **清理后务必检查**：凡是内部含 `<rect>` / `<circle>` / `<ellipse>` 的图标，
 > 这些子元素必须保留自己的 `width` / `height` / `r`。可以用一行验证：
@@ -494,7 +482,7 @@ $s = [regex]::Replace($s, '>\s+<', '><').Trim()
 
 改完用同一算法重算写回即可；**stamps 不要动**（指纹校验只要求 body+stamps 与 fingerprint 自洽）。
 
-> ⚠️ **两个 vault 都装了 callout-studio**：`D:\szy\szy obsidian仓库\PaperBell` 与 `…\TenCircle10`。改配置必须两边都改，否则你在另一个库里看到的是旧颜色（这个坑 2026-10-27 踩过）。
+> ⚠️ **只维护 `D:\szy\szy obsidian仓库\TenCircle10`**：`PaperBell` 库已弃用（里面的 callout-studio 配置不再生效，改它没有意义）。
 > ⚠️ 改之前**先退出 Obsidian**：插件把设置缓存在内存里，下次保存会把磁盘上的修改覆盖回去。
 
 **回滚方式**

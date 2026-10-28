@@ -1,249 +1,228 @@
 /* ==========================================================================
-   Obsidian Callout 样式（v4）
+   Obsidian Callout 样式（v5：纯 SVG + mask，零字体依赖）
 
-   配色：12 色 Tailwind 体系（深蓝 / 森林绿 / 青绿 / 深紫 / 石板灰 / 天空蓝 /
-        深青 / 琥珀 / 亮橙 / 警示红 / 亮紫），亮色用 700-900 档，暗色用 400 档
-   图标：12 个数学类改用 Font Awesome 6 字形（note.html 已通过 CDN 加载 all.min.css），
-        其余类型沿用 CSS mask + Base64 SVG，不依赖字体
-   背景：rgba(R, G, B, 0.08) 亮色 / rgba(R, G, B, 0.15) 暗色（显式写死，不用 color-mix）
-   完整说明：项目根目录 callout-for-web.md
+   图标：全部来自 data.json 里各类型配置的 icon 字段
+        lucide 21 个 · material 1 个（definition）· tabler 1 个（keypoint）
+        一律内联为 Base64 SVG，用 mask-image 上色（background-color: currentColor）
+        **不再依赖 Font Awesome / Lucide 字体，也不需要加载任何图标 JS**
+   颜色：12 个数学类用 Tailwind 700-900（亮）/ 400（暗）；13 个内置类沿用原配色
+   背景：rgba(R, G, B, 0.08) 亮 / 0.15 暗（显式写死）
+   说明：项目根目录 callout-for-web.md，技术细节见 TECH_GUIDE.md §4.5
 
    设计要点：
-     1. 每个类型声明 --callout-color（主色）、--callout-bg（背景）、--callout-icon-glyph（字形）
-     2. 边框 / 标题 / 图标都从 --callout-color 派生，暗色只换颜色变量
-     3. 图标前缀统一 1.2em 宽并居中，保证 12 类标题起始位置一致
+     1. 每个类型 3 个变量：--callout-color（主色）、--callout-bg（背景）、--callout-icon（Base64 SVG）
+     2. 图标统一 1.2em 方框、vertical-align: middle、margin-right: 0.4em，标题起始位置对齐
+     3. 暗色只覆盖变量，不重复 Base64（体积只有一份）
    ========================================================================== */
 
-/* ===== 基础结构与变量 ===== */
+/* ===== 基础结构 ===== */
 .callout {
   --callout-color: #086ddd;
   --callout-bg: rgba(8, 109, 221, 0.08);
   border-left: 4px solid var(--callout-color);
-  /* 未声明 --callout-bg 的类型（保留 mask 方案者）仍按主色派生 8% 背景 */
-  background-color: var(--callout-bg, color-mix(in srgb, var(--callout-color) 8%, transparent));
+  background-color: var(--callout-bg);
   padding: 12px 16px;
   margin: 16px 0;
   border-radius: 6px;
 }
 
-/* 标题行：故意【不用】flex —— <summary> 上 display:flex 与 ::marker 的交互
-   在 Chrome / Safari 上行为不一致（曾导致展开时布局崩坏）。
-   这里全部退回最保守的 inline / block 布局。 */
+/* 标题行：故意不用 flex（<summary> 上 display:flex 与 ::marker 在 Chrome/Safari 行为不一致） */
 .callout-title {
-  display: block;              /* 保持 <summary> 的原生 block 行为，不做覆盖性改动 */
+  display: block;
   font-weight: 700;
   color: var(--callout-color);
   margin-bottom: 8px;
   list-style: none;
 }
 
-/* 兜底图标：mask 上色（保留类型走这条），12 个数学类下面会覆盖成字形 */
+/* 图标：mask 上色，颜色由 currentColor 继承标题色（亮暗自动跟随） */
 .callout-title::before {
   content: "";
   display: inline-block;
-  width: 1.1em;
-  height: 1.1em;
-  margin-right: 8px;
-  vertical-align: -0.15em;
-  background-color: var(--callout-color);
-  -webkit-mask: var(--callout-icon) center / contain no-repeat;
-          mask: var(--callout-icon) center / contain no-repeat;
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: 0.4em;
+  vertical-align: middle;
+  background-color: currentColor;
+  -webkit-mask-image: var(--callout-icon);
+  mask-image: var(--callout-icon);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
 }
 
-/* ===== 12 个数学类：颜色 + 字形 ===== */
-/* Theorem — 定理 / FA \f698（平方根） */
+/* ===== 25 个类型：颜色 + 背景 + Base64 图标 ===== */
+/* theorem — 定理 / lucide/function-square */
 .callout[data-callout="theorem"] {
   --callout-color: #1e3a8a;
   --callout-bg: rgba(30, 58, 138, 0.08);
-  --callout-icon-glyph: "\f698";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIgcnk9IjIiIC8+PHBhdGggZD0iTTkgMTdjMiAwIDIuOC0xIDIuOC0yLjhWMTBjMC0yIDEtMy4zIDMuMi0zIiAvPjxwYXRoIGQ9Ik05IDExLjJoNS43IiAvPjwvc3ZnPg==");
 }
 
-/* Definition — 定义 / FA \f02d（书本） */
+/* definition — 定义 / material/rounded/book_ribbon */
 .callout[data-callout="definition"] {
   --callout-color: #15803d;
   --callout-bg: rgba(21, 128, 61, 0.08);
-  --callout-icon-glyph: "\f02d";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIj48cGF0aCBkPSJNNDUyLTI1MHYtNDI3cS00NS0zMC05Ny42Mi00Ni41UTMwMS43Ni03NDAgMjQ4LTc0MHEtMzggMC03NC41IDkuNVQxMDAtNzA3djQzNHEzMS0xNCA3MC41LTIwLjVUMjQ4LTMwMHE1My41NyAwIDEwNC4yOCAxMi41UTQwMy0yNzUgNDUyLTI1MFptLTQxMi0xdi00NjNxMC0xNSA3LTI3LjVUNjgtNzYxcTQyLTIwIDg3LjM5LTI5LjUgNDUuNC05LjUgOTIuNjEtOS41IDc1IDAgMTMwLjUgMTkuNVQ0OTQtNzIzcTggNSAxMyAxMy41dDUgMTkuNXY0NDBxNTAtMjUgOTgtMzcuNVQ3MTItMzAwcTM4IDAgNzguNSA2dDY5LjUgMTZ2LTQ2NnEwLTEyLjc1IDguNjgtMjEuMzggOC42Ny04LjYyIDIxLjUtOC42MiAxMi44MiAwIDIxLjMyIDguNjIgOC41IDguNjMgOC41IDIxLjM4djQ5M3EwIDI3Ljg5LTIyLjUgNDIuNDVRODc1LTE5NCA4NTMtMjA4cS0zNC0xNC02OS4yMy0yMi41UTc0OC41NC0yMzkgNzEyLTIzOXEtNTQuNTIgMC0xMDYuMjYgMTYuNVQ1MDgtMTc3cS02IDQtMTIuNSA1LjVUNDgyLTE3MHEtNyAwLTEzLjUtMS41VDQ1Ni0xNzdxLTQ3LjI5LTI5LjMxLTk5LjY0LTQ1LjY1UTMwNC0yMzkgMjQ4LTIzOXEtMzYuNTQgMC03MS43NyA5VDEwNi0yMDhxLTIzLjEgMTEtNDQuNTUtM1E0MC0yMjUgNDAtMjUxWm01NzItMTY3di0zOTBxMC05LjkyIDUuNTYtMTcuOTMgNS41NS04LjAyIDE0LjQ0LTExLjA3bDk4LTMzcTExLTQgMjAuNSAyLjk5IDkuNSA2Ljk4IDkuNSAxOC4wMXYzOTJxMCA5LjkyLTUuODMgMTcuOTMtNS44NCA4LjAyLTE1LjE3IDExLjA3bC05OCAzMXEtMTEgNC0yMC0yLjk5LTktNi45OC05LTE4LjAxWm0tMzM2LTc3WiIvPjwvc3ZnPg==");
 }
 
-/* Conclusion — 结论 / FA \f058（对勾） */
+/* conclusion — 结论 / lucide/badge-check */
 .callout[data-callout="conclusion"] {
   --callout-color: #10b981;
   --callout-bg: rgba(16, 185, 129, 0.08);
-  --callout-icon-glyph: "\f058";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTMuODUgOC42MmE0IDQgMCAwIDEgNC43OC00Ljc3IDQgNCAwIDAgMSA2Ljc0IDAgNCA0IDAgMCAxIDQuNzggNC43OCA0IDQgMCAwIDEgMCA2Ljc0IDQgNCAwIDAgMS00Ljc3IDQuNzggNCA0IDAgMCAxLTYuNzUgMCA0IDQgMCAwIDEtNC43OC00Ljc3IDQgNCAwIDAgMSAwLTYuNzZaIiAvPjxwYXRoIGQ9Im0xNiA5LTUuNSA1LjVMOCAxMiIgLz48L3N2Zz4=");
 }
 
-/* Corollary — 推论 / FA \f126（分支） */
+/* corollary — 推论 / lucide/git-branch */
 .callout[data-callout="corollary"] {
   --callout-color: #6b21a8;
   --callout-bg: rgba(107, 33, 168, 0.08);
-  --callout-icon-glyph: "\f126";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE1IDZhOSA5IDAgMCAwLTkgOVYzIiAvPjxjaXJjbGUgY3g9IjE4IiBjeT0iNiIgcj0iMyIgLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjMiIC8+PC9zdmc+");
 }
 
-/* Lemma — 引理 / FA \f12e（拼图） */
+/* lemma — 引理 / tabler/puzzle */
 .callout[data-callout="lemma"] {
   --callout-color: #475569;
   --callout-bg: rgba(71, 85, 105, 0.08);
-  --callout-icon-glyph: "\f12e";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIiAvPjxwYXRoIGQ9Ik00IDdoM2ExIDEgMCAwIDAgMSAtMXYtMWEyIDIgMCAwIDEgNCAwdjFhMSAxIDAgMCAwIDEgMWgzYTEgMSAwIDAgMSAxIDF2M2ExIDEgMCAwIDAgMSAxaDFhMiAyIDAgMCAxIDAgNGgtMWExIDEgMCAwIDAgLTEgMXYzYTEgMSAwIDAgMSAtMSAxaC0zYTEgMSAwIDAgMSAtMSAtMXYtMWEyIDIgMCAwIDAgLTQgMHYxYTEgMSAwIDAgMSAtMSAxaC0zYTEgMSAwIDAgMSAtMSAtMXYtM2ExIDEgMCAwIDEgMSAtMWgxYTIgMiAwIDAgMCAwIC00aC0xYTEgMSAwIDAgMSAtMSAtMXYtM2ExIDEgMCAwIDEgMSAtMSIgLz48L3N2Zz4=");
 }
 
-/* Formula — 公式 / FA \f1ec（计算器） */
+/* formula — 公式 / tabler/math-function */
 .callout[data-callout="formula"] {
   --callout-color: #0284c7;
   --callout-bg: rgba(2, 132, 199, 0.08);
-  --callout-icon-glyph: "\f1ec";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIiAvPjxwYXRoIGQ9Ik0zIDE5YTIgMiAwIDAgMCAyIDJjMiAwIDIgLTQgMyAtOXMxIC05IDMgLTlhMiAyIDAgMCAxIDIgMiIgLz48cGF0aCBkPSJNNSAxMmg2IiAvPjxwYXRoIGQ9Ik0xNSAxMmw2IDYiIC8+PHBhdGggZD0iTTE1IDE4bDYgLTYiIC8+PC9zdmc+");
 }
 
-/* Context — 背景 / FA \f276（定位） */
+/* context — 背景 / lucide/map-pin */
 .callout[data-callout="context"] {
   --callout-color: #0d9488;
   --callout-bg: rgba(13, 148, 136, 0.08);
-  --callout-icon-glyph: "\f276";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIwIDEwYzAgNC45OTMtNS41MzkgMTAuMTkzLTcuMzk5IDExLjc5OWExIDEgMCAwIDEtMS4yMDIgMEM5LjUzOSAyMC4xOTMgNCAxNC45OTMgNCAxMGE4IDggMCAwIDEgMTYgMCIgLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSIzIiAvPjwvc3ZnPg==");
 }
 
-/* Seealso — 参见 / FA \f0c1（链接） */
+/* seealso — 参见 / tabler/zoom-scan */
 .callout[data-callout="seealso"] {
   --callout-color: #475569;
   --callout-bg: rgba(71, 85, 105, 0.08);
-  --callout-icon-glyph: "\f0c1";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIiAvPjxwYXRoIGQ9Ik04IDExYTMgMyAwIDEgMCA2IDBhMyAzIDAgMCAwIC02IDAiIC8+PHBhdGggZD0iTTE2IDE2bC0yLjUgLTIuNSIgLz48cGF0aCBkPSJNMyA3di0yYTIgMiAwIDAgMSAyIC0yaDIiIC8+PHBhdGggZD0iTTMgMTd2MmEyIDIgMCAwIDAgMiAyaDIiIC8+PHBhdGggZD0iTTE3IDNoMmEyIDIgMCAwIDEgMiAydjIiIC8+PHBhdGggZD0iTTE3IDIxaDJhMiAyIDAgMCAwIDIgLTJ2LTIiIC8+PC9zdmc+");
 }
 
-/* Idea — 想法 / FA \f0eb（灯泡） */
+/* idea — 想法 / lucide/lightbulb */
 .callout[data-callout="idea"] {
   --callout-color: #d97706;
   --callout-bg: rgba(217, 119, 6, 0.08);
-  --callout-icon-glyph: "\f0eb";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE1IDE0Yy4yLTEgLjctMS43IDEuNS0yLjUgMS0uOSAxLjUtMi4yIDEuNS0zLjVBNiA2IDAgMCAwIDYgOGMwIDEgLjIgMi4yIDEuNSAzLjUuNy43IDEuMyAxLjUgMS41IDIuNSIgLz48cGF0aCBkPSJNOSAxOGg2IiAvPjxwYXRoIGQ9Ik0xMCAyMmg0IiAvPjwvc3ZnPg==");
 }
 
-/* Motivation — 动机 / FA \f14e（指南针） */
+/* motivation — 动机 / material/rounded/explore */
 .callout[data-callout="motivation"] {
   --callout-color: #f97316;
   --callout-bg: rgba(249, 115, 22, 0.08);
-  --callout-icon-glyph: "\f14e";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIj48cGF0aCBkPSJtMzMwLTMxMSAyMTMtNjZxMTQtNSAyNC0xNXQxNS0yNGw2Ni0yMTNxMy04LjY0LTMuNS0xNS4zMlQ2MjktNjQ4bC0yMTMgNjZxLTE0IDUtMjQgMTV0LTE1IDI0bC02NiAyMTNxLTMgOC42NCAzLjUgMTUuMzJUMzMwLTMxMVptMTQ5Ljc2LTEyOXEtMTYuNzYgMC0yOC4yNi0xMS43NC0xMS41LTExLjczLTExLjUtMjguNSAwLTE2Ljc2IDExLjc0LTI4LjI2IDExLjczLTExLjUgMjguNS0xMS41IDE2Ljc2IDAgMjguMjYgMTEuNzQgMTEuNSAxMS43MyAxMS41IDI4LjUgMCAxNi43Ni0xMS43NCAyOC4yNi0xMS43MyAxMS41LTI4LjUgMTEuNVptLjUxIDM2MHEtODIuNzQgMC0xNTUuNS0zMS41UTI1Mi0xNDMgMTk3LjUtMTk3LjV0LTg2LTEyNy4zNFE4MC0zOTcuNjggODAtNDgwLjV0MzEuNS0xNTUuNjZRMTQzLTcwOSAxOTcuNS03NjN0MTI3LjM0LTg1LjVRMzk3LjY4LTg4MCA0ODAuNS04ODB0MTU1LjY2IDMxLjVRNzA5LTgxNyA3NjMtNzYzdDg1LjUgMTI3UTg4MC01NjMgODgwLTQ4MC4yN3EwIDgyLjc0LTMxLjUgMTU1LjVRODE3LTI1MiA3NjMtMTk3LjY4cS01NCA1NC4zMS0xMjcgODZRNTYzLTgwIDQ4MC4yNy04MFptLjIyLTYwUTYyMi0xNDAgNzIxLTIzOS40OXE5OS05OS40OCA5OS0yNDFRODIwLTYyMiA3MjEtNzIxdC0yNDAuNTEtOTlxLTE0MS41MiAwLTI0MSA5OVExNDAtNjIyIDE0MC00ODAuNDlxMCAxNDEuNTIgOTkuNDkgMjQxIDk5LjQ4IDk5LjQ5IDI0MSA5OS40OVpNNDgwLTQ4MFoiLz48L3N2Zz4=");
 }
 
-/* Keypoint — 重点 / FA \f140（靶心） */
+/* keypoint — 重点 / tabler/target-arrow */
 .callout[data-callout="keypoint"] {
   --callout-color: #dc2626;
   --callout-bg: rgba(220, 38, 38, 0.08);
-  --callout-icon-glyph: "\f140";
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIiAvPjxwYXRoIGQ9Ik0xMSAxMmExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiAvPjxwYXRoIGQ9Ik0xMiA3YTUgNSAwIDEgMCA1IDUiIC8+PHBhdGggZD0iTTEzIDMuMDU1YTkgOSAwIDEgMCA3Ljk0MSA3Ljk0NSIgLz48cGF0aCBkPSJNMTUgNnYzaDNsMyAtM2gtM3YtM2wtMyAzIiAvPjxwYXRoIGQ9Ik0xNSA5bC0zIDMiIC8+PC9zdmc+");
 }
 
-/* Understand — 顿悟 / FA \e2ca（星火） */
+/* understand — 顿悟 / octicons/sparkles-fill */
 .callout[data-callout="understand"] {
   --callout-color: #c026d3;
   --callout-bg: rgba(192, 38, 211, 0.08);
-  --callout-icon-glyph: "\e2ca";
-}
-
-/* 兼容旧写法 "key point"（带空格）—— 与 keypoint 同色同图标 */
-.callout[data-callout="key point"] {
-  --callout-color: #dc2626;
-  --callout-bg: rgba(220, 38, 38, 0.08);
-  --callout-icon-glyph: "\f140";
-}
-
-/* ===== 其余类型：颜色 + mask 图标（原样保留） ===== */
-/* Abstract — lucide / clipboard-list */
-.callout[data-callout="abstract"] {
-  --callout-color: #00bfa5;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHJlY3Qgd2lkdGg9IjgiIGhlaWdodD0iNCIgeD0iOCIgeT0iMiIgcng9IjEiIHJ5PSIxIiAvPjxwYXRoIGQ9Ik0xNiA0aDJhMiAyIDAgMCAxIDIgMnYxNGEyIDIgMCAwIDEtMiAySDZhMiAyIDAgMCAxLTItMlY2YTIgMiAwIDAgMSAyLTJoMiIgLz48cGF0aCBkPSJNMTIgMTFoNCIgLz48cGF0aCBkPSJNMTIgMTZoNCIgLz48cGF0aCBkPSJNOCAxMWguMDEiIC8+PHBhdGggZD0iTTggMTZoLjAxIiAvPjwvc3ZnPg==");
-}
-
-/* Danger — lucide / zap */
-.callout[data-callout="danger"] {
-  --callout-color: #e93147;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE1LjkxNCA0YTEuNSAxLjUgMCAwMC0yLjQ3NC0xLjU2MWwtOSA5QTEuNSAxLjUgMCAwMDUuNSAxNGg0LjAwMmEuNS41IDAgMDEuNDcxLjY2Nkw4LjA4NiAyMGExLjUgMS41IDAgMDAyLjQ3NSAxLjU2bDktOUExLjUgMS41IDAgMDAxOC41IDEwaC0zLjk5N2EuNS41IDAgMDEtLjQ3Mi0uNjY3eiIgLz48L3N2Zz4=");
-}
-
-/* Example — lucide / list */
-.callout[data-callout="example"] {
-  --callout-color: #7852ee;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTMgNWguMDEiIC8+PHBhdGggZD0iTTMgMTJoLjAxIiAvPjxwYXRoIGQ9Ik0zIDE5aC4wMSIgLz48cGF0aCBkPSJNOCA1aDEzIiAvPjxwYXRoIGQ9Ik04IDEyaDEzIiAvPjxwYXRoIGQ9Ik04IDE5aDEzIiAvPjwvc3ZnPg==");
-}
-
-/* Failure — lucide / x */
-.callout[data-callout="failure"] {
-  --callout-color: #e93147;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE4IDYgNiAxOCIgLz48cGF0aCBkPSJtNiA2IDEyIDEyIiAvPjwvc3ZnPg==");
-}
-
-/* Info — lucide / info */
-.callout[data-callout="info"] {
-  --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0iTTEyIDE2di00IiAvPjxwYXRoIGQ9Ik0xMiA4aC4wMSIgLz48L3N2Zz4=");
-}
-
-/* Note — lucide / pencil */
-.callout[data-callout="note"] {
-  --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIxLjE3NCA2LjgxMmExIDEgMCAwIDAtMy45ODYtMy45ODdMMy44NDIgMTYuMTc0YTIgMiAwIDAgMC0uNS44M2wtMS4zMjEgNC4zNTJhLjUuNSAwIDAgMCAuNjIzLjYyMmw0LjM1My0xLjMyYTIgMiAwIDAgMCAuODMtLjQ5N3oiIC8+PHBhdGggZD0ibTE1IDUgNCA0IiAvPjwvc3ZnPg==");
-}
-
-/* Question — lucide / help-circle */
-.callout[data-callout="question"] {
-  --callout-color: #ec7500;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0iTTkuMDkgOWEzIDMgMCAwIDEgNS44MyAxYzAgMi0zIDMtMyAzIiAvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiIC8+PC9zdmc+");
-}
-
-/* Quote — lucide / quote */
-.callout[data-callout="quote"] {
-  --callout-color: #9e9e9e;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE2IDNhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDIgMSAxIDAgMCAxIDEgMXYxYTIgMiAwIDAgMS0yIDIgMSAxIDAgMCAwLTEgMXYyYTEgMSAwIDAgMCAxIDEgNiA2IDAgMCAwIDYtNlY1YTIgMiAwIDAgMC0yLTJ6IiAvPjxwYXRoIGQ9Ik01IDNhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDIgMSAxIDAgMCAxIDEgMXYxYTIgMiAwIDAgMS0yIDIgMSAxIDAgMCAwLTEgMXYyYTEgMSAwIDAgMCAxIDEgNiA2IDAgMCAwIDYtNlY1YTIgMiAwIDAgMC0yLTJ6IiAvPjwvc3ZnPg==");
-}
-
-/* Success — lucide / check */
-.callout[data-callout="success"] {
-  --callout-color: #08b94e;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIwIDYgOSAxN2wtNS01IiAvPjwvc3ZnPg==");
-}
-
-/* Tip — lucide / flame */
-.callout[data-callout="tip"] {
-  --callout-color: #00bfbc;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTEyIDNxMSA0IDQgNi41dDMgNS41YTEgMSAwIDAgMS0xNCAwIDUgNSAwIDAgMSAxLTMgMSAxIDAgMCAwIDUgMGMwLTItMS41LTMtMS41LTVxMC0yIDIuNS00IiAvPjwvc3ZnPg==");
-}
-
-/* Todo — lucide / check-circle-2 */
-.callout[data-callout="todo"] {
-  --callout-color: #086ddd;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0ibTE2IDktNS41IDUuNUw4IDEyIiAvPjwvc3ZnPg==");
-}
-
-/* Warning — lucide / alert-triangle */
-.callout[data-callout="warning"] {
-  --callout-color: #ec7500;
-  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0ibTIxLjczIDE4LTgtMTRhMiAyIDAgMCAwLTMuNDggMGwtOCAxNEEyIDIgMCAwIDAgNCAyMWgxNmEyIDIgMCAwIDAgMS43My0zIiAvPjxwYXRoIGQ9Ik0xMiA5djQiIC8+PHBhdGggZD0iTTEyIDE3aC4wMSIgLz48L3N2Zz4=");
-}
-
-/* Highlight — octicons / sparkles-fill */
-.callout[data-callout="highlight"] {
-  --callout-color: #086ddd;
   --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE0LjQgMy40MTlhLjYzOS42MzkgMCAwIDEgMS4yIDBsLjYxIDEuNjY4YTkuNTg3IDkuNTg3IDAgMCAwIDUuNzAzIDUuNzAzbDEuNjY4LjYxYS42MzkuNjM5IDAgMCAxIDAgMS4ybC0xLjY2OC42MWE5LjU4NyA5LjU4NyAwIDAgMC01LjcwMyA1LjcwM2wtLjYxIDEuNjY4YS42MzkuNjM5IDAgMCAxLTEuMiAwbC0uNjEtMS42NjhhOS41ODcgOS41ODcgMCAwIDAtNS43MDMtNS43MDNsLTEuNjY4LS42MWEuNjM5LjYzOSAwIDAgMSAwLTEuMmwxLjY2OC0uNjFhOS41ODcgOS41ODcgMCAwIDAgNS43MDMtNS43MDNsLjYxLTEuNjY4Wk04IDE2LjY3NWEuMjY2LjI2NiAwIDAgMSAuNSAwbC4yNTQuNjk0YTMuOTkyIDMuOTkyIDAgMCAwIDIuMzc2IDIuMzc3bC42OTUuMjU0YS4yNjYuMjY2IDAgMCAxIDAgLjVsLS42OTUuMjU0YTMuOTkyIDMuOTkyIDAgMCAwLTIuMzc2IDIuMzc3bC0uMjU0LjY5NGEuMjY2LjI2NiAwIDAgMS0uNSAwbC0uMjU0LS42OTRhMy45OTIgMy45OTIgMCAwIDAtMi4zNzYtMi4zNzdsLS42OTUtLjI1NGEuMjY2LjI2NiAwIDAgMSAwLS41bC42OTUtLjI1NGEzLjk5MiAzLjk5MiAwIDAgMCAyLjM3Ni0yLjM3N0w4IDE2LjY3NVpNNC4yLjIxYS4zMi4zMiAwIDAgMSAuNiAwbC4zMDUuODMzYTQuNzkzIDQuNzkzIDAgMCAwIDIuODUyIDIuODUybC44MzMuMzA1YS4zMi4zMiAwIDAgMSAwIC42bC0uODMzLjMwNWE0Ljc5MyA0Ljc5MyAwIDAgMC0yLjg1MiAyLjg1Mkw0LjggOC43OWEuMzIuMzIgMCAwIDEtLjYgMGwtLjMwNS0uODMzYTQuNzkzIDQuNzkzIDAgMCAwLTIuODUyLTIuODUyTC4yMSA0LjhhLjMyLjMyIDAgMCAxIDAtLjZsLjgzMy0uMzA1YTQuNzkzIDQuNzkzIDAgMCAwIDIuODUyLTIuODUyTDQuMi4yMVoiLz48L3N2Zz4=");
 }
 
-/* ===== 12 个数学类：图标改用 Font Awesome 6 字形 ===== */
-.callout:is(
-  [data-callout="theorem"], [data-callout="definition"], [data-callout="conclusion"],
-  [data-callout="corollary"], [data-callout="lemma"], [data-callout="formula"],
-  [data-callout="context"], [data-callout="seealso"], [data-callout="idea"],
-  [data-callout="motivation"], [data-callout="keypoint"], [data-callout="understand"],
-  [data-callout="key point"]
-) > .callout-title::before {
-  content: var(--callout-icon-glyph);
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  font-style: normal;
-  width: 1.2em;
-  height: auto;
-  margin-right: 8px;
-  vertical-align: -0.12em;
-  text-align: center;
-  background: none;            /* 必须清掉，否则 mask 变字形后残留色块 */
-  -webkit-mask: none;
-          mask: none;
+/* abstract — 摘要 / lucide/clipboard-list */
+.callout[data-callout="abstract"] {
+  --callout-color: #00bfa5;
+  --callout-bg: rgba(0, 191, 165, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHJlY3Qgd2lkdGg9IjgiIGhlaWdodD0iNCIgeD0iOCIgeT0iMiIgcng9IjEiIHJ5PSIxIiAvPjxwYXRoIGQ9Ik0xNiA0aDJhMiAyIDAgMCAxIDIgMnYxNGEyIDIgMCAwIDEtMiAySDZhMiAyIDAgMCAxLTItMlY2YTIgMiAwIDAgMSAyLTJoMiIgLz48cGF0aCBkPSJNMTIgMTFoNCIgLz48cGF0aCBkPSJNMTIgMTZoNCIgLz48cGF0aCBkPSJNOCAxMWguMDEiIC8+PHBhdGggZD0iTTggMTZoLjAxIiAvPjwvc3ZnPg==");
 }
 
-/* ===== 暗色：只覆盖颜色与背景，图标和结构不变 ===== */
+/* danger — 危险 / lucide/zap */
+.callout[data-callout="danger"] {
+  --callout-color: #e93147;
+  --callout-bg: rgba(233, 49, 71, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE1LjkxNCA0YTEuNSAxLjUgMCAwMC0yLjQ3NC0xLjU2MWwtOSA5QTEuNSAxLjUgMCAwMDUuNSAxNGg0LjAwMmEuNS41IDAgMDEuNDcxLjY2Nkw4LjA4NiAyMGExLjUgMS41IDAgMDAyLjQ3NSAxLjU2bDktOUExLjUgMS41IDAgMDAxOC41IDEwaC0zLjk5N2EuNS41IDAgMDEtLjQ3Mi0uNjY3eiIgLz48L3N2Zz4=");
+}
+
+/* example — 示例 / lucide/list */
+.callout[data-callout="example"] {
+  --callout-color: #7852ee;
+  --callout-bg: rgba(120, 82, 238, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTMgNWguMDEiIC8+PHBhdGggZD0iTTMgMTJoLjAxIiAvPjxwYXRoIGQ9Ik0zIDE5aC4wMSIgLz48cGF0aCBkPSJNOCA1aDEzIiAvPjxwYXRoIGQ9Ik04IDEyaDEzIiAvPjxwYXRoIGQ9Ik04IDE5aDEzIiAvPjwvc3ZnPg==");
+}
+
+/* failure — 失败 / lucide/x */
+.callout[data-callout="failure"] {
+  --callout-color: #e93147;
+  --callout-bg: rgba(233, 49, 71, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE4IDYgNiAxOCIgLz48cGF0aCBkPSJtNiA2IDEyIDEyIiAvPjwvc3ZnPg==");
+}
+
+/* info — 信息 / lucide/info */
+.callout[data-callout="info"] {
+  --callout-color: #086ddd;
+  --callout-bg: rgba(8, 109, 221, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0iTTEyIDE2di00IiAvPjxwYXRoIGQ9Ik0xMiA4aC4wMSIgLz48L3N2Zz4=");
+}
+
+/* note — 笔记 / lucide/pencil */
+.callout[data-callout="note"] {
+  --callout-color: #086ddd;
+  --callout-bg: rgba(8, 109, 221, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIxLjE3NCA2LjgxMmExIDEgMCAwIDAtMy45ODYtMy45ODdMMy44NDIgMTYuMTc0YTIgMiAwIDAgMC0uNS44M2wtMS4zMjEgNC4zNTJhLjUuNSAwIDAgMCAuNjIzLjYyMmw0LjM1My0xLjMyYTIgMiAwIDAgMCAuODMtLjQ5N3oiIC8+PHBhdGggZD0ibTE1IDUgNCA0IiAvPjwvc3ZnPg==");
+}
+
+/* question — 问题 / lucide/help-circle */
+.callout[data-callout="question"] {
+  --callout-color: #ec7500;
+  --callout-bg: rgba(236, 117, 0, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0iTTkuMDkgOWEzIDMgMCAwIDEgNS44MyAxYzAgMi0zIDMtMyAzIiAvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiIC8+PC9zdmc+");
+}
+
+/* quote — 引用 / lucide/quote */
+.callout[data-callout="quote"] {
+  --callout-color: #9e9e9e;
+  --callout-bg: rgba(158, 158, 158, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTE2IDNhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDIgMSAxIDAgMCAxIDEgMXYxYTIgMiAwIDAgMS0yIDIgMSAxIDAgMCAwLTEgMXYyYTEgMSAwIDAgMCAxIDEgNiA2IDAgMCAwIDYtNlY1YTIgMiAwIDAgMC0yLTJ6IiAvPjxwYXRoIGQ9Ik01IDNhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDIgMSAxIDAgMCAxIDEgMXYxYTIgMiAwIDAgMS0yIDIgMSAxIDAgMCAwLTEgMXYyYTEgMSAwIDAgMCAxIDEgNiA2IDAgMCAwIDYtNlY1YTIgMiAwIDAgMC0yLTJ6IiAvPjwvc3ZnPg==");
+}
+
+/* success — 成功 / lucide/check */
+.callout[data-callout="success"] {
+  --callout-color: #08b94e;
+  --callout-bg: rgba(8, 185, 78, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTIwIDYgOSAxN2wtNS01IiAvPjwvc3ZnPg==");
+}
+
+/* tip — 提示 / lucide/flame */
+.callout[data-callout="tip"] {
+  --callout-color: #00bfbc;
+  --callout-bg: rgba(0, 191, 188, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0iTTEyIDNxMSA0IDQgNi41dDMgNS41YTEgMSAwIDAgMS0xNCAwIDUgNSAwIDAgMSAxLTMgMSAxIDAgMCAwIDUgMGMwLTItMS41LTMtMS41LTVxMC0yIDIuNS00IiAvPjwvc3ZnPg==");
+}
+
+/* todo — 待办 / lucide/check-circle-2 */
+.callout[data-callout="todo"] {
+  --callout-color: #086ddd;
+  --callout-bg: rgba(8, 109, 221, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIC8+PHBhdGggZD0ibTE2IDktNS41IDUuNUw4IDEyIiAvPjwvc3ZnPg==");
+}
+
+/* warning — 警告 / lucide/alert-triangle */
+.callout[data-callout="warning"] {
+  --callout-color: #ec7500;
+  --callout-bg: rgba(236, 117, 0, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggZD0ibTIxLjczIDE4LTgtMTRhMiAyIDAgMCAwLTMuNDggMGwtOCAxNEEyIDIgMCAwIDAgNCAyMWgxNmEyIDIgMCAwIDAgMS43My0zIiAvPjxwYXRoIGQ9Ik0xMiA5djQiIC8+PHBhdGggZD0iTTEyIDE3aC4wMSIgLz48L3N2Zz4=");
+}
+/* ===== 暗色：只换颜色与背景（Base64 不重复）===== */
 @media (prefers-color-scheme: dark) {
   .callout[data-callout="theorem"] { --callout-color: #60a5fa; --callout-bg: rgba(96, 165, 250, 0.15); }
   .callout[data-callout="definition"] { --callout-color: #4ade80; --callout-bg: rgba(74, 222, 128, 0.15); }
@@ -257,18 +236,18 @@
   .callout[data-callout="motivation"] { --callout-color: #fb923c; --callout-bg: rgba(251, 146, 60, 0.15); }
   .callout[data-callout="keypoint"] { --callout-color: #f87171; --callout-bg: rgba(248, 113, 113, 0.15); }
   .callout[data-callout="understand"] { --callout-color: #e879f9; --callout-bg: rgba(232, 121, 249, 0.15); }
-  .callout[data-callout="key point"] { --callout-color: #f87171; --callout-bg: rgba(248, 113, 113, 0.15); }
-  .callout[data-callout="danger"] { --callout-color: #fb464c; }
-  .callout[data-callout="example"] { --callout-color: #a882ff; }
-  .callout[data-callout="failure"] { --callout-color: #fb464c; }
-  .callout[data-callout="info"] { --callout-color: #027aff; }
-  .callout[data-callout="note"] { --callout-color: #027aff; }
-  .callout[data-callout="question"] { --callout-color: #e9973f; }
-  .callout[data-callout="success"] { --callout-color: #44cf6e; }
-  .callout[data-callout="tip"] { --callout-color: #53dfdd; }
-  .callout[data-callout="todo"] { --callout-color: #027aff; }
-  .callout[data-callout="warning"] { --callout-color: #e9973f; }
-  .callout[data-callout="highlight"] { --callout-color: #027aff; }
+  .callout[data-callout="abstract"] { --callout-color: #00bfa5; --callout-bg: rgba(0, 191, 165, 0.15); }
+  .callout[data-callout="danger"] { --callout-color: #fb464c; --callout-bg: rgba(251, 70, 76, 0.15); }
+  .callout[data-callout="example"] { --callout-color: #a882ff; --callout-bg: rgba(168, 130, 255, 0.15); }
+  .callout[data-callout="failure"] { --callout-color: #fb464c; --callout-bg: rgba(251, 70, 76, 0.15); }
+  .callout[data-callout="info"] { --callout-color: #027aff; --callout-bg: rgba(2, 122, 255, 0.15); }
+  .callout[data-callout="note"] { --callout-color: #027aff; --callout-bg: rgba(2, 122, 255, 0.15); }
+  .callout[data-callout="question"] { --callout-color: #e9973f; --callout-bg: rgba(233, 151, 63, 0.15); }
+  .callout[data-callout="quote"] { --callout-color: #9e9e9e; --callout-bg: rgba(158, 158, 158, 0.15); }
+  .callout[data-callout="success"] { --callout-color: #44cf6e; --callout-bg: rgba(68, 207, 110, 0.15); }
+  .callout[data-callout="tip"] { --callout-color: #53dfdd; --callout-bg: rgba(83, 223, 221, 0.15); }
+  .callout[data-callout="todo"] { --callout-color: #027aff; --callout-bg: rgba(2, 122, 255, 0.15); }
+  .callout[data-callout="warning"] { --callout-color: #e9973f; --callout-bg: rgba(233, 151, 63, 0.15); }
 }
 
 /* 手动切到暗色（覆盖系统亮色） */
@@ -284,18 +263,18 @@ html[data-theme="dark"] .callout[data-callout="idea"] { --callout-color: #fbbf24
 html[data-theme="dark"] .callout[data-callout="motivation"] { --callout-color: #fb923c; --callout-bg: rgba(251, 146, 60, 0.15); }
 html[data-theme="dark"] .callout[data-callout="keypoint"] { --callout-color: #f87171; --callout-bg: rgba(248, 113, 113, 0.15); }
 html[data-theme="dark"] .callout[data-callout="understand"] { --callout-color: #e879f9; --callout-bg: rgba(232, 121, 249, 0.15); }
-html[data-theme="dark"] .callout[data-callout="key point"] { --callout-color: #f87171; --callout-bg: rgba(248, 113, 113, 0.15); }
-html[data-theme="dark"] .callout[data-callout="danger"] { --callout-color: #fb464c; }
-html[data-theme="dark"] .callout[data-callout="example"] { --callout-color: #a882ff; }
-html[data-theme="dark"] .callout[data-callout="failure"] { --callout-color: #fb464c; }
-html[data-theme="dark"] .callout[data-callout="info"] { --callout-color: #027aff; }
-html[data-theme="dark"] .callout[data-callout="note"] { --callout-color: #027aff; }
-html[data-theme="dark"] .callout[data-callout="question"] { --callout-color: #e9973f; }
-html[data-theme="dark"] .callout[data-callout="success"] { --callout-color: #44cf6e; }
-html[data-theme="dark"] .callout[data-callout="tip"] { --callout-color: #53dfdd; }
-html[data-theme="dark"] .callout[data-callout="todo"] { --callout-color: #027aff; }
-html[data-theme="dark"] .callout[data-callout="warning"] { --callout-color: #e9973f; }
-html[data-theme="dark"] .callout[data-callout="highlight"] { --callout-color: #027aff; }
+html[data-theme="dark"] .callout[data-callout="abstract"] { --callout-color: #00bfa5; --callout-bg: rgba(0, 191, 165, 0.15); }
+html[data-theme="dark"] .callout[data-callout="danger"] { --callout-color: #fb464c; --callout-bg: rgba(251, 70, 76, 0.15); }
+html[data-theme="dark"] .callout[data-callout="example"] { --callout-color: #a882ff; --callout-bg: rgba(168, 130, 255, 0.15); }
+html[data-theme="dark"] .callout[data-callout="failure"] { --callout-color: #fb464c; --callout-bg: rgba(251, 70, 76, 0.15); }
+html[data-theme="dark"] .callout[data-callout="info"] { --callout-color: #027aff; --callout-bg: rgba(2, 122, 255, 0.15); }
+html[data-theme="dark"] .callout[data-callout="note"] { --callout-color: #027aff; --callout-bg: rgba(2, 122, 255, 0.15); }
+html[data-theme="dark"] .callout[data-callout="question"] { --callout-color: #e9973f; --callout-bg: rgba(233, 151, 63, 0.15); }
+html[data-theme="dark"] .callout[data-callout="quote"] { --callout-color: #9e9e9e; --callout-bg: rgba(158, 158, 158, 0.15); }
+html[data-theme="dark"] .callout[data-callout="success"] { --callout-color: #44cf6e; --callout-bg: rgba(68, 207, 110, 0.15); }
+html[data-theme="dark"] .callout[data-callout="tip"] { --callout-color: #53dfdd; --callout-bg: rgba(83, 223, 221, 0.15); }
+html[data-theme="dark"] .callout[data-callout="todo"] { --callout-color: #027aff; --callout-bg: rgba(2, 122, 255, 0.15); }
+html[data-theme="dark"] .callout[data-callout="warning"] { --callout-color: #e9973f; --callout-bg: rgba(233, 151, 63, 0.15); }
 
 /* 手动切到亮色（覆盖系统暗色） */
 html[data-theme="light"] .callout[data-callout="theorem"] { --callout-color: #1e3a8a; --callout-bg: rgba(30, 58, 138, 0.08); }
@@ -310,26 +289,28 @@ html[data-theme="light"] .callout[data-callout="idea"] { --callout-color: #d9770
 html[data-theme="light"] .callout[data-callout="motivation"] { --callout-color: #f97316; --callout-bg: rgba(249, 115, 22, 0.08); }
 html[data-theme="light"] .callout[data-callout="keypoint"] { --callout-color: #dc2626; --callout-bg: rgba(220, 38, 38, 0.08); }
 html[data-theme="light"] .callout[data-callout="understand"] { --callout-color: #c026d3; --callout-bg: rgba(192, 38, 211, 0.08); }
-html[data-theme="light"] .callout[data-callout="key point"] { --callout-color: #dc2626; --callout-bg: rgba(220, 38, 38, 0.08); }
-html[data-theme="light"] .callout[data-callout="abstract"] { --callout-color: #00bfa5; }
-html[data-theme="light"] .callout[data-callout="danger"] { --callout-color: #e93147; }
-html[data-theme="light"] .callout[data-callout="example"] { --callout-color: #7852ee; }
-html[data-theme="light"] .callout[data-callout="failure"] { --callout-color: #e93147; }
-html[data-theme="light"] .callout[data-callout="info"] { --callout-color: #086ddd; }
-html[data-theme="light"] .callout[data-callout="note"] { --callout-color: #086ddd; }
-html[data-theme="light"] .callout[data-callout="question"] { --callout-color: #ec7500; }
-html[data-theme="light"] .callout[data-callout="quote"] { --callout-color: #9e9e9e; }
-html[data-theme="light"] .callout[data-callout="success"] { --callout-color: #08b94e; }
-html[data-theme="light"] .callout[data-callout="tip"] { --callout-color: #00bfbc; }
-html[data-theme="light"] .callout[data-callout="todo"] { --callout-color: #086ddd; }
-html[data-theme="light"] .callout[data-callout="warning"] { --callout-color: #ec7500; }
-html[data-theme="light"] .callout[data-callout="highlight"] { --callout-color: #086ddd; }
+html[data-theme="light"] .callout[data-callout="abstract"] { --callout-color: #00bfa5; --callout-bg: rgba(0, 191, 165, 0.08); }
+html[data-theme="light"] .callout[data-callout="danger"] { --callout-color: #e93147; --callout-bg: rgba(233, 49, 71, 0.08); }
+html[data-theme="light"] .callout[data-callout="example"] { --callout-color: #7852ee; --callout-bg: rgba(120, 82, 238, 0.08); }
+html[data-theme="light"] .callout[data-callout="failure"] { --callout-color: #e93147; --callout-bg: rgba(233, 49, 71, 0.08); }
+html[data-theme="light"] .callout[data-callout="info"] { --callout-color: #086ddd; --callout-bg: rgba(8, 109, 221, 0.08); }
+html[data-theme="light"] .callout[data-callout="note"] { --callout-color: #086ddd; --callout-bg: rgba(8, 109, 221, 0.08); }
+html[data-theme="light"] .callout[data-callout="question"] { --callout-color: #ec7500; --callout-bg: rgba(236, 117, 0, 0.08); }
+html[data-theme="light"] .callout[data-callout="quote"] { --callout-color: #9e9e9e; --callout-bg: rgba(158, 158, 158, 0.08); }
+html[data-theme="light"] .callout[data-callout="success"] { --callout-color: #08b94e; --callout-bg: rgba(8, 185, 78, 0.08); }
+html[data-theme="light"] .callout[data-callout="tip"] { --callout-color: #00bfbc; --callout-bg: rgba(0, 191, 188, 0.08); }
+html[data-theme="light"] .callout[data-callout="todo"] { --callout-color: #086ddd; --callout-bg: rgba(8, 109, 221, 0.08); }
+html[data-theme="light"] .callout[data-callout="warning"] { --callout-color: #ec7500; --callout-bg: rgba(236, 117, 0, 0.08); }
 
-/* ==========================================================================
-   补充：正文区、折叠标记与折叠指示
-   （纯 CSS 三角，不依赖任何图标字体）
-   ========================================================================== */
+/* ===== 兼容旧写法 "key point"（带空格）===== */
+.callout[data-callout="key point"] {
+  --callout-color: #dc2626;
+  --callout-bg: rgba(220, 38, 38, 0.08);
+  --callout-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiA+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIiAvPjxwYXRoIGQ9Ik0xMSAxMmExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiAvPjxwYXRoIGQ9Ik0xMiA3YTUgNSAwIDEgMCA1IDUiIC8+PHBhdGggZD0iTTEzIDMuMDU1YTkgOSAwIDEgMCA3Ljk0MSA3Ljk0NSIgLz48cGF0aCBkPSJNMTUgNnYzaDNsMyAtM2gtM3YtM2wtMyAzIiAvPjxwYXRoIGQ9Ik0xNSA5bC0zIDMiIC8+PC9zdmc+");
+}
+html[data-theme="dark"] .callout[data-callout="key point"] { --callout-color: #f87171; --callout-bg: rgba(248, 113, 113, 0.15); }
 
+/* ===== 正文区与折叠指示（纯 CSS 三角，无字体）===== */
 .callout-content > :first-child { margin-top: 0; }
 .callout-content > :last-child { margin-bottom: 0; }
 
@@ -338,19 +319,9 @@ html[data-theme="light"] .callout[data-callout="highlight"] { --callout-color: #
   user-select: none;
 }
 
-/* 去掉 <summary> 的原生三角，否则会和我们的图标并排出现两个标记 */
-/* 去掉浏览器默认三角（两条规则一起用，覆盖 WebKit 与标准 ::marker） */
-.callout > summary.callout-title::-webkit-details-marker {
-  display: none;
-}
+.callout > summary.callout-title::-webkit-details-marker { display: none; }
+.callout > summary.callout-title::marker { content: ""; }
 
-.callout > summary.callout-title::marker {
-  content: "";
-}
-
-/* 折叠指示三角：float:right 在 block 容器里最稳
-   —— 不用 absolute、不用 flex、不加 transition
-   （展开/折叠是浏览器原生行为，任何 transition 都可能触发多余重绘） */
 .callout > summary.callout-title::after {
   content: "";
   float: right;
