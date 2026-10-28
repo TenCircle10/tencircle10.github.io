@@ -216,7 +216,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 </div>
 </details>
 
-**证明**：把 $[a, b]$ 等分成两个小区间，必有一个含 $\lbrace x_n\rbrace $ 的无穷多项（否则两边各只含有限项，合起来也只有有限项，矛盾），记为 $[a_1, b_1]$，并在其中取一项 $x_{n_1}$。再等分 $[a_1, b_1]$ 重复此过程，得到闭区间套 $\lbrace [a_k, b_k]\rbrace $ 与子列 $\lbrace x_{n_k}\rbrace $，满足 $x_{n_k} \in [a_k, b_k]$ 且下标严格递增。由 [闭区间套定理](#nested-intervals)，$a_k \to c \leftarrow b_k$，夹逼得 $x_{n_k} \to c$。
+**证明**：把 $[a, b]$ 等分成两个小区间，必有一个含 $\lbrace x_n\rbrace $ 的无穷多项（否则两边各只含有限项，合起来也只有有限项，矛盾），记为 $[a_1, b_1]$，并在其中取一项 $x_{n_1}$。再等分 $[a_1, b_1]$ 重复此过程，得到闭区间套 $\lbrace [a_k, b_k]\rbrace $ 与子列 $\lbrace x_{n_k}\rbrace $，满足 $x_{n_k} \in [a_k, b_k]$ 且下标严格递增。由 [闭区间套定理](#nested-intervals)，$a_k \to c \gets b_k$，夹逼得 $x_{n_k} \to c$。
 <a id="bolzano-weierstrass"></a>
 
 ### 3.5 实数的小数表示
@@ -433,7 +433,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 </div>
 </details>
 
-这种"逐位锁定"只保证收得住，不给出值得多少 —— $\gamma$ 就是这类量。
+单调有界定理只保证极限存在，不给值 —— $\gamma$ 就是这类量。
 
 <details class="callout example" data-callout="example" open>
 <summary class="callout-title">例 1：Euler 常数 $\gamma$ 存在</summary>
@@ -884,7 +884,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 </div>
 </details>
 
-**证**：接上，由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有收敛子列 $x_{n_k} \to \xi$，其中 $\xi \in [a, b]$（闭区间的极限点还在区间内，注意这一点）。由连续性 $f(\xi) = \lim\limits_{k \to \infty} f(x_{n_k}) = m$，即最小值可以取到。上确界同理。
+**证**：接上，由 [Bolzano–Weierstrass 定理](#bolzano-weierstrass) 有收敛子列 $x_{n_k} \to \xi$，其中 $\xi \in [a, b]$（闭区间对极限封闭）。由连续性 $f(\xi) = \lim\limits_{k \to \infty} f(x_{n_k}) = m$，即最小值可以取到。上确界同理。
 
 ### 8.2 介值定理
 
@@ -1198,7 +1198,7 @@ $$\Delta y = A\,\Delta x + o(\Delta x)\quad(\Delta x \to 0)$$
 </div>
 </details>
 
-记 $dx = \Delta x$，但 $dy \neq \Delta y$：$\Delta y - dy = o(\Delta x)$。由定义立刻得到 $dy = f'(x)\,dx$，即 $\dfrac{dy}{dx} = f'(x)$ —— 导数就是两个微分之比。$A = f'(x_0) \neq 0$ 时 $dy \sim \Delta y$。
+记 $dx = \Delta x$，但 $dy \neq \Delta y$：$\Delta y - dy = o(\Delta x)$。由定义立刻得到 $dy = f'(x)\,dx$，即 $\dfrac{dy}{dx} = f'(x)$。$A = f'(x_0) \neq 0$ 时 $dy \sim \Delta y$。
 
 ### 12.2 可导与可微
 
@@ -1227,7 +1227,7 @@ $$d(u \pm v) = du \pm dv, \qquad d(uv) = v\,du + u\,dv, \qquad d(Cu) = C\,du, \q
 </div>
 </details>
 
-**局部线性化**：拿 $dy$ 代替 $\Delta y$，就是 $y - y_0 = f'(x_0)(x - x_0)$ —— 在 $x_0$ 附近用切线代替曲线。
+**局部线性化**：$dy$ 代替 $\Delta y$，即 $y - y_0 = f'(x_0)(x - x_0)$。
 
 **近似计算**：$\Delta y\big\mid{}&#95;{x=x_0} \approx dy\big\mid{}&#95;{x=x_0}$。
 
@@ -1308,7 +1308,7 @@ $$y^{(2k+1)}(0) = (-1)^{k}(2k)!$$
 
 ### 13.3 高阶微分与形式不变性
 
-**高阶微分**：$d^{n}y = d\left(d^{n-1}y\right)$。两种写法要分清 —— $d(x^{n}) = nx^{n-1}dx$ 是求微分，$(dx)^{n}$ 记作 $dx^{n}$ 是微分的乘幂。
+**高阶微分**：$d^{n}y = d\left(d^{n-1}y\right)$。两种含义：$d(x^{n}) = nx^{n-1}dx$ 是求微分，$dx^{n} = (dx)^{n}$ 是微分的乘幂。
 
 <details class="callout keypoint" id="higher-differential" data-callout="keypoint" open>
 <summary class="callout-title">一阶有形式不变性，高阶没有</summary>
@@ -1334,8 +1334,6 @@ $$\frac{d^{2}x}{dy^{2}} = \frac{d}{dy}\left(\frac{1}{f'(x)}\right) = \frac{d}{dx
 
 ## 14 三个病态函数
 
-连续与可导的反例集中在这一节，证明单开，主线只留结论。
-
 | 函数 | 连续 | 可导 | 备注 |
 | --- | --- | --- | --- |
 | $f(x) = e^{-\frac{1}{x}}\ (x \gt{} 0)$，$0\ (x \le 0)$ | $\mathbb{R}$ 上连续 | $\mathbb{R}$ 上无穷次可导 | 各阶导在 $0$ 处为 $0$，但各阶导不恒为 $0$ |
@@ -1346,7 +1344,7 @@ $$\frac{d^{2}x}{dy^{2}} = \frac{d}{dy}\left(\frac{1}{f'(x)}\right) = \frac{d}{dx
 
 **Dirichlet 函数**：$D(x) = 1\ (x \in \mathbb{Q})$，$0\ (x \notin \mathbb{Q})$。$T \in \mathbb{Q}$、$T \neq 0$ 时 $D(x + T) = D(x)$，故每个非零有理数都是周期；**无理数不是周期**（$x$ 与 $x + T$ 的有理性相反）。任一点取有理数列与无理数列逼近，$D$ 的极限分别是 $1$ 与 $0$，故极限处处不存在。
 
-**Thomae 函数**：$R(x) = \dfrac{1}{q}\ (x = \dfrac{p}{q}\ \text{既约},\ q \gt{} 0)$，$0\ (x \notin \mathbb{Q})$。分母越大值越小，所以有理点的稠密不破坏它在无理点收敛到 $0$。但连续救不了可导：差商沿无理方向恒为 $0$，沿贴着 $x_0$ 的有理方向 $\gt{} q \to \infty$，两条路对不上，故无理点也不可导。证明见 [Thomae 函数的连续性](/notes/Thomae 函数的连续性/)、[[Thomae 函数的连续性#^thomae-nondiff|处处不可导]]。
+**Thomae 函数**：$R(x) = \dfrac{1}{q}\ (x = \dfrac{p}{q}\ \text{既约},\ q \gt{} 0)$，$0\ (x \notin \mathbb{Q})$。分母越大值越小，所以有理点的稠密不破坏它在无理点收敛到 $0$。无理点处也不可导：差商沿无理方向为 $0$，沿有理方向无界。证明见 [Thomae 函数的连续性](/notes/Thomae 函数的连续性/)。
 
 ---
 
