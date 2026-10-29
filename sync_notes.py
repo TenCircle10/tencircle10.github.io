@@ -89,6 +89,18 @@ try:
     from pypinyin import lazy_pinyin
 except ImportError:  # 没装 pypinyin 时降级为「保留原文件名」，不中断同步
     lazy_pinyin = None
+else:
+    # 若安装了 pypinyin-dict，加载扩充词典（汉典大字词典 + 大词组词典），
+    # 改善多音字 / 异读字 / 词组的拼音准确度，例如：
+    #   重数 -> chóngshù、会计 -> kuàijì、银行 -> yínháng、奇数 -> jīshù。
+    # 不装也不影响运行，仅降级为 pypinyin 自带词典（slug 仍可生成）。
+    try:
+        from pypinyin_dict.pinyin_data import zdic
+        from pypinyin_dict.phrase_pinyin_data import large_pinyin
+        zdic.load()
+        large_pinyin.load()
+    except Exception:
+        pass
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SRC = ROOT / "origin"
