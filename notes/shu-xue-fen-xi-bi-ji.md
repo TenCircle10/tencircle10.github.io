@@ -99,7 +99,7 @@ $\mathbb{Q}$、$\mathbb{R}$ 是有序域；$\mathbb{C}$ **不是**：相容的�
 
 ### 2.2 可列个可列集之并
 
-<details class="callout theorem" id="f0fbb3" data-callout="theorem" open>
+<details class="callout theorem" id="countable-union" data-callout="theorem" open>
 <summary class="callout-title">定理 1.0.1</summary>
 <div class="callout-content" markdown="block">
 
@@ -127,7 +127,7 @@ $$
 
 ### 2.3 $\mathbb{Q}$ 是可列集
 
-记 $A_n = [n, n+1] \cap \mathbb{Q}$（$n \in \mathbb{Z}$），则 $\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$。这是**可列个**集合之并，由 [定理 1.0.1](#f0fbb3)，只需证 $A_0$ 可列：
+记 $A_n = [n, n+1] \cap \mathbb{Q}$（$n \in \mathbb{Z}$），则 $\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$。这是**可列个**集合之并，由 [可列个可列集之并仍可列](#countable-union)，只需证 $A_0$ 可列：
 
 $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},\ \tfrac{3}{4},\ \tfrac{1}{5},\ \tfrac{2}{5},\ \tfrac{3}{5},\ \tfrac{4}{5},\ \dots\Big\}$$
 

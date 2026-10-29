@@ -78,7 +78,7 @@ $$
 <summary class="callout-title">为什么倍乘不允许乘 $0$</summary>
 <div class="callout-content" markdown="block">
 
-乘 $0$ 会把整行信息彻底抹掉、无法还原（$O$ 行变不回原来的行），初等变换就不再可逆，"等价 / 同解"的整条链就断了。所以定义里限定 $k \neq 0$。
+乘 $0$ 会把整行信息彻底抹掉、无法还原（零行变不回原来的行），初等变换就不再可逆，"等价 / 同解"的整条链就断了。所以定义里限定 $k \neq 0$。
 
 </div>
 </details>
@@ -485,9 +485,59 @@ $r(A+B) \le r(A) + r(B)$。其余专题单开：
 - **Sylvester 秩不等式** $r(AB) \ge r(A) + r(B) - n$ 及其几何解释：见 [Sylvester 秩不等式](/notes/Sylvester 秩不等式/)
 - **子矩阵的秩不超过原矩阵** $r(B) \le r(A)$：见 [子母矩阵秩的大小关系](/notes/子母矩阵秩的大小关系/)
 - **加长向量组仍无关**（无关的向量组添上若干坐标后仍无关）：见 [向量组无关加元素仍无关](/notes/向量组无关加元素仍无关/)
+- **秩 1 分解** $r(A) = 1 \iff A = \mathbf{u}\mathbf{v}^T$：见 [秩1矩阵的分解](/notes/秩1矩阵的分解/)
 <a id="rank-further"></a>
 
 ---
+
+### 5.7 极大无关组与三秩合一
+
+#### 5.7.1 极大无关组求法
+
+设 $A = [\beta_1, \beta_2, \dots, \beta_n]$（$\beta_i$ 为列向量）。对 $A$ 作初等行变换化为阶梯形 $A'$，则 $r(A') = r$，取 $A'$ 中 $r$ 个主元列对应的**原矩阵** $A$ 的那 $r$ 个列，即为 $A$ 的一个极大无关组。
+
+<details class="callout keypoint" id="max-independent-group" data-callout="keypoint" open>
+<summary class="callout-title">为什么取"原矩阵"的列</summary>
+<div class="callout-content" markdown="block">
+
+行变换不改变列向量之间的线性相关性（见 5.7.3），所以阶梯形里哪 $r$ 个列无关，原矩阵里对应的那 $r$ 个列也无关，且能表出其余列。
+
+</div>
+</details>
+
+要写出表示系数，需进一步化为**行简化阶梯形**读取。
+
+**秩不等式的极大无关组证法**。设 $A$ 的列极大无关组为 $\lbrace \alpha_1, \dots, \alpha_s\rbrace $，$B$ 的列极大无关组为 $\lbrace \beta_1, \dots, \beta_t\rbrace $，合并取 $\lbrace \alpha_1, \dots, \alpha_s, \beta_1, \dots, \beta_t\rbrace $ 即可表出 $A+B$ 的各列 $\lbrace \gamma_1, \dots, \gamma_r\rbrace $，故 $r \le s + t$，即
+
+$$r(A+B) \le r(A) + r(B)$$
+
+#### 5.7.2 乘可逆矩阵不改变秩
+
+<details class="callout theorem" id="rank-mult-invariant" data-callout="theorem" open>
+<summary class="callout-title">左右乘可逆矩阵保秩</summary>
+<div class="callout-content" markdown="block">
+
+设 $P, Q$ 均可逆，则 $r(A) \ge r(PA) \ge r(PAQ) \ge r(P^{-1}PAQ) = r(AQ) \ge r(A)$，故 $r(PA) = r(AQ) = r(PAQ) = r(A)$。
+
+</div>
+</details>
+
+#### 5.7.3 三秩合一：行秩 = 列秩 = 矩阵秩
+
+**引理（表无关，需更多）**。若 $\beta_1, \dots, \beta_m$ 线性无关，且每个 $\beta_j$ 都能由 $\alpha_1, \dots, \alpha_n$ 线性表出，则 $m \le n$。
+
+**证明**：设 $[\alpha_1, \dots, \alpha_n] M = [\beta_1, \dots, \beta_m]$，$M$ 为 $n \times m$。若 $m \gt{} n$，则 $M x = 0$ 有非零解 $x$；右乘上式得 $[\beta_1, \dots, \beta_m] x = 0$ 且 $x \neq 0$，与 $\beta_j$ 线性无关矛盾，故 $m \le n$。
+
+**行秩 = 列秩**。初等行变换是对行向量做线性组合，不改变各列的线性相关性（相关仍相关，无关仍无关），故列秩在行变换下不变。将 $A$ 行变换为阶梯形 $A'$：其列秩 = 主元列数 = 非零行数 = $A'$ 的行秩，于是 $A$ 的列秩 = $A'$ 的列秩 = $A'$ 的行秩 = $A$ 的行秩。
+
+<details class="callout theorem" id="three-ranks-equal" data-callout="theorem" open>
+<summary class="callout-title">三秩合一</summary>
+<div class="callout-content" markdown="block">
+
+任意矩阵的行秩、列秩、矩阵秩三者相等，统一记作 $r(A)$；由此 $r(A) = r(A^T)$（相抵标准形证法见 [5.5](#rank-transpose)）。
+
+</div>
+</details>
 
 ## 6 初等矩阵与矩阵等价
 
