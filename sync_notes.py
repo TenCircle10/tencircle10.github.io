@@ -23,6 +23,9 @@ Markdown，输出到 ``notes/``。
    ``a*b`` 会变强调、``\{`` 会丢反斜杠、``<b>`` 会被当 HTML 标签。
    ``$$...$$`` 块级公式**保持原样不做任何转义**：kramdown 的数学引擎会把整段内容透传给
    MathJax，而块内 ``&`` 是矩阵对齐符、``_`` 是下标，加转义反而会把矩阵和下标记号弄坏。
+   但 ``\\``（行分隔符）会**先翻倍成 ``\\\\``**：kramdown 的 BackslashEscapes 会把 ``\\``
+   还原成单个 ``\``，导致矩阵 / 数组的换行消失、被压平成一行；翻倍后 kramdown 成对还原，
+   仍是 ``\\``。行内公式同理也做了翻倍。
    另外两点块级处理：``\[...\]`` 会先统一替换成 ``$$...$$``；块级公式（独占整行或内容跨行）
    **前后各强制补一个换行**，否则 kramdown 会把它和上下段落合进同一个段落，
    导致公式错位、不居中（多余的空行稍后会被压缩成一个）。
@@ -436,10 +439,34 @@ _DISPLAY_LTGT_RULES: list[tuple[re.Pattern[str], str]] = [
 #     \mid 不是 \left 的合法定界符，同样会报错；\left\vert 才是对的。
 #   · ``<`` / ``>`` 在 \left、\right 后面不转义：\left< 是合法定界符，
 #     转成 \left\lt 反而非法。用定长负向后顾排除这两种情况。
-_MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], str]] = [
+def _size_vert(match: re.Match[str]) -> str:
+    r"""``\big|`` -> ``\big\vert``（保留尺寸命令与 l/r/m 变体）。"""
+    return "\\" + match.group(1) + match.group(2) + "\\vert"
+
+
+def _size_Vert(match: re.Match[str]) -> str:
+    r"""``\big\|`` -> ``\big\Vert``。"""
+    return "\\" + match.group(1) + match.group(2) + "\\Vert"
+
+
+# 匹配 LaTeX 环境（matrix / pmatrix / bmatrix / array / cases / align ...），用于保护
+# 环境内部的 |（数组列分隔符 \begin{array}{|c|c|}）不被当成裸竖线换成 \mid。
+_BEGIN_ENV_RE = re.compile(r"\\begin\{([a-zA-Z*]+)\}.*?\\end\{\1\}", re.DOTALL)
+
+
+def _protect_env_pipes(body: str) -> str:
+    r"""把 LaTeX 环境内部的 | 临时替换为占位符，避免被 \mid{} 规则误伤。"""
+
+    def repl(match: re.Match[str]) -> str:
+        return match.group(0).replace("|", "\x00ENVPIPE\x00")
+
+    return _BEGIN_ENV_RE.sub(repl, body)
+
+
+_MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], "str | Callable[[re.Match[str]], str]"]] = [
     (re.compile(r"(?<!\\)#"), r"\\#"),
-    (re.compile(r"(?<!\\)\\\{"), r"\\lbrace "),
-    (re.compile(r"(?<!\\)\\\}"), r"\\rbrace "),
+    (re.compile(r"(?<!\\)\\\{"), r"\\lbrace"),
+    (re.compile(r"(?<!\\)\\\}"), r"\\rbrace"),
     # 用 HTML 实体代替 LaTeX 转义，但【只在真会触发 Markdown 强调的位置】替换：
     # Markdown 的 _ 强调要求开始 _ 左侧不是字母数字。所以
     #   a_1 / A_n / p_n      → 左侧是字母，不会触发强调，保持原样（MathJax 正常渲染下标）
@@ -456,7 +483,13 @@ _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\\right\\\|"), r"\\right\\Vert"),
     (re.compile(r"\\left\|"), r"\\left\\vert"),
     (re.compile(r"\\right\|"), r"\\right\\vert"),
-    # 剩下的：独立的 \| 是范数 -> \Vert{}；裸 | -> \mid{}
+    # 尺寸命令 + 竖线：\big| \Big| \bigg| \Bigg|（含 l/r/m 变体 \bigl| \bigm| \bigr| …）
+    # 必须换成 \vert（双竖线换成 \Vert），绝不能留裸 |（kramdown 当表格列分隔符），
+    # 也不能换成 \mid（\mid 不是 \big 的合法定界符，MathJax 会报
+    # "Missing or unrecognized delimiter for \big"）。
+    (re.compile(r"\\(big|Big|bigg|Bigg)([lrm]?)\|"), _size_vert),
+    (re.compile(r"\\(big|Big|bigg|Bigg)([lrm]?)\\\|"), _size_Vert),
+    # 剩下的：独立的 \| 是范数 -> \Vert{}；裸 | -> \mid{}（环境内部的 | 见 escape_math_body 的保护）
     (re.compile(r"\\\|"), r"\\Vert{}"),
     (re.compile(r"(?<!\\)\|"), r"\\mid{}"),
     # 下面三条会替换成字母命令，用 {} 结尾而不是空格：
@@ -473,8 +506,18 @@ _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], str]] = [
 
 def escape_math_body(body: str) -> str:
     """转义单条行内公式内部的 kramdown 雷区字符（对已转义的内容幂等）。"""
+    # 1) LaTeX 行分隔符 \\ 必须保留：kramdown 的 BackslashEscapes 会把 \\ 还原成单个 \，
+    #    导致矩阵 / 数组的换行消失、被压平成一行文本。先翻倍成 \\\\，kramdown 成对还原后仍是 \\。
+    body = re.sub(r"\\\\", r"\\\\\\\\", body)
+    # 2) 保护 LaTeX 环境内部的 |（数组列分隔符），避免被下面的 \mid{} 规则误换成 \mid。
+    if "|" in body:
+        body = _protect_env_pipes(body)
+    # 3) 逐条转义（已对转义过的内容幂等）。
     for pattern, replacement in _MATH_ESCAPE_RULES:
         body = pattern.sub(replacement, body)
+    # 4) 还原环境内部的 | 占位符。
+    if "\x00ENVPIPE\x00" in body:
+        body = body.replace("\x00ENVPIPE\x00", "|")
     return body
 
 
@@ -541,6 +584,8 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
         #   · _ 换成 &#95; 后，&#95; 里的 & 会被 MathJax 当成对齐符 → Misplaced & 崩溃
         #   · # & * % 在数学里都有语义，转义即破坏
         body = restore_html_entities(match.group(1))
+        # 翻倍 \\ 以对抗 kramdown 的 BackslashEscapes（否则块级矩阵 / 数组也会被压平）
+        body = re.sub(r"\\\\", r"\\\\\\\\", body)
         body = _DISPLAY_LTGT_RULES[0][0].sub(_DISPLAY_LTGT_RULES[0][1], body)
         body = _DISPLAY_LTGT_RULES[1][0].sub(_DISPLAY_LTGT_RULES[1][1], body)
         placeholder = stash("$$" + body + "$$")

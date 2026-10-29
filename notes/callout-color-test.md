@@ -34,7 +34,7 @@ render_with_liquid: false
 <summary class="callout-title">Lemma · 引理</summary>
 <div class="callout-content" markdown="block">
 
-设 $\lbrace a_n\rbrace $ 收敛于 $A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} 0$。
+设 $\lbracea_n\rbrace$ 收敛于 $A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} 0$。
 
 </div>
 </details>
@@ -43,7 +43,7 @@ render_with_liquid: false
 <summary class="callout-title">Corollary · 推论</summary>
 <div class="callout-content" markdown="block">
 
-由 $r(AB) \le \min\lbrace r(A), r(B)\rbrace $ 立得：可逆矩阵乘任何矩阵不改变秩。
+由 $r(AB) \le \min\lbracer(A), r(B)\rbrace$ 立得：可逆矩阵乘任何矩阵不改变秩。
 
 </div>
 </details>

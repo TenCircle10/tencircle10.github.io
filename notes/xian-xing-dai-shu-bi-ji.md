@@ -28,9 +28,9 @@ render_with_liquid: false
 
 $$
 \begin{cases}
-a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = 0\\
-a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = 0\\
-\quad \vdots\\
+a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = 0\\\\
+a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = 0\\\\
+\quad \vdots\\\\
 a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = 0
 \end{cases}
 $$
@@ -125,10 +125,10 @@ $$C_{ij} = \sum_{k=1}^{p} a_{ik} b_{kj}, \qquad A_{m \times p} \, B_{p \times n}
 **算例**（$3 \times 2$ 乘 $2 \times 4$ 得 $3 \times 4$）：
 
 $$
-\begin{bmatrix} 3 & 2 \\ -2 & 1 \\ 0 & 1 \end{bmatrix}
-\begin{bmatrix} 1 & 2 & 3 & 1 \\ 2 & 4 & 1 & 3 \end{bmatrix}
+\begin{bmatrix} 3 & 2 \\\\ -2 & 1 \\\\ 0 & 1 \end{bmatrix}
+\begin{bmatrix} 1 & 2 & 3 & 1 \\\\ 2 & 4 & 1 & 3 \end{bmatrix}
 =
-\begin{bmatrix} 7 & 14 & 11 & 9 \\ 0 & 0 & -5 & 1 \\ 2 & 4 & 1 & 3 \end{bmatrix}
+\begin{bmatrix} 7 & 14 & 11 & 9 \\\\ 0 & 0 & -5 & 1 \\\\ 2 & 4 & 1 & 3 \end{bmatrix}
 $$
 
 <details class="callout keypoint" data-callout="keypoint" open>
@@ -198,16 +198,16 @@ $$
 <div class="callout-content" markdown="block">
 
 $$
-A = \begin{bmatrix} 1 & 0 \\ 1 & 0 \end{bmatrix}, \qquad
-B = \begin{bmatrix} 0 & 0 \\ 1 & 1 \end{bmatrix}
+A = \begin{bmatrix} 1 & 0 \\\\ 1 & 0 \end{bmatrix}, \qquad
+B = \begin{bmatrix} 0 & 0 \\\\ 1 & 1 \end{bmatrix}
 $$
 
 甚至两个矩阵**都不含 $0$ 元素**也能乘出零矩阵，可见"零因子"与元素是否为 $0$ 无关：
 
 $$
-\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}
-\begin{bmatrix} 1 & -1 \\ -1 & 1 \end{bmatrix}
-= \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix}
+\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \end{bmatrix}
+\begin{bmatrix} 1 & -1 \\\\ -1 & 1 \end{bmatrix}
+= \begin{bmatrix} 0 & 0 \\\\ 0 & 0 \end{bmatrix}
 $$
 
 </div>
@@ -276,25 +276,25 @@ $$(A+B)^{n} = \sum_{k=0}^{n} C_n^{k} A^{k} B^{n-k}$$
 ### 3.1 二阶若尔当块
 
 $$
-\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix}^{n}
-= \begin{bmatrix} \lambda^{n} & n\lambda^{n-1} \\ 0 & \lambda^{n} \end{bmatrix}
+\begin{bmatrix} \lambda & 1 \\\\ 0 & \lambda \end{bmatrix}^{n}
+= \begin{bmatrix} \lambda^{n} & n\lambda^{n-1} \\\\ 0 & \lambda^{n} \end{bmatrix}
 $$
 
 **做法**：拆成"对角 + 幂零"，就能用 [二项式定理](#binomial-theorem)。令
 
 $$
-A = \begin{bmatrix} \lambda & 0 \\ 0 & \lambda \end{bmatrix}, \qquad
-B = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}, \qquad
-\begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix} = A + B
+A = \begin{bmatrix} \lambda & 0 \\\\ 0 & \lambda \end{bmatrix}, \qquad
+B = \begin{bmatrix} 0 & 1 \\\\ 0 & 0 \end{bmatrix}, \qquad
+\begin{bmatrix} \lambda & 1 \\\\ 0 & \lambda \end{bmatrix} = A + B
 $$
 
-$AB = BA = \begin{bmatrix} 0 & \lambda \\ 0 & 0 \end{bmatrix}$（可交换，定理可用）；$B^{2} = O$，$A^{n} = \begin{bmatrix} \lambda^{n} & 0 \\ 0 & \lambda^{n} \end{bmatrix}$。于是 $k \ge 2$ 的项全是 $O$：
+$AB = BA = \begin{bmatrix} 0 & \lambda \\\\ 0 & 0 \end{bmatrix}$（可交换，定理可用）；$B^{2} = O$，$A^{n} = \begin{bmatrix} \lambda^{n} & 0 \\\\ 0 & \lambda^{n} \end{bmatrix}$。于是 $k \ge 2$ 的项全是 $O$：
 
 $$
 \begin{aligned}
-(A+B)^{n} &= A^{n} + n A^{n-1}B \\
-&= \begin{bmatrix} \lambda^{n} & 0 \\ 0 & \lambda^{n} \end{bmatrix} + n \begin{bmatrix} 0 & \lambda^{n-1} \\ 0 & 0 \end{bmatrix}
-= \begin{bmatrix} \lambda^{n} & n\lambda^{n-1} \\ 0 & \lambda^{n} \end{bmatrix}
+(A+B)^{n} &= A^{n} + n A^{n-1}B \\\\
+&= \begin{bmatrix} \lambda^{n} & 0 \\\\ 0 & \lambda^{n} \end{bmatrix} + n \begin{bmatrix} 0 & \lambda^{n-1} \\\\ 0 & 0 \end{bmatrix}
+= \begin{bmatrix} \lambda^{n} & n\lambda^{n-1} \\\\ 0 & \lambda^{n} \end{bmatrix}
 \end{aligned}
 $$
 
@@ -303,11 +303,11 @@ $$
 ### 3.2 三阶若尔当块（幂零块）
 
 $$
-A = \begin{bmatrix} \lambda & 1 & 0 \\ 0 & \lambda & 1 \\ 0 & 0 & \lambda \end{bmatrix}
+A = \begin{bmatrix} \lambda & 1 & 0 \\\\ 0 & \lambda & 1 \\\\ 0 & 0 & \lambda \end{bmatrix}
 = \lambda I + B, \qquad
-B = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix},
+B = \begin{bmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \end{bmatrix},
 \qquad
-B^{2} = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix},
+B^{2} = \begin{bmatrix} 0 & 0 & 1 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0 \end{bmatrix},
 \qquad
 B^{3} = O
 $$
@@ -327,7 +327,7 @@ $$
 
 设 $A_{m \times n},\ B_{n \times t}$，记 $A_{i\cdot} = [a_{i1}\ a_{i2}\ \cdots\ a_{in}]$（行向量），$B_{\cdot j} = [b_{1j}\ b_{2j}\ \cdots\ b_{nj}]^{T}$（列向量）。
 
-- **按行**：$AB$ 的第 $i$ 行 $= A_{i\cdot} B$，即 $AB = \begin{bmatrix} A_{1\cdot} B \\ A_{2\cdot} B \\ \vdots \\ A_{m\cdot} B \end{bmatrix}$；
+- **按行**：$AB$ 的第 $i$ 行 $= A_{i\cdot} B$，即 $AB = \begin{bmatrix} A_{1\cdot} B \\\\ A_{2\cdot} B \\\\ \vdots \\\\ A_{m\cdot} B \end{bmatrix}$；
 - **按列**：$AB$ 的第 $j$ 列 $= A\, B_{\cdot j}$；
 - 可乘条件：$A$ 的列数 $=$ $B$ 的行数。
 
@@ -336,11 +336,11 @@ $$
 <div class="callout-content" markdown="block">
 
 $$
-A = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ \vdots & \vdots & & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{bmatrix},
+A = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\\\ \vdots & \vdots & & \vdots \\\\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{bmatrix},
 \quad
-x = \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix},
+x = \begin{bmatrix} x_1 \\\\ \vdots \\\\ x_n \end{bmatrix},
 \quad
-b = \begin{bmatrix} b_1 \\ \vdots \\ b_m \end{bmatrix}
+b = \begin{bmatrix} b_1 \\\\ \vdots \\\\ b_m \end{bmatrix}
 $$
 
 则 $AX = b$ 就是原来的 $m$ 个方程。$A$ 称**系数矩阵**；注意 $b$ 的行数必须与 $A$ 的行数同为 $m$（不是 $n$）。
@@ -377,7 +377,7 @@ $$
 设 $A$ 是 $m \times n$ 矩阵，则
 
 1. $r(A) = 0 \iff A = O$；若 $A \neq O$，则 $r(A) \ge 1$；
-2. $r(A) \le \min\lbrace m, n\rbrace $；
+2. $r(A) \le \min\lbracem, n\rbrace$；
 3. 初等行变换不改变矩阵的秩。
 
 </div>
@@ -439,7 +439,7 @@ $$
 （第一、二个等号用的是 [初等行变换不改变秩](#rank-invariance)，最后一个等号由 $r(T) = r(A)$ 得到。）由 $(\ast)$ 得 $r(AQP) \le r(AQ) \le r(A)$；取 $P = Q^{-1}$ 又得 $r(A) \le r(AQ) \le r(A)$，故 $r(AQ) = r(A)$。
 
 <details class="callout corollary" data-callout="corollary" open>
-<summary class="callout-title">$r(AB) \le \min\lbrace r(A),\, r(B)\rbrace $</summary>
+<summary class="callout-title">$r(AB) \le \min\lbracer(A),\, r(B)\rbrace$</summary>
 <div class="callout-content" markdown="block">
 
 矩阵乘法不增加信息，只可能减少信息。
@@ -453,7 +453,7 @@ $$
 <summary class="callout-title">相抵（等价）标准形</summary>
 <div class="callout-content" markdown="block">
 
-任何 $m \times n$ 矩阵 $A$ 都可经初等变换化为 $\begin{bmatrix} I_r & O \\ O & O \end{bmatrix}&#95;{m \times n}$（$r = r(A)$），称**相抵标准形**。它被 $r(A)$ **唯一确定**，于是同型矩阵之间
+任何 $m \times n$ 矩阵 $A$ 都可经初等变换化为 $\begin{bmatrix} I_r & O \\\\ O & O \end{bmatrix}&#95;{m \times n}$（$r = r(A)$），称**相抵标准形**。它被 $r(A)$ **唯一确定**，于是同型矩阵之间
 
 $$A \cong B \iff r(A) = r(B)$$
 
@@ -471,9 +471,9 @@ $$A \cong B \iff r(A) = r(B)$$
 </div>
 </details>
 
-**证**：设 $P_s \cdots P_1 A Q_1 \cdots Q_t = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}&#95;{m \times n}$，两边转置得
+**证**：设 $P_s \cdots P_1 A Q_1 \cdots Q_t = \begin{bmatrix} I_r & O \\\\ O & O \end{bmatrix}&#95;{m \times n}$，两边转置得
 
-$$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\ O & O \end{bmatrix}_{n \times m}$$
+$$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O \\\\ O & O \end{bmatrix}_{n \times m}$$
 
 左边是"可逆矩阵乘 $A^{T}$ 再乘可逆矩阵"，不改变秩；右边的秩为 $r$，故 $r(A^{T}) = r(A) = r$。
 
@@ -481,7 +481,7 @@ $$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O 
 
 $r(A+B) \le r(A) + r(B)$。其余专题单开：
 
-- **分块矩阵的秩**（$\begin{bmatrix} A & O \\ O & B\end{bmatrix}$ 的秩、$\begin{bmatrix} A & C \\ 0 & B\end{bmatrix}$ 的下界）：见 [分块矩阵性质](/notes/分块矩阵性质/)
+- **分块矩阵的秩**（$\begin{bmatrix} A & O \\\\ O & B\end{bmatrix}$ 的秩、$\begin{bmatrix} A & C \\\\ 0 & B\end{bmatrix}$ 的下界）：见 [分块矩阵性质](/notes/分块矩阵性质/)
 - **Sylvester 秩不等式** $r(AB) \ge r(A) + r(B) - n$ 及其几何解释：见 [Sylvester 秩不等式](/notes/Sylvester 秩不等式/)
 - **子矩阵的秩不超过原矩阵** $r(B) \le r(A)$：见 [子母矩阵秩的大小关系](/notes/子母矩阵秩的大小关系/)
 - **加长向量组仍无关**（无关的向量组添上若干坐标后仍无关）：见 [向量组无关加元素仍无关](/notes/向量组无关加元素仍无关/)
@@ -507,7 +507,7 @@ $r(A+B) \le r(A) + r(B)$。其余专题单开：
 
 要写出表示系数，需进一步化为**行简化阶梯形**读取。
 
-**秩不等式的极大无关组证法**。设 $A$ 的列极大无关组为 $\lbrace \alpha_1, \dots, \alpha_s\rbrace $，$B$ 的列极大无关组为 $\lbrace \beta_1, \dots, \beta_t\rbrace $，合并取 $\lbrace \alpha_1, \dots, \alpha_s, \beta_1, \dots, \beta_t\rbrace $ 即可表出 $A+B$ 的各列 $\lbrace \gamma_1, \dots, \gamma_r\rbrace $，故 $r \le s + t$，即
+**秩不等式的极大无关组证法**。设 $A$ 的列极大无关组为 $\lbrace\alpha_1, \dots, \alpha_s\rbrace$，$B$ 的列极大无关组为 $\lbrace\beta_1, \dots, \beta_t\rbrace$，合并取 $\lbrace\alpha_1, \dots, \alpha_s, \beta_1, \dots, \beta_t\rbrace$ 即可表出 $A+B$ 的各列 $\lbrace\gamma_1, \dots, \gamma_r\rbrace$，故 $r \le s + t$，即
 
 $$r(A+B) \le r(A) + r(B)$$
 
@@ -615,9 +615,9 @@ $$(A^{-1})^{-1} = A, \qquad (A^{T})^{-1} = (A^{-1})^{T}, \qquad (AB)^{-1} = B^{-
 对角矩阵（$a_{ii} \neq 0$）：
 
 $$
-\begin{bmatrix} a_{11} & & & \\ & a_{22} & & \\ & & \ddots & \\ & & & a_{nn} \end{bmatrix}^{-1}
+\begin{bmatrix} a_{11} & & & \\\\ & a_{22} & & \\\\ & & \ddots & \\\\ & & & a_{nn} \end{bmatrix}^{-1}
 =
-\begin{bmatrix} \frac{1}{a_{11}} & & & \\ & \frac{1}{a_{22}} & & \\ & & \ddots & \\ & & & \frac{1}{a_{nn}} \end{bmatrix}
+\begin{bmatrix} \frac{1}{a_{11}} & & & \\\\ & \frac{1}{a_{22}} & & \\\\ & & \ddots & \\\\ & & & \frac{1}{a_{nn}} \end{bmatrix}
 $$
 
 </div>
@@ -634,8 +634,8 @@ $$
 <div class="callout-content" markdown="block">
 
 $$
-A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}, \qquad
-A^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}
+A = \begin{bmatrix} a & b \\\\ c & d \end{bmatrix}, \qquad
+A^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\\\ -c & a \end{bmatrix}
 \quad (ad - bc \neq 0)
 $$
 
@@ -663,7 +663,7 @@ $[A \mid I] \to [I \mid A^{-1}]$ 是**初等行变换法**；**伴随矩阵法**
 <summary class="callout-title">由 $AX = A + 2X$ 反推可逆性</summary>
 <div class="callout-content" markdown="block">
 
-设 $AX = A + 2X$，证明 $A - 2I$ 可逆并写出 $(A - 2I)^{-1}$，其中 $A = \begin{bmatrix} 4 & 2 & 3 \\ 1 & 1 & 0 \\ -1 & 2 & 3 \end{bmatrix}$。
+设 $AX = A + 2X$，证明 $A - 2I$ 可逆并写出 $(A - 2I)^{-1}$，其中 $A = \begin{bmatrix} 4 & 2 & 3 \\\\ 1 & 1 & 0 \\\\ -1 & 2 & 3 \end{bmatrix}$。
 
 </div>
 </details>
@@ -674,7 +674,7 @@ $$(A - 2I)(X - I) = AX - A - 2X + 2I = A - A + 2I = 2I$$
 
 所以 $(A - 2I) \cdot \frac{1}{2}(X - I) = I$，由 [满秩与可逆](#full-rank-invertible) 得 $\frac{1}{2}(X - I) = (A - 2I)^{-1}$。
 
-**验证**：$A - 2I = \begin{bmatrix} 2 & 2 & 3 \\ 1 & -1 & 0 \\ -1 & 2 & 1 \end{bmatrix}$，$\mid{}A - 2I\mid{} = 2(-1) - 2(1) + 3(1) = -1 \neq 0$，故 $r(A - 2I) = 3$，确实可逆。
+**验证**：$A - 2I = \begin{bmatrix} 2 & 2 & 3 \\\\ 1 & -1 & 0 \\\\ -1 & 2 & 1 \end{bmatrix}$，$\mid{}A - 2I\mid{} = 2(-1) - 2(1) + 3(1) = -1 \neq 0$，故 $r(A - 2I) = 3$，确实可逆。
 <a id="example-inverse"></a>
 
 ---

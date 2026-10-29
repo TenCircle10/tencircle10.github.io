@@ -20,4 +20,4 @@ render_with_liquid: false
 
 单字符公式：$a$、$\gt{}$、$\lt{}$。
 
-含 & 的公式：$a & b$、$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$。
+含 & 的公式：$a & b$、$\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \end{bmatrix}$。

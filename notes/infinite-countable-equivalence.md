@@ -15,7 +15,7 @@ render_with_liquid: false
 </div>
 </details>
 
-对于可列集 $A = \lbrace a_1, a_2, \dots, a_n, \dots\rbrace $，$B = \lbrace b_1, b_2, \dots, b_n, \dots\rbrace $
+对于可列集 $A = \lbracea_1, a_2, \dots, a_n, \dots\rbrace$，$B = \lbraceb_1, b_2, \dots, b_n, \dots\rbrace$
 其中 $\forall i, j \in N^&#42;$，$i \neq j$，有 $a_i \neq a_j$，$b_i \neq b_j$。
 
 定义映射 $f: A \to B$，

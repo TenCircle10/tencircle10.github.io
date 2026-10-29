@@ -26,8 +26,8 @@ render_with_liquid: false
 
 $$
 \begin{aligned}
-a_n &= \sqrt{n+1} - \sqrt{n} \\
-&= \frac{(\sqrt{n+1} - \sqrt{n})(\sqrt{n+1} + \sqrt{n})}{\sqrt{n+1} + \sqrt{n}} \\
+a_n &= \sqrt{n+1} - \sqrt{n} \\\\
+&= \frac{(\sqrt{n+1} - \sqrt{n})(\sqrt{n+1} + \sqrt{n})}{\sqrt{n+1} + \sqrt{n}} \\\\
 &= \frac{1}{\sqrt{n+1} + \sqrt{n}}
 \end{aligned}
 $$
@@ -40,14 +40,14 @@ $$
 
 $$
 \begin{aligned}
-& \sqrt{(x+c)^2+y^2} + \sqrt{(x-c)^2+y^2} = 2a \\
-& A = \sqrt{(x+c)^2+y^2}, \quad B = \sqrt{(x-c)^2+y^2} \\
-& A + B = 2a \\
-& A^2 - B^2 = (x+c)^2 - (x-c)^2 = 4cx \\
-& (A+B)(A-B) = 4cx \Rightarrow A - B = \frac{2cx}{a} \\
-& A = a + \frac{cx}{a} \Rightarrow \sqrt{(x+c)^2+y^2} = a + \frac{cx}{a} \\
-& (x+c)^2+y^2 = a^2 + 2cx + \frac{c^2x^2}{a^2} \\
-& x^2\left(1 - \frac{c^2}{a^2}\right) + y^2 = a^2 - c^2 \\
+& \sqrt{(x+c)^2+y^2} + \sqrt{(x-c)^2+y^2} = 2a \\\\
+& A = \sqrt{(x+c)^2+y^2}, \quad B = \sqrt{(x-c)^2+y^2} \\\\
+& A + B = 2a \\\\
+& A^2 - B^2 = (x+c)^2 - (x-c)^2 = 4cx \\\\
+& (A+B)(A-B) = 4cx \Rightarrow A - B = \frac{2cx}{a} \\\\
+& A = a + \frac{cx}{a} \Rightarrow \sqrt{(x+c)^2+y^2} = a + \frac{cx}{a} \\\\
+& (x+c)^2+y^2 = a^2 + 2cx + \frac{c^2x^2}{a^2} \\\\
+& x^2\left(1 - \frac{c^2}{a^2}\right) + y^2 = a^2 - c^2 \\\\
 & a^2 - c^2 = b^2 \Rightarrow \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
 \end{aligned}
 $$
