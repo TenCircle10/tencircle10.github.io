@@ -9,7 +9,7 @@ render_with_liquid: false
 # 数学分析
 
 <details class="callout abstract" data-callout="abstract" open>
-<summary class="callout-title">主线（保留自己的话）</summary>
+<summary class="callout-title">主线</summary>
 <div class="callout-content" markdown="block">
 
 思考：**无穷小分析** —— 用"要多小有多小"的语言（$\varepsilon$、$\delta$、$N$）把"趋势"写成可以逐条验证的不等式。
@@ -268,7 +268,7 @@ $$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ |
 </div>
 </details>
 
-### 4.2 $\varepsilon$–$N$ 证明的实践
+### 4.2 $\varepsilon – N$ 证明的实践
 
 <details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">自己的经验（保留）</summary>
@@ -1076,6 +1076,7 @@ $$
 <div class="callout-content" markdown="block">
 
 **防止在 $x_0$ 的邻域内 $u(x) - u(x_0)$ 的零点极多**。
+比如对任意的 $x \in \mathbb{Q}$，$U(x)-U(x_0)=0$，则任取一个邻域必然有零点。
 $x \to u$ 映射，$u \to y$ 映射，**由外向内逐层求导**。
 
 </div>
