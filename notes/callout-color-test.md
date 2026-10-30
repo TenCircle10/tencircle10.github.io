@@ -3,6 +3,7 @@ layout: note
 title: "callout-color-test"
 slug: "callout-color-test"
 permalink: "/notes/callout-color-test/"
+public: true
 render_with_liquid: false
 ---
 

@@ -24,7 +24,7 @@
 - **笔记页**：后来重做的「顶部导航栏 + 居中阅读区」结构，**没有侧边栏**
   - 顶栏：左=头像+昵称，中=笔记标题（`max-width: 50%` + 省略号），右=返回主页
   - 阅读区 `max-width: 860px` 居中；右下角有返回顶部按钮
-- **笔记列表**：`notes.md` 是个没有 front matter 的片段，被 `index.md` 用 `include_relative` 引入；列表用 Liquid 遍历 `site.pages` 自动生成，并按文件名关键词（`test` / `torture` / `测试` / `demo`）过滤掉测试文件
+- **笔记列表**：`notes.md` 是个没有 front matter 的片段，被 `index.md` 用 `include_relative` 引入；列表用 Liquid 遍历 `site.pages` 自动生成，先按 `page.public == true` 过滤掉「隐藏仓」的笔记，再按文件名关键词（`test` / `torture` / `测试` / `demo`）过滤掉测试文件
 
 > ⚠️ 布局里刻意用 `<nav>` / `<main>` 而不是 `<header>` / `<section>`：主题 `_sass` 里有 `header{position:fixed;width:232px}`、`section{width:650px;float:right}` 这类**元素选择器**，用 `<section>` 会被那套侧边栏布局命中。
 
@@ -81,14 +81,14 @@ gem "webrick", "~> 1.8"
 ### 2.1 标准流程
 
 1. **在 Obsidian 里写笔记**，文件名直接用中文（如 `泛函分析.md`），**不需要手写任何 front matter**
-2. 把文件放进项目根目录的 **`origin/`**（该目录被 `.gitignore` 忽略，原始笔记不会上传 GitHub）
+2. 把文件放进 **`origin/public/`**（出现在主页列表）或 **`origin/hidden/`**（不出现，但 URL 仍可直接访问）——`origin/` 整个目录被 `.gitignore` 忽略，原始笔记不会上传 GitHub
 3. 运行一键发布：
    ```powershell
    .\deploy.ps1
    ```
    或者**双击 `发布博客.bat`**（它是纯 ASCII 启动壳，内部调用 `deploy.ps1`）
 4. 脚本自动完成：
-   - 运行 `python sync_notes.py`，把 `origin/` 的笔记转换到 `notes/`
+   - 运行 `python sync_notes.py`，把 `origin/{public,hidden}/` 的笔记转换到 `notes/`
    - 检测到改动 → `git add .` + `git commit`（信息形如 `auto: sync notes and deploy 2026-10-18 23:30`）
    - 尝试 `git push origin main`
 5. **实际推送由站长本人手动执行**
@@ -120,11 +120,31 @@ git commit -m "你的信息"
 ### 3.1 用法
 
 ```powershell
-python sync_notes.py                           # origin/ -> notes/
+python sync_notes.py                           # origin/{public,hidden}/ -> notes/
 python sync_notes.py --src other --dest out    # 自定义目录
 ```
 
-### 3.2 能力清单
+### 3.2 分仓：公开笔记 vs 隐藏笔记
+
+`origin/` 下按子目录分仓，**只影响主页列表，不影响 URL 可访问性**（不是密码保护）：
+
+| 源位置 | 生成 front matter | 出现在主页列表 | URL |
+|---|---|---|---|
+| `origin/public/xxx.md` | `public: true` | ✅ | `/notes/<slug>/` |
+| `origin/hidden/xxx.md` | `public: false` | ❌ | `/notes/<slug>/`（仍可直接访问） |
+| `origin/xxx.md`（历史遗留） | `public: true` | ✅ | `/notes/<slug>/` |
+
+关键设计：
+
+- **输出路径基于「仓内相对路径」**：`origin/public/数学分析笔记.md` → `notes/shu-xue-fen-xi-bi-ji.md`，permalink 仍是 `/notes/shu-xue-fen-xi-bi-ji/`。所以分仓**不会让任何旧链接失效**。
+- **slug / 双链映射是全仓共享的**：`build_slug_map()` 吃的是 `rglob` 扫出来的全部文件（public + hidden 混在一起），所以 public 里的 `[[私密笔记]]` 能正确指向 hidden 里那篇的 `/notes/<slug>/`，反之亦然。
+- **仓归属是权威来源**：源笔记自己手写的 `public:` 会被脚本覆盖成所在仓的值，避免手滑写错把私密笔记挂到主页。
+- **fail-safe**：front matter 里缺 `public` 字段的页面，`page.public == true` 判定为 false → 不会出现在主页（默认隐藏，而不是默认公开）。
+- **主页过滤**（`notes.md`）：`page.path contains 'notes/' and page.name != 'index.md' and page.public == true`，再叠加原有的 `test` / `torture` / `测试` / `demo` 关键词排除。
+
+> 源文件不入库：根 `.gitignore` 用 `origin/*` + `!origin/.gitignore` 放行，`origin/.gitignore` 再忽略 `public/` 与 `hidden/`。这样忽略规则跟着目录结构进仓库，换机器 clone 也不会误提交源文件。
+
+### 3.3 能力清单
 
 **① 元数据自动化**
 
@@ -133,7 +153,7 @@ python sync_notes.py --src other --dest out    # 自定义目录
 | 拼音 slug | 中文文件名 → `pypinyin.lazy_pinyin()` → 小写 → 非字母数字压成 `-`。例：`数学学习漫谈——Attention` → `shu-xue-xue-xi-man-tan-attention` |
 | emoji 兜底 | 拼音为空时用 `note-<正文 MD5 前 6 位>` |
 | title 自动补 | 没有 `title` 就取原文件名（中文） |
-| 强制注入 | `layout: note`、`permalink: /notes/<slug>/`、`render_with_liquid: false` |
+| 强制注入 | `layout: note`、`permalink: /notes/<slug>/`、`public: true|false`、`render_with_liquid: false` |
 | 手写优先 | front matter 里显式写的 `slug` / `title` 永远优先于自动生成 |
 
 **② Liquid 防爆**
@@ -735,6 +755,9 @@ Personal-Website/
 ├── notes.md                 # 笔记列表片段（被 include_relative 引入）
 ├── notes/                   # ★ 脚本生成物，不要手改
 ├── origin/                  # ★ Obsidian 原始笔记（gitignore，不上传）
+│   ├── .gitignore           #   忽略 public/ 与 hidden/ 的源文件（本身入库）
+│   ├── public/              #   → public: true  → 出现在主页列表
+│   └── hidden/              #   → public: false → 不出现在主页，URL 仍可访问
 ├── sync_notes.py            # 转换脚本
 ├── deploy.ps1               # 一键发布（PowerShell，UTF-8 BOM）
 ├── 发布博客.bat             # 双击发布（纯 ASCII 启动壳，调用 deploy.ps1）
@@ -750,8 +773,9 @@ Personal-Website/
 └── html_source_file/        # 旧版手写 HTML（exclude，不参与构建）
 ```
 
-## 三条铁律
+## 四条铁律
 
 1. **`notes/` 里的文件全部由脚本生成** —— 要改内容请改 `origin/` 再跑脚本，直接改 `notes/` 会被下次同步覆盖
 2. **`_includes/` 的注释里不能出现 Liquid 标签** —— HTML 注释挡不住 Liquid，会触发 `Nesting too deep`
 3. **推送由本人手动执行** —— 脚本只负责 `commit`，`git push` 自己来
+4. **笔记的可见性由所在目录决定** —— 放 `origin/public/` 才会出现在主页列表，放 `origin/hidden/` 就只保留 URL 入口；改 front matter 里的 `public:` 没用（会被脚本按目录覆盖）

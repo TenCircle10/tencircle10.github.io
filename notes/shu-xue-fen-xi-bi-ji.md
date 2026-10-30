@@ -3,6 +3,7 @@ layout: note
 title: "数学分析笔记"
 slug: "shu-xue-fen-xi-bi-ji"
 permalink: "/notes/shu-xue-fen-xi-bi-ji/"
+public: true
 render_with_liquid: false
 ---
 

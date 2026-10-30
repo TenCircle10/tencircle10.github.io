@@ -5,7 +5,11 @@ Gemfile.lock
 .DS_Store
 .jekyll-cache
 git-update.sh
-origin/
+# 源笔记目录不入库（public/ 公开、hidden/ 不在主页显示）。
+# 用 origin/* 而不是 origin/，是为了让 origin/.gitignore 本身能被跟踪，
+# 这样忽略规则随目录结构一起进仓库，换机器 clone 也不会误提交源文件。
+origin/*
+!origin/.gitignore
 __pycache__/
 *.pyc
 

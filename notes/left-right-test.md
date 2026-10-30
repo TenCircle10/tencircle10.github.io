@@ -3,6 +3,7 @@ layout: note
 title: "left-right-test"
 slug: "left-right-test"
 permalink: "/notes/left-right-test/"
+public: true
 render_with_liquid: false
 ---
 

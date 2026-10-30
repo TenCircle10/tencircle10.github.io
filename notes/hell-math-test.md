@@ -3,6 +3,7 @@ layout: note
 title: "hell-math-test"
 slug: "hell-math-test"
 permalink: "/notes/hell-math-test/"
+public: true
 render_with_liquid: false
 ---
 
@@ -21,3 +22,7 @@ render_with_liquid: false
 单字符公式：$a$、$\gt{}$、$\lt{}$。
 
 含 & 的公式：$a & b$、$\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \end{bmatrix}$。
+
+## 跨仓双链测试
+
+公开笔记指向隐藏笔记：[隐藏草稿](/notes/yin-cang-cao-gao/)（应解析为 `/notes/yin-cang-cao-gao/`）。

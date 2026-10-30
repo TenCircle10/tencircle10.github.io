@@ -3,6 +3,7 @@ layout: note
 title: "math-bug-test"
 slug: "math-bug-test"
 permalink: "/notes/math-bug-test/"
+public: true
 render_with_liquid: false
 ---
 

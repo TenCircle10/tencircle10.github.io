@@ -1,0 +1,11 @@
+# 源笔记目录：源文件一律不入库，只在本地保留。
+#
+# 分仓结构（sync_notes.py 会递归扫描这两个子目录）：
+#   public/  -> 生成的网页带 front matter `public: true`，出现在主页笔记列表
+#   hidden/  -> 生成的网页带 front matter `public: false`，不出现在主页列表，
+#               但依然可以通过 URL 直接访问（不是密码保护，只是"不在列表里"）
+#
+# 两个目录里的笔记共享同一套 slug / 双链映射，因此 public 里的笔记可以
+# 用 [[双链]] 指向 hidden 里的笔记，反之亦然。
+public/
+hidden/

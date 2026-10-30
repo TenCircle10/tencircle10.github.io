@@ -70,9 +70,18 @@ Markdown，输出到 ``notes/``。
 
 ````` 围起来的代码块（``` 或 ~~~）整体跳过，不做任何替换。
 
+**分仓（可见性）**：源目录按子文件夹分仓，决定笔记是否出现在主页列表里::
+
+    origin/public/   ->  front matter 写 public: true   ->  出现在主页笔记列表
+    origin/hidden/   ->  front matter 写 public: false  ->  不出现在主页列表
+                                                    （但 URL 仍可直接访问）
+
+两个仓共享同一套 slug / 双链映射，跨仓互链照常工作；输出路径基于「仓内相对
+路径」，所以把笔记移进 public/ 不会改变既有 URL。
+
 用法::
 
-    python sync_notes.py                       # origin/ -> notes/
+    python sync_notes.py                       # origin/{public,hidden}/ -> notes/
     python sync_notes.py --src other --dest out
 """
 
@@ -105,6 +114,23 @@ else:
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SRC = ROOT / "origin"
 DEFAULT_DEST = ROOT / "notes"
+
+
+# --------------------------------------------------------------------------- #
+# 分仓（visibility bucket）
+# --------------------------------------------------------------------------- #
+# 源笔记按所在子目录决定「是否出现在主页笔记列表」：
+#   origin/public/  -> front matter 写 public: true  -> 出现在主页列表
+#   origin/hidden/  -> front matter 写 public: false -> 不出现在主页列表
+#                                               （但 URL 仍可直接访问，不是密码保护）
+#   origin/ 根目录下散落的 .md（历史遗留）-> 按 public 处理，保持向后兼容。
+#
+# 两个仓共享同一套 slug / 双链映射，所以 public 里的笔记可以用 [[双链]]
+# 指向 hidden 里的笔记，反之亦然。
+BUCKET_PUBLIC = "public"
+BUCKET_HIDDEN = "hidden"
+BUCKET_NAMES = (BUCKET_PUBLIC, BUCKET_HIDDEN)
+DEFAULT_BUCKET = BUCKET_PUBLIC
 
 
 # --------------------------------------------------------------------------- #
@@ -986,6 +1012,31 @@ def apply_slug(front_matter: str, slug: str) -> str:
     return updated.rstrip("\n") + "\n\n"
 
 
+_PUBLIC_LINE_RE = re.compile(r"^[ \t]*public[ \t]*:.*$", re.MULTILINE)
+
+
+def apply_public(front_matter: str, is_public: bool) -> str:
+    """写入 front matter 的 public 字段，决定这篇笔记是否出现在主页列表。
+
+    写的是真正的 YAML 布尔量（``true`` / ``false``）而不是字符串，所以主页的
+    Liquid 可以直接用 ``page.public == true`` 判定。
+
+    仓归属是权威来源：即使源笔记自己写了 ``public:``，也会被这里覆盖成
+    所在仓对应的值，避免「手滑写错导致私密笔记被挂到主页」。
+    """
+    line = "public: %s" % ("true" if is_public else "false")
+    if _PUBLIC_LINE_RE.search(front_matter):
+        updated = _PUBLIC_LINE_RE.sub(lambda _match: line, front_matter, count=1)
+    else:
+        stripped = front_matter.rstrip("\n")
+        if not stripped.endswith("---"):
+            return front_matter
+        head = stripped[:-3].rstrip("\n")
+        updated = head + "\n" + line + "\n---\n"
+    # front matter 与正文之间统一保留一个空行
+    return updated.rstrip("\n") + "\n\n"
+
+
 _RENDER_LIQUID_LINE_RE = re.compile(r"^[ \t]*render_with_liquid[ \t]*:.*$", re.MULTILINE)
 
 
@@ -1008,11 +1059,32 @@ def apply_render_with_liquid(front_matter: str) -> str:
     return updated.rstrip("\n") + "\n\n"
 
 
+def classify_source(path: Path, src: Path) -> tuple[str, Path]:
+    """判断源笔记属于哪个仓，返回 (仓名, 相对该仓目录的路径)。
+
+    - ``origin/public/xxx.md``   -> ("public", "xxx.md")
+    - ``origin/hidden/xxx.md``   -> ("hidden", "xxx.md")
+    - ``origin/xxx.md``（历史遗留）-> ("public", "xxx.md")
+
+    返回的「相对路径」决定生成文件落在 notes/ 下的什么位置，因此把笔记移进
+    public/ 子目录**不会改变**既有 URL（permalink 仍是 /notes/<slug>/）。
+    """
+    relative = path.relative_to(src)
+    parts = relative.parts
+    if parts and parts[0] in BUCKET_NAMES:
+        return parts[0], Path(*parts[1:])
+    return DEFAULT_BUCKET, relative
+
+
 def build_slug_map(sources: list[Path]) -> dict[str, str]:
     """建立「源文件名 / front matter title -> slug」的映射，用于重写 wikilink。
 
     没有显式 slug 的笔记也会用 make_slug() 自动生成一个，所以中文互链
     （``[[中文笔记名]]``）能正确指向 ``/notes/<拼音>/``。
+
+    注意：``sources`` 是**全仓扫描**的结果（public/ 与 hidden/ 混在一起），
+    所以 public 里的笔记写 ``[[私密笔记]]``、而那篇私密笔记在 hidden/ 里时，
+    映射照样能命中，链接依然指向正确的 /notes/<拼音>/。
     """
     mapping: dict[str, str] = {}
     for path in sources:
@@ -1050,6 +1122,7 @@ def convert_document(
     permalink: str,
     slug_map: dict[str, str],
     url_prefix: str,
+    is_public: bool = True,
 ) -> tuple[str, dict[str, int], bool]:
     """转换单个笔记，返回 (结果文本, 各类替换计数, 是否新插入 front matter)。"""
     counts = {
@@ -1107,6 +1180,8 @@ def convert_document(
     # front matter 里没有 slug 时，把自动生成的（拼音）slug 写进去
     front_matter = apply_slug(front_matter, slug)
     front_matter = apply_permalink(front_matter, permalink)
+    # 分仓可见性：public/ 的笔记进主页列表，hidden/ 的不进（URL 仍可直接访问）
+    front_matter = apply_public(front_matter, is_public)
     # 强制关闭 Liquid 渲染（Jekyll 4+ 生效；GitHub Pages 的 3.9 会忽略，另有 escape 兜底）
     front_matter = apply_render_with_liquid(front_matter)
     # permalink 已经保证 front matter 后面带一个空行，正文开头的空行去掉避免重复
@@ -1129,11 +1204,14 @@ def main(argv: list[str] | None = None) -> int:
 
     dest.mkdir(parents=True, exist_ok=True)
 
+    # 递归扫描整个源目录：public/ 与 hidden/ 都会被收进来（历史上就是 rglob）
     sources = sorted(path for path in src.rglob("*.md") if path.is_file())
     if not sources:
         print("[warn] %s 下没有找到 .md 文件" % src)
 
-    # 第一遍：收集 slug 映射，供第二遍重写 wikilink 时使用
+    # 第一遍：收集 slug 映射，供第二遍重写 wikilink 时使用。
+    # 这一步用的是**全仓**的 sources（public + hidden 混在一起），
+    # 所以跨仓双链（public 指向 hidden）依然能正确解析成 /notes/<拼音>/。
     slug_map = build_slug_map(sources)
 
     # permalink 前缀跟随输出目录在仓库里的位置（默认 dest 是仓库根的 notes/ -> /notes/）
@@ -1142,12 +1220,15 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError:
         url_prefix = "/" + dest.name + "/"
 
-    # 第一遍：算出每篇的 slug / permalink，并检查 slug 冲突
-    plans: list[tuple[Path, str, str, str]] = []
+    # 第一遍：算出每篇的 slug / permalink / 所属仓，并检查 slug 冲突
+    # plans 的每一项是 (源相对路径, 仓内相对路径, slug, permalink, 原文, 是否公开)
+    plans: list[tuple[Path, Path, str, str, str, bool]] = []
     seen_slugs: dict[str, Path] = {}
     conflicts: list[str] = []
     for path in sources:
         relative = path.relative_to(src)
+        bucket, inner = classify_source(path, src)
+        is_public = bucket == BUCKET_PUBLIC
         text = path.read_text(encoding="utf-8")
         front_matter, _ = split_front_matter(text)
         fields = read_front_matter_fields(front_matter)
@@ -1162,8 +1243,12 @@ def main(argv: list[str] | None = None) -> int:
         else:
             seen_slugs[slug] = relative
 
-        parent = "" if relative.parent == Path(".") else relative.parent.as_posix() + "/"
-        plans.append((relative, slug, url_prefix + parent + slug + "/", text))
+        # 输出路径基于「仓内相对路径」，所以 public/xxx.md -> notes/<slug>.md，
+        # permalink 仍是 /notes/<slug>/ —— 与分仓前完全一致，不会有旧链接失效
+        parent = "" if inner.parent == Path(".") else inner.parent.as_posix() + "/"
+        plans.append(
+            (relative, inner, slug, url_prefix + parent + slug + "/", text, is_public)
+        )
 
     if conflicts:
         print(
@@ -1177,16 +1262,16 @@ def main(argv: list[str] | None = None) -> int:
 
     # 第二遍：逐篇转换。单篇失败只跳过它自己，绝不拖垮整站
     processed = 0
-    for relative, slug, permalink, text in plans:
+    for relative, inner, slug, permalink, text, is_public in plans:
         _, body_only = split_front_matter(text)
         if not body_only.strip():
             print("[skip] %s（正文为空）" % relative, file=sys.stderr)
             continue
 
-        target = dest / relative.parent / (slug + ".md")
+        target = dest / inner.parent / (slug + ".md")
         try:
             converted, counts, added = convert_document(
-                text, relative.stem, slug, permalink, slug_map, url_prefix
+                text, inner.stem, slug, permalink, slug_map, url_prefix, is_public
             )
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(converted, encoding="utf-8", newline="\n")
@@ -1200,12 +1285,13 @@ def main(argv: list[str] | None = None) -> int:
 
         processed += 1
         print(
-            "[ok] %s -> %s  (slug=%s, permalink=%s, callout=%d, math=%d, wikilink=%d, block_link=%d, block_id=%d, image=%d, obsidian=%d, front_matter=%s)"
+            "[ok] %s -> %s  (slug=%s, permalink=%s, public=%s, callout=%d, math=%d, wikilink=%d, block_link=%d, block_id=%d, image=%d, obsidian=%d, front_matter=%s)"
             % (
                 relative,
                 target.name,
                 slug,
                 permalink,
+                "true" if is_public else "false",
                 counts["callout"],
                 counts["math"],
                 counts["wikilink"],
