@@ -206,11 +206,16 @@
             contentSelector: ".note-main",
             headingSelector: "h2, h3",
             hasInnerContainers: true,
-            scrollSmooth: true,
-            scrollSmoothDuration: 400,
-            // 顶部导航栏是 sticky 的，留出它的高度 + 一点余量
+            // 关闭 Tocbot 自带平滑滚动：点击目录只改变 URL 的 #，
+            // 由浏览器原生 scroll-behavior: smooth（见 notes.css）接管，
+            // 体验与正文里的 # 锚点跳转完全一致，不再“迟滞半拍”。
+            scrollSmooth: false,
+            // 下方两个偏移参数仅在 Tocbot 自己滚动时生效（scrollSmooth 为 true）。
+            // 现在平滑滚动交给浏览器，落点偏移实际由 CSS 的
+            // scroll-margin-top（顶栏 88px / 窄屏 112px）提供，左右一致。
             scrollSmoothOffset: -80,
-            // 标题内容里的数学公式不参与生成 id，避免 MathJax 渲染后 id 变化
+            // 标题内容里的数学公式不参与生成 id，避免 MathJax 渲染后 id 变化；
+            // 同时作为滚动监听高亮：标题距顶多少算“当前章节”。
             headingsOffset: 80,
             ignoreSelector: ".giscus, .giscus-container, .no-toc",
             // 目录 DOM 生成后，把完整标题写进 title 属性。
