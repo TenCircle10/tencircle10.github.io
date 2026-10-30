@@ -482,10 +482,10 @@ $$Q_t^{T} \cdots Q_1^{T} A^{T} P_1^{T} \cdots P_s^{T} = \begin{bmatrix} I_r & O 
 
 $r(A+B) \le r(A) + r(B)$。其余专题单开：
 
-- **分块矩阵的秩**（$\begin{bmatrix} A & O \\\\ O & B\end{bmatrix}$ 的秩、$\begin{bmatrix} A & C \\\\ 0 & B\end{bmatrix}$ 的下界）：见 [分块矩阵性质](/notes/分块矩阵性质/)
-- **Sylvester 秩不等式** $r(AB) \ge r(A) + r(B) - n$ 及其几何解释：见 [Sylvester 秩不等式](/notes/Sylvester 秩不等式/)
-- **子矩阵的秩不超过原矩阵** $r(B) \le r(A)$：见 [子母矩阵秩的大小关系](/notes/子母矩阵秩的大小关系/)
-- **加长向量组仍无关**（无关的向量组添上若干坐标后仍无关）：见 [向量组无关加元素仍无关](/notes/向量组无关加元素仍无关/)
+- **分块矩阵的秩**（$\begin{bmatrix} A & O \\\\ O & B\end{bmatrix}$ 的秩、$\begin{bmatrix} A & C \\\\ 0 & B\end{bmatrix}$ 的下界）：见 [分块矩阵性质](/notes/fen-kuai-ju-zhen-xing-zhi/)
+- **Sylvester 秩不等式** $r(AB) \ge r(A) + r(B) - n$ 及其几何解释：见 [Sylvester 秩不等式](/notes/sylvester-zhi-bu-deng-shi/)
+- **子矩阵的秩不超过原矩阵** $r(B) \le r(A)$：见 [子母矩阵秩的大小关系](/notes/zi-mu-ju-zhen-zhi-de-da-xiao-guan-xi/)
+- **加长向量组仍无关**（无关的向量组添上若干坐标后仍无关）：见 [向量组无关加元素仍无关](/notes/xiang-liang-zu-wu-guan-jia-yuan-su-reng-wu-guan/)
 - **秩 1 分解** $r(A) = 1 \iff A = \mathbf{u}\mathbf{v}^T$：见 [秩1矩阵的分解](/notes/秩1矩阵的分解/)
 <a id="rank-further"></a>
 
@@ -600,7 +600,7 @@ $$
 </div>
 </details>
 
-细节见 [满秩矩阵](/notes/满秩矩阵/)、[满秩方阵的单侧可逆蕴含双侧可逆](/notes/满秩方阵的单侧可逆蕴含双侧可逆/)。
+细节见 [满秩矩阵](/notes/man-zhi-ju-zhen/)、[满秩方阵的单侧可逆蕴含双侧可逆](/notes/man-zhi-fang-zhen-de-dan-ce-ke-ni-yun-han-shuang-ce-ke-ni/)。
 
 ### 7.1 逆矩阵的运算
 
@@ -683,6 +683,6 @@ $$(A - 2I)(X - I) = AX - A - 2X + 2I = A - A + 2I = 2I$$
 ## 相关笔记
 
 - 主线：[数学分析笔记](/notes/shu-xue-fen-xi-bi-ji/)
-- 秩与不等式专题：[分块矩阵性质](/notes/分块矩阵性质/)、[Sylvester 秩不等式](/notes/Sylvester 秩不等式/)、[子母矩阵秩的大小关系](/notes/子母矩阵秩的大小关系/)、[向量组无关加元素仍无关](/notes/向量组无关加元素仍无关/)
-- 满秩与可逆：[满秩矩阵](/notes/满秩矩阵/)、[满秩方阵的单侧可逆蕴含双侧可逆](/notes/满秩方阵的单侧可逆蕴含双侧可逆/)
-- 工具：[∑求和运算律](/notes/∑求和运算律/)
+- 秩与不等式专题：[分块矩阵性质](/notes/fen-kuai-ju-zhen-xing-zhi/)、[Sylvester 秩不等式](/notes/sylvester-zhi-bu-deng-shi/)、[子母矩阵秩的大小关系](/notes/zi-mu-ju-zhen-zhi-de-da-xiao-guan-xi/)、[向量组无关加元素仍无关](/notes/xiang-liang-zu-wu-guan-jia-yuan-su-reng-wu-guan/)
+- 满秩与可逆：[满秩矩阵](/notes/man-zhi-ju-zhen/)、[满秩方阵的单侧可逆蕴含双侧可逆](/notes/man-zhi-fang-zhen-de-dan-ce-ke-ni-yun-han-shuang-ce-ke-ni/)
+- 工具：[∑求和运算律](/notes/qiu-he-yun-suan-lv/)

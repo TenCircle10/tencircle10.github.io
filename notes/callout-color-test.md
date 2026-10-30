@@ -221,7 +221,7 @@ $$e = \sum_{n=0}^{\infty} \frac{1}{n!}$$
 <summary class="callout-title">Seealso · 参见</summary>
 <div class="callout-content" markdown="block">
 
-证明细节见 [Stolz定理的证明](/notes/Stolz定理的证明/)。
+证明细节见 [Stolz定理的证明](/notes/stolz-ding-li-di-zheng-ming/)。
 
 </div>
 </details>

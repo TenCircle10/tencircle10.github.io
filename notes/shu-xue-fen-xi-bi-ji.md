@@ -41,7 +41,7 @@ $\varnothing \subset A$ 里的符号要理解为"包含于"（$\subseteq$）；�
 
 ### 1.2 集合运算与德摩根律
 
-$A \cap B$ 交，$A \cup B$ 并，$A \setminus B = \lbrace{}x \mid x \in A \text{ 且 } x \notin B\rbrace{}$ 差，$A^{c}$ 补（相对于全集 $X$）。运算律（交换、结合、分配、幂等、吸收、补集、德摩根、差集与对称差恒等式）见 [集合运算律](/notes/集合运算律/)。
+$A \cap B$ 交，$A \cup B$ 并，$A \setminus B = \lbrace{}x \mid x \in A \text{ 且 } x \notin B\rbrace{}$ 差，$A^{c}$ 补（相对于全集 $X$）。运算律（交换、结合、分配、幂等、吸收、补集、德摩根、差集与对称差恒等式）见 [集合运算律](/notes/ji-he-yun-suan-lv/)。
 
 <details class="callout formula" id="de-morgan" data-callout="formula" open>
 <summary class="callout-title">德摩根律（de Morgan）</summary>
@@ -136,9 +136,9 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 
 ### 2.4 注意点
 
-- 所有可列集的元素个数都相同（同一基数 $\aleph_0$），见 [无限可列集等势证明](/notes/infinite-countable-equivalence/)；
+- 所有可列集的元素个数都相同（同一基数 $\aleph_0$），见 [无限可列集等势证明](/notes/wu-xian-ke-lie-ji-deng-shi-zheng-ming/)；
 - 有理数集与无理数集都**稠密**；
-- 但稠密不等于可列：无理数集不可列，见 [实数集与无理数集不可列证明](/notes/real-irrational-uncountable/)。
+- 但稠密不等于可列：无理数集不可列，见 [实数集与无理数集不可列证明](/notes/shi-shu-ji-yu-wu-li-shu-ji-bu-ke-lie-zheng-ming/)。
 
 ---
 
@@ -350,7 +350,7 @@ $\lim a_n = a$ 与 $\lim b_n = b$ **都存在**时才能拆开运算，而且只
 </div>
 </details>
 
-做法：构造一个新序列 $f(a_n)$，逐项用四则运算推（求和符号的运算律见 [∑求和运算律](/notes/∑求和运算律/)）。
+做法：构造一个新序列 $f(a_n)$，逐项用四则运算推（求和符号的运算律见 [∑求和运算律](/notes/qiu-he-yun-suan-lv/)）。
 
 ### 4.5 根式与幂的极限
 
@@ -495,7 +495,7 @@ $$\begin{cases} \lim\limits_{n \to \infty} a_{2n} = A \\\\[4pt] \lim\limits_{n \
 </div>
 </details>
 
-用差分形式表示 $x_n, y_n$ 凑出已知极限；用无穷大抵消"有限的累加项"。$0/0$ 型与两种证明见 [Stolz定理的证明](/notes/Stolz定理的证明/)。
+用差分形式表示 $x_n, y_n$ 凑出已知极限；用无穷大抵消"有限的累加项"。$0/0$ 型与两种证明见 [Stolz定理的证明](/notes/stolz-ding-li-di-zheng-ming/)。
 
 **例**：
 
@@ -1133,7 +1133,7 @@ $$\frac{dy}{dx} = \frac{1}{\frac{dx}{dy}} = \frac{1}{\cos y} = \frac{1}{\cos(\ar
 | $\operatorname{arcsec} x$ | $\dfrac{1}{\lvert x \rvert\sqrt{x^{2} - 1}}$ | $\lvert x \rvert \gt{} 1$ |
 | $\operatorname{arccsc} x$ | $-\dfrac{1}{\lvert x \rvert\sqrt{x^{2} - 1}}$ | $\lvert x \rvert \gt{} 1$ |
 
-辅助式：$\cos(\operatorname{arcsec} x) = \dfrac{1}{x}$，$\sin(\operatorname{arcsec} x) = \dfrac{\sqrt{x^{2} - 1}}{\lvert x \rvert}$。三角恒等式备用：[积化和差 和差化积](/notes/积化和差 和差化积/)。
+辅助式：$\cos(\operatorname{arcsec} x) = \dfrac{1}{x}$，$\sin(\operatorname{arcsec} x) = \dfrac{\sqrt{x^{2} - 1}}{\lvert x \rvert}$。三角恒等式备用：[积化和差 和差化积](/notes/ji-hua-he-cha-he-cha-hua-ji/)。
 <a id="inverse-trig-derivatives"></a>
 
 ### 11.4 由两个重要极限导出的一组极限
@@ -1342,18 +1342,18 @@ $$\frac{d^{2}x}{dy^{2}} = \frac{d}{dy}\left(\frac{1}{f'(x)}\right) = \frac{d}{dx
 | Dirichlet $D(x)$ | 处处不连续 | 处处不可导 | 非零有理数都是周期，无最小正周期 |
 | Thomae $R(x)$ | 无理点连续、有理点不连续 | 处处不可导 | 周期 $1$；无理点处极限为 $0$ |
 
-**$e^{-1/x}$**：$x \gt{} 0$ 时 $f^{(n)}(x) = P_n\!\left(\frac{1}{x}\right)e^{-\frac{1}{x}}$，$P_n$ 为多项式，$P_1(t) = t^{2}$，$P_{n+1}(t) = t^{2}\left(P_n(t) - P_n'(t)\right)$。$t^{m}e^{-t} \to 0$ 给出 $f^{(n)}(0) = 0$，于是它在 $0$ 处的泰勒级数恒为 $0$，与函数本身不符。通项与证明见 [e的负x分之一次方的无穷次可导性](/notes/e的负x分之一次方的无穷次可导性/)。
+**$e^{-1/x}$**：$x \gt{} 0$ 时 $f^{(n)}(x) = P_n\!\left(\frac{1}{x}\right)e^{-\frac{1}{x}}$，$P_n$ 为多项式，$P_1(t) = t^{2}$，$P_{n+1}(t) = t^{2}\left(P_n(t) - P_n'(t)\right)$。$t^{m}e^{-t} \to 0$ 给出 $f^{(n)}(0) = 0$，于是它在 $0$ 处的泰勒级数恒为 $0$，与函数本身不符。通项与证明见 [e的负x分之一次方的无穷次可导性](/notes/e-de-fu-x-fen-zhi-yi-ci-fang-de-wu-qiong-ci-ke-dao-xing/)。
 
 **Dirichlet 函数**：$D(x) = 1\ (x \in \mathbb{Q})$，$0\ (x \notin \mathbb{Q})$。$T \in \mathbb{Q}$、$T \neq 0$ 时 $D(x + T) = D(x)$，故每个非零有理数都是周期；**无理数不是周期**（$x$ 与 $x + T$ 的有理性相反）。任一点取有理数列与无理数列逼近，$D$ 的极限分别是 $1$ 与 $0$，故极限处处不存在。
 
-**Thomae 函数**：$R(x) = \dfrac{1}{q}\ (x = \dfrac{p}{q}\ \text{既约},\ q \gt{} 0)$，$0\ (x \notin \mathbb{Q})$。分母越大值越小，所以有理点的稠密不破坏它在无理点收敛到 $0$。无理点处也不可导：差商沿无理方向为 $0$，沿有理方向无界。证明见 [Thomae 函数的连续性](/notes/Thomae 函数的连续性/)。
+**Thomae 函数**：$R(x) = \dfrac{1}{q}\ (x = \dfrac{p}{q}\ \text{既约},\ q \gt{} 0)$，$0\ (x \notin \mathbb{Q})$。分母越大值越小，所以有理点的稠密不破坏它在无理点收敛到 $0$。无理点处也不可导：差商沿无理方向为 $0$，沿有理方向无界。证明见 [Thomae 函数的连续性](/notes/thomae-han-shu-de-lian-xu-xing/)。
 
 ---
 
 ## 相关笔记
 
 - 主线：[线性代数笔记](/notes/xian-xing-dai-shu-bi-ji/)
-- 极限与证明细节：[Stolz定理的证明](/notes/Stolz定理的证明/)
-- 集合、求和与三角工具：[集合运算律](/notes/集合运算律/)、[∑求和运算律](/notes/∑求和运算律/)、[积化和差 和差化积](/notes/积化和差 和差化积/)
-- 可列集专题：[无限可列集等势证明](/notes/infinite-countable-equivalence/)、[实数集与无理数集不可列证明](/notes/real-irrational-uncountable/)
-- 病态函数：[e的负x分之一次方的无穷次可导性](/notes/e的负x分之一次方的无穷次可导性/)、[Thomae 函数的连续性](/notes/Thomae 函数的连续性/)
+- 极限与证明细节：[Stolz定理的证明](/notes/stolz-ding-li-di-zheng-ming/)
+- 集合、求和与三角工具：[集合运算律](/notes/ji-he-yun-suan-lv/)、[∑求和运算律](/notes/qiu-he-yun-suan-lv/)、[积化和差 和差化积](/notes/ji-hua-he-cha-he-cha-hua-ji/)
+- 可列集专题：[无限可列集等势证明](/notes/wu-xian-ke-lie-ji-deng-shi-zheng-ming/)、[实数集与无理数集不可列证明](/notes/shi-shu-ji-yu-wu-li-shu-ji-bu-ke-lie-zheng-ming/)
+- 病态函数：[e的负x分之一次方的无穷次可导性](/notes/e-de-fu-x-fen-zhi-yi-ci-fang-de-wu-qiong-ci-ke-dao-xing/)、[Thomae 函数的连续性](/notes/thomae-han-shu-de-lian-xu-xing/)
