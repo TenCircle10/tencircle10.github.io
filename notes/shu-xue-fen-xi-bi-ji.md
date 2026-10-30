@@ -23,9 +23,9 @@ render_with_liquid: false
 
 ### 1.1 集合的基本概念
 
-**集合**的三条性质：**互异性**（相同元素只算一个，如 $\lbrace1, 2, 1, 2\rbrace = \lbrace1, 2\rbrace$）、**无序性**（$\lbrace1, 2\rbrace = \lbrace2, 1\rbrace$）、**确定性**（任一对象要么属于、要么不属于）。
+**集合**的三条性质：**互异性**（相同元素只算一个，如 $\lbrace{}1, 2, 1, 2\rbrace{} = \lbrace{}1, 2\rbrace{}$）、**无序性**（$\lbrace{}1, 2\rbrace{} = \lbrace{}2, 1\rbrace{}$）、**确定性**（任一对象要么属于、要么不属于）。
 
-**例子**：$1 \in \lbrace1\rbrace$，而 $1 \neq \lbrace1\rbrace$（元素不等于集合）；$\varnothing \subseteq A$ 对任何集合 $A$ 成立（$A$ 允许为空集）。
+**例子**：$1 \in \lbrace{}1\rbrace{}$，而 $1 \neq \lbrace{}1\rbrace{}$（元素不等于集合）；$\varnothing \subseteq A$ 对任何集合 $A$ 成立（$A$ 允许为空集）。
 
 <details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">一个容易混的符号</summary>
@@ -40,7 +40,7 @@ $\varnothing \subset A$ 里的符号要理解为"包含于"（$\subseteq$）；�
 
 ### 1.2 集合运算与德摩根律
 
-$A \cap B$ 交，$A \cup B$ 并，$A \setminus B = \lbracex \mid x \in A \text{ 且 } x \notin B\rbrace$ 差，$A^{c}$ 补（相对于全集 $X$）。运算律（交换、结合、分配、幂等、吸收、补集、德摩根、差集与对称差恒等式）见 [集合运算律](/notes/集合运算律/)。
+$A \cap B$ 交，$A \cup B$ 并，$A \setminus B = \lbrace{}x \mid x \in A \text{ 且 } x \notin B\rbrace{}$ 差，$A^{c}$ 补（相对于全集 $X$）。运算律（交换、结合、分配、幂等、吸收、补集、德摩根、差集与对称差恒等式）见 [集合运算律](/notes/集合运算律/)。
 
 <details class="callout formula" id="de-morgan" data-callout="formula" open>
 <summary class="callout-title">德摩根律（de Morgan）</summary>
@@ -92,7 +92,7 @@ $\mathbb{Q}$、$\mathbb{R}$ 是有序域；$\mathbb{C}$ **不是**：相容的�
 <summary class="callout-title">可列集</summary>
 <div class="callout-content" markdown="block">
 
-若无限集 $A$ 的元素能按某种规律排成一个序列 $A = \lbracea_1, a_2, \dots, a_n, \dots\rbrace$，则称 $A$ 为**可列集**（可数无限集）。
+若无限集 $A$ 的元素能按某种规律排成一个序列 $A = \lbrace{}a_1, a_2, \dots, a_n, \dots\rbrace{}$，则称 $A$ 为**可列集**（可数无限集）。
 
 </div>
 </details>
@@ -108,7 +108,7 @@ $\mathbb{Q}$、$\mathbb{R}$ 是有序域；$\mathbb{C}$ **不是**：相容的�
 </div>
 </details>
 
-**证明思路（记）**：记 $A_n = \lbracea_{n1}, a_{n2}, \dots, a_{nk}, \dots\rbrace$，沿对角线方向取
+**证明思路（记）**：记 $A_n = \lbrace{}a_{n1}, a_{n2}, \dots, a_{nk}, \dots\rbrace{}$，沿对角线方向取
 
 $$\bigcup_{n=1}^{\infty} A_n = \{a_{11},\ a_{21},\ a_{12},\ a_{31},\ a_{22},\ a_{13},\ \dots\}$$
 
@@ -181,7 +181,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 </div>
 </details>
 
-对 $\mathbb{Q}$ 不成立：$S = \lbracex \in \mathbb{Q} \mid x^{2} \lt{} 2\rbrace$ 在 $\mathbb{Q}$ 中**没有上确界**（"应该在"的那个位置 $\sqrt{2}$ 不在 $\mathbb{Q}$ 里）；而 $S' = \lbracex \in \mathbb{R} \mid x^{2} \lt{} 2\rbrace$ 有界，且 $\sup S' = \sqrt{2}$。
+对 $\mathbb{Q}$ 不成立：$S = \lbrace{}x \in \mathbb{Q} \mid x^{2} \lt{} 2\rbrace{}$ 在 $\mathbb{Q}$ 中**没有上确界**（"应该在"的那个位置 $\sqrt{2}$ 不在 $\mathbb{Q}$ 里）；而 $S' = \lbrace{}x \in \mathbb{R} \mid x^{2} \lt{} 2\rbrace{}$ 有界，且 $\sup S' = \sqrt{2}$。
 
 <details class="callout understand" data-callout="understand" open>
 <summary class="callout-title">理解</summary>
@@ -211,12 +211,12 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 <summary class="callout-title">有界序列必有收敛子列（Bolzano–Weierstrass）</summary>
 <div class="callout-content" markdown="block">
 
-若 $a \le x_n \le b$（$n = 1, 2, \dots$），则 $\lbracex_n\rbrace$ 有收敛子列。
+若 $a \le x_n \le b$（$n = 1, 2, \dots$），则 $\lbrace{}x_n\rbrace{}$ 有收敛子列。
 
 </div>
 </details>
 
-**证明**：把 $[a, b]$ 等分成两个小区间，必有一个含 $\lbracex_n\rbrace$ 的无穷多项（否则两边各只含有限项，合起来也只有有限项，矛盾），记为 $[a_1, b_1]$，并在其中取一项 $x_{n_1}$。再等分 $[a_1, b_1]$ 重复此过程，得到闭区间套 $\lbrace[a_k, b_k]\rbrace$ 与子列 $\lbracex_{n_k}\rbrace$，满足 $x_{n_k} \in [a_k, b_k]$ 且下标严格递增。由 [闭区间套定理](#nested-intervals)，$a_k \to c \gets b_k$，夹逼得 $x_{n_k} \to c$。
+**证明**：把 $[a, b]$ 等分成两个小区间，必有一个含 $\lbrace{}x_n\rbrace{}$ 的无穷多项（否则两边各只含有限项，合起来也只有有限项，矛盾），记为 $[a_1, b_1]$，并在其中取一项 $x_{n_1}$。再等分 $[a_1, b_1]$ 重复此过程，得到闭区间套 $\lbrace{}[a_k, b_k]\rbrace{}$ 与子列 $\lbrace{}x_{n_k}\rbrace{}$，满足 $x_{n_k} \in [a_k, b_k]$ 且下标严格递增。由 [闭区间套定理](#nested-intervals)，$a_k \to c \gets b_k$，夹逼得 $x_{n_k} \to c$。
 <a id="bolzano-weierstrass"></a>
 
 ### 3.5 实数的小数表示
@@ -236,7 +236,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 <summary class="callout-title">数列极限</summary>
 <div class="callout-content" markdown="block">
 
-$\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 就有 $\mid{}a_n - l\mid{} \lt{} \varepsilon$，则称 $l$ 为 $\lbracea_n\rbrace$ 的极限，记作 $\lim\limits_{n \to \infty} a_n = l$。
+$\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 就有 $\mid{}a_n - l\mid{} \lt{} \varepsilon$，则称 $l$ 为 $\lbrace{}a_n\rbrace{}$ 的极限，记作 $\lim\limits_{n \to \infty} a_n = l$。
 几何意义：$n \gt{} N$ 时 $a_n$ 全部落在 $l$ 的 **$\varepsilon$ 邻域** $U(l, \varepsilon) = (l - \varepsilon, l + \varepsilon)$ 内。
 
 </div>
@@ -300,27 +300,27 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 <summary class="callout-title">保号性</summary>
 <div class="callout-content" markdown="block">
 
-设 $\lbracea_n\rbrace$ 收敛，$\lim\limits_{n \to \infty} a_n = A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} 0$。
+设 $\lbrace{}a_n\rbrace{}$ 收敛，$\lim\limits_{n \to \infty} a_n = A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} 0$。
 
 </div>
 </details>
 
 **证**：取 $\varepsilon = A$，存在 $N$，当 $n \gt{} N$ 时 $\mid{}a_n - A\mid{} \lt{} \varepsilon = A$，故 $a_n \gt{} A - \varepsilon = 0$。
 
-**推论 1**：$\lbracea_n\rbrace$ 收敛于 $A$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \ge 0$，则 $A \ge 0$。**推论 2**：$\lbracea_n\rbrace$ 收敛于 $A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \ge \dfrac{A}{2}$。
+**推论 1**：$\lbrace{}a_n\rbrace{}$ 收敛于 $A$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \ge 0$，则 $A \ge 0$。**推论 2**：$\lbrace{}a_n\rbrace{}$ 收敛于 $A \gt{} 0$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \ge \dfrac{A}{2}$。
 
 <details class="callout theorem" id="order-preserving" data-callout="theorem" open>
 <summary class="callout-title">保序性</summary>
 <div class="callout-content" markdown="block">
 
-设 $\lbracea_n\rbrace, \lbraceb_n\rbrace$ 收敛，极限分别为 $A, B$。若 $A \gt{} B$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} b_n$。
+设 $\lbrace{}a_n\rbrace{}, \lbrace{}b_n\rbrace{}$ 收敛，极限分别为 $A, B$。若 $A \gt{} B$，则存在 $N$，当 $n \gt{} N$ 时 $a_n \gt{} b_n$。
 
 </div>
 </details>
 
-**证**：取 $\varepsilon = \dfrac{A - B}{2} \gt{} 0$。由 $a_n \to A$ 得 $n \gt{} N_1$ 时 $a_n \gt{} A - \varepsilon = \dfrac{A + B}{2}$；由 $b_n \to B$ 得 $n \gt{} N_2$ 时 $b_n \lt{} B + \varepsilon = \dfrac{A + B}{2}$。取 $N = \max\lbraceN_1, N_2\rbrace$，当 $n \gt{} N$ 时 $b_n \lt{} \dfrac{A+B}{2} \lt{} a_n$。
+**证**：取 $\varepsilon = \dfrac{A - B}{2} \gt{} 0$。由 $a_n \to A$ 得 $n \gt{} N_1$ 时 $a_n \gt{} A - \varepsilon = \dfrac{A + B}{2}$；由 $b_n \to B$ 得 $n \gt{} N_2$ 时 $b_n \lt{} B + \varepsilon = \dfrac{A + B}{2}$。取 $N = \max\lbrace{}N_1, N_2\rbrace{}$，当 $n \gt{} N$ 时 $b_n \lt{} \dfrac{A+B}{2} \lt{} a_n$。
 
-**推论 3**：$\lbracea_n\rbrace, \lbraceb_n\rbrace$ 收敛于 $A, B$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \le b_n$，则 $A \le B$。
+**推论 3**：$\lbrace{}a_n\rbrace{}, \lbrace{}b_n\rbrace{}$ 收敛于 $A, B$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \le b_n$，则 $A \le B$。
 
 **思考**：把 $A \gt{} B$ 换成 $A \ge B$，还能得到"存在 $N$，当 $n \gt{} N$ 时 $a_n \ge b_n$"吗？不能，反例 $a_n = 0,\ b_n = \dfrac{1}{n}$：此时 $A = B = 0$，但 $a_n \lt{} b_n$ 对一切 $n$ 成立。严格的大小关系在取极限后会被"抹平"。
 
@@ -328,7 +328,7 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 <summary class="callout-title">$a_n \le b_n$ 推不出"$a_n \le B$"</summary>
 <div class="callout-content" markdown="block">
 
-已知 $a_n \le b_n\ (n \gt{} N)$、$\lbracea_n\rbrace \to A$、$\lbraceb_n\rbrace \to B$，能得到的只有 $A \le B$；**得不到**"存在 $N$，当 $n \gt{} N$ 时 $a_n \le B$"。
+已知 $a_n \le b_n\ (n \gt{} N)$、$\lbrace{}a_n\rbrace{} \to A$、$\lbrace{}b_n\rbrace{} \to B$，能得到的只有 $A \le B$；**得不到**"存在 $N$，当 $n \gt{} N$ 时 $a_n \le B$"。
 反例：$a_n = b_n = \dfrac{1}{n}$，则 $A = B = 0$，但 $a_n = \dfrac{1}{n} \gt{} 0 = B$ 对一切 $n$ 成立。
 
 </div>
@@ -417,18 +417,18 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 <summary class="callout-title">单调有界定理</summary>
 <div class="callout-content" markdown="block">
 
-单调且有界的数列必有极限。具体地，$\lbracex_n\rbrace$ 单调增且有上界时 $\lim\limits_{n \to \infty} x_n = \sup\lbracex_n\rbrace$。
+单调且有界的数列必有极限。具体地，$\lbrace{}x_n\rbrace{}$ 单调增且有上界时 $\lim\limits_{n \to \infty} x_n = \sup\lbrace{}x_n\rbrace{}$。
 
 </div>
 </details>
 
-**证明**：设 $\lbracex_n\rbrace$ 单调增且有上界，由 [上确界](#sup-inf-def) 与 [确界原理](#completeness)，记 $a = \sup\lbracex_n\rbrace$。对任意 $\varepsilon \gt{} 0$，$a - \varepsilon$ 不再是上界，故存在 $N$ 使 $x_N \gt{} a - \varepsilon$。由单调性，当 $n \gt{} N$ 时 $a - \varepsilon \lt{} x_N \le x_n \le a \lt{} a + \varepsilon$，即 $\mid{}x_n - a\mid{} \lt{} \varepsilon$，故 $x_n \to a$。
+**证明**：设 $\lbrace{}x_n\rbrace{}$ 单调增且有上界，由 [上确界](#sup-inf-def) 与 [确界原理](#completeness)，记 $a = \sup\lbrace{}x_n\rbrace{}$。对任意 $\varepsilon \gt{} 0$，$a - \varepsilon$ 不再是上界，故存在 $N$ 使 $x_N \gt{} a - \varepsilon$。由单调性，当 $n \gt{} N$ 时 $a - \varepsilon \lt{} x_N \le x_n \le a \lt{} a + \varepsilon$，即 $\mid{}x_n - a\mid{} \lt{} \varepsilon$，故 $x_n \to a$。
 
 <details class="callout understand" data-callout="understand" open>
 <summary class="callout-title">直观记法</summary>
 <div class="callout-content" markdown="block">
 
-用小数表示看：$x_n = m_n + 0.a_1^{(n)} a_2^{(n)} \cdots$。单调增有上界保证整数部分 $m_n$ 最终不再变化；再看小数位，上一位一旦"锁定"，下一位只能从 $\lbrace0, 1, \dots, 9\rbrace$ 中取，于是逐位锁定出一个小数 —— 它就是上确界。
+用小数表示看：$x_n = m_n + 0.a_1^{(n)} a_2^{(n)} \cdots$。单调增有上界保证整数部分 $m_n$ 最终不再变化；再看小数位，上一位一旦"锁定"，下一位只能从 $\lbrace{}0, 1, \dots, 9\rbrace{}$ 中取，于是逐位锁定出一个小数 —— 它就是上确界。
 
 </div>
 </details>
@@ -455,7 +455,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 <summary class="callout-title">例 2：$x_{n+1} = x_n(1 - x_n)$</summary>
 <div class="callout-content" markdown="block">
 
-设 $0 \lt{} x_1 \lt{} 1$，证明：(1) $\lbracex_n\rbrace$ 收敛；(2) $\lim\limits_{n \to \infty} n x_n = 1$。
+设 $0 \lt{} x_1 \lt{} 1$，证明：(1) $\lbrace{}x_n\rbrace{}$ 收敛；(2) $\lim\limits_{n \to \infty} n x_n = 1$。
 
 </div>
 </details>
@@ -472,7 +472,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 <summary class="callout-title">子列继承极限</summary>
 <div class="callout-content" markdown="block">
 
-若 $\lim\limits_{n \to \infty} a_n = L$，则 $\lbracea_n\rbrace$ 的任何子列也收敛于 $L$。
+若 $\lim\limits_{n \to \infty} a_n = L$，则 $\lbrace{}a_n\rbrace{}$ 的任何子列也收敛于 $L$。
 
 </div>
 </details>
@@ -489,7 +489,7 @@ $$\begin{cases} \lim\limits_{n \to \infty} a_{2n} = A \\\\[4pt] \lim\limits_{n \
 <summary class="callout-title">Stolz 定理（离散的洛必达法则）</summary>
 <div class="callout-content" markdown="block">
 
-设 $\lbracey_n\rbrace$ 严格单调递增且 $\lim\limits_{n \to \infty} y_n = +\infty$。若 $\lim\limits_{n \to \infty} \dfrac{x_n - x_{n-1}}{y_n - y_{n-1}} = a$，则 $\lim\limits_{n \to \infty} \dfrac{x_n}{y_n} = a$，其中 $a$ 可以是有限数，也可以是 $+\infty$ 或 $-\infty$。
+设 $\lbrace{}y_n\rbrace{}$ 严格单调递增且 $\lim\limits_{n \to \infty} y_n = +\infty$。若 $\lim\limits_{n \to \infty} \dfrac{x_n - x_{n-1}}{y_n - y_{n-1}} = a$，则 $\lim\limits_{n \to \infty} \dfrac{x_n}{y_n} = a$，其中 $a$ 可以是有限数，也可以是 $+\infty$ 或 $-\infty$。
 
 </div>
 </details>
@@ -681,7 +681,7 @@ $$0 \lt{} r \lt{} \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\r
 
 ## 6 几个典型函数
 
-$X$ 是**定义域**，$f(X) = \lbracef(x) \mid x \in X\rbrace$ 是**值域**，且 $f(X) \subset Y$（$Y$ 为陪域）。复合函数 $y = f(g(x))$ 需满足 $g$ 的值域落在 $f$ 的定义域内。
+$X$ 是**定义域**，$f(X) = \lbrace{}f(x) \mid x \in X\rbrace{}$ 是**值域**，且 $f(X) \subset Y$（$Y$ 为陪域）。复合函数 $y = f(g(x))$ 需满足 $g$ 的值域落在 $f$ 的定义域内。
 
 | 名称 | 定义 | 备注 |
 | --- | --- | --- |
@@ -710,7 +710,7 @@ $X$ 是**定义域**，$f(X) = \lbracef(x) \mid x \in X\rbrace$ 是**值域**，
 <summary class="callout-title">函数极限与去心邻域</summary>
 <div class="callout-content" markdown="block">
 
-**空心（去心）邻域**：$(x_0 - \delta, x_0 + \delta) \setminus \lbracex_0\rbrace$，记 $U^{\circ}(x_0, \delta)$。
+**空心（去心）邻域**：$(x_0 - \delta, x_0 + \delta) \setminus \lbrace{}x_0\rbrace{}$，记 $U^{\circ}(x_0, \delta)$。
 **极限**：$\forall \varepsilon \gt{} 0,\ \exists \delta \gt{} 0$，当 $0 \lt{} \mid{}x - x_0\mid{} \lt{} \delta$ 时 $\mid{}f(x) - L\mid{} \lt{} \varepsilon$，记 $\lim\limits_{x \to x_0} f(x) = L$。
 
 - $\varepsilon$ 任选、$\delta$ 随 $\varepsilon$ 变动，动态地描述"要多小有多小"；
@@ -783,7 +783,7 @@ $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^
 </div>
 </details>
 
-**解**：取 $\mid{}x - 2\mid{} \lt{} 1$，则 $\mid{}x + 2\mid{} \lt{} 5$，于是 $\mid{}x^{2} - 4\mid{} = \mid{}x - 2\mid{}\mid{}x + 2\mid{} \lt{} 5\mid{}x - 2\mid{}$；要它 $\lt{} \varepsilon$ 只需 $\mid{}x - 2\mid{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace1, \dfrac{\varepsilon}{5}\right\rbrace$。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
+**解**：取 $\mid{}x - 2\mid{} \lt{} 1$，则 $\mid{}x + 2\mid{} \lt{} 5$，于是 $\mid{}x^{2} - 4\mid{} = \mid{}x - 2\mid{}\mid{}x + 2\mid{} \lt{} 5\mid{}x - 2\mid{}$；要它 $\lt{} \varepsilon$ 只需 $\mid{}x - 2\mid{} \lt{} \dfrac{\varepsilon}{5}$，故 $\delta = \min\left\lbrace{}1, \dfrac{\varepsilon}{5}\right\rbrace{}$。记法：**$M$、$N$ 取 $\max$，$\delta$ 取 $\min$。**
 
 ### 7.4 夹逼与单调收敛（函数版）
 
@@ -873,7 +873,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 
 ### 8.1 最值定理
 
-设 $f$ 在 $[a, b]$ 上连续，则 $f([a, b])$ 有上、下确界。以最小值为例，设下确界为 $m$，由 [确界](#sup-inf-def) 的定义，存在 $\lbracex_n\rbrace \subset [a, b]$ 使 $m \le f(x_n) \lt{} m + \dfrac{1}{n}$，故 $f(x_n) \to m$。
+设 $f$ 在 $[a, b]$ 上连续，则 $f([a, b])$ 有上、下确界。以最小值为例，设下确界为 $m$，由 [确界](#sup-inf-def) 的定义，存在 $\lbrace{}x_n\rbrace{} \subset [a, b]$ 使 $m \le f(x_n) \lt{} m + \dfrac{1}{n}$，故 $f(x_n) \to m$。
 
 <details class="callout theorem" id="extreme-value" data-callout="theorem" open>
 <summary class="callout-title">最值定理</summary>

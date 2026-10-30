@@ -377,7 +377,7 @@ $$
 设 $A$ 是 $m \times n$ 矩阵，则
 
 1. $r(A) = 0 \iff A = O$；若 $A \neq O$，则 $r(A) \ge 1$；
-2. $r(A) \le \min\lbracem, n\rbrace$；
+2. $r(A) \le \min\lbrace{}m, n\rbrace{}$；
 3. 初等行变换不改变矩阵的秩。
 
 </div>
@@ -439,7 +439,7 @@ $$
 （第一、二个等号用的是 [初等行变换不改变秩](#rank-invariance)，最后一个等号由 $r(T) = r(A)$ 得到。）由 $(\ast)$ 得 $r(AQP) \le r(AQ) \le r(A)$；取 $P = Q^{-1}$ 又得 $r(A) \le r(AQ) \le r(A)$，故 $r(AQ) = r(A)$。
 
 <details class="callout corollary" data-callout="corollary" open>
-<summary class="callout-title">$r(AB) \le \min\lbracer(A),\, r(B)\rbrace$</summary>
+<summary class="callout-title">$r(AB) \le \min\lbrace{}r(A),\, r(B)\rbrace{}$</summary>
 <div class="callout-content" markdown="block">
 
 矩阵乘法不增加信息，只可能减少信息。
@@ -507,7 +507,7 @@ $r(A+B) \le r(A) + r(B)$。其余专题单开：
 
 要写出表示系数，需进一步化为**行简化阶梯形**读取。
 
-**秩不等式的极大无关组证法**。设 $A$ 的列极大无关组为 $\lbrace\alpha_1, \dots, \alpha_s\rbrace$，$B$ 的列极大无关组为 $\lbrace\beta_1, \dots, \beta_t\rbrace$，合并取 $\lbrace\alpha_1, \dots, \alpha_s, \beta_1, \dots, \beta_t\rbrace$ 即可表出 $A+B$ 的各列 $\lbrace\gamma_1, \dots, \gamma_r\rbrace$，故 $r \le s + t$，即
+**秩不等式的极大无关组证法**。设 $A$ 的列极大无关组为 $\lbrace{}\alpha_1, \dots, \alpha_s\rbrace{}$，$B$ 的列极大无关组为 $\lbrace{}\beta_1, \dots, \beta_t\rbrace{}$，合并取 $\lbrace{}\alpha_1, \dots, \alpha_s, \beta_1, \dots, \beta_t\rbrace{}$ 即可表出 $A+B$ 的各列 $\lbrace{}\gamma_1, \dots, \gamma_r\rbrace{}$，故 $r \le s + t$，即
 
 $$r(A+B) \le r(A) + r(B)$$
 

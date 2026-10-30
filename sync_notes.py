@@ -477,8 +477,11 @@ def _protect_env_pipes(body: str) -> str:
 
 _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], "str | Callable[[re.Match[str]], str]"]] = [
     (re.compile(r"(?<!\\)#"), r"\\#"),
-    (re.compile(r"(?<!\\)\\\{"), r"\\lbrace"),
-    (re.compile(r"(?<!\\)\\\}"), r"\\rbrace"),
+    # 转成 \lbrace{} / \rbrace{}（带空分组），避免 \lbrace 这类【多字母命令】
+    # 紧跟字母时被 LaTeX 读成非法命令（\{a_1 -> \lbracea_1 -> \lbracea 未定义 -> 整条公式报红）。
+    # 空分组 {} 不可见，不影响渲染。
+    (re.compile(r"(?<!\\)\\\{"), r"\\lbrace{}"),
+    (re.compile(r"(?<!\\)\\\}"), r"\\rbrace{}"),
     # 用 HTML 实体代替 LaTeX 转义，但【只在真会触发 Markdown 强调的位置】替换：
     # Markdown 的 _ 强调要求开始 _ 左侧不是字母数字。所以
     #   a_1 / A_n / p_n      → 左侧是字母，不会触发强调，保持原样（MathJax 正常渲染下标）
@@ -513,6 +516,10 @@ _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], "str | Callable[[re.Match[str]],
     (re.compile(r"(?<!\\left)(?<!\\right)(?<!\\)>"), r"\\gt{}"),
     (re.compile(r"(?<!\\)%"), r"\\%"),
     (re.compile(r"(?<!\\)~"), r"\\sim{}"),
+    # 边界守卫：兜底处理【源文件里直接写了 \lbrace / \rbrace】（例如外来 OCR 文本）、
+    # 且后面紧接字母/数字的情况。\{ -> \lbrace{} 已覆盖转换出来的情形；这里再兜一层，
+    # 把 \lbraceX / \rbraceX 修成 \lbrace{}X / \rbrace{}X，避免被读成非法命令 \lbraceX。
+    (re.compile(r"(?<!\\)\\(lbrace|rbrace)(?=[A-Za-z0-9])"), lambda m: "\\" + m.group(1) + "{}"),
 ]
 
 
@@ -569,10 +576,39 @@ def is_block_math(text: str, match: re.Match[str]) -> bool:
     return text[line_start:start].strip() == "" and text[end:line_end].strip() == ""
 
 
+def wrap_orphan_math(text: str) -> str:
+    """把散落在普通文本里、没有被 $ / $$ / \\[ \\] / \\( \\) 包裹的 LaTeX 环境
+    （``\\begin{...} ... \\end{...}``）自动包成 ``$$ ... $$`` 块级公式。
+
+    外来 OCR / AI 整理文本经常漏写定界符，导致 ``\\begin{matrix}`` 整块被当成纯文本、
+    公式符号直接漏到页面上。这里只处理【环境块】这种 unambiguously 是公式的结构，
+    并且会跳过已经被任意定界符包裹的环境，避免重复包裹把公式弄坏。
+    """
+    # 1) 收集所有已被各类定界符包裹的区间，孤儿检测时一律跳过。
+    protected: list[tuple[int, int]] = []
+    for rx in (_DISPLAY_MATH_RE, _INLINE_MATH_RE, _BRACKET_DISPLAY_RE, _PAREN_INLINE_RE):
+        protected.extend(m.span() for m in rx.finditer(text))
+
+    def overlapped(start: int, end: int) -> bool:
+        # 两个半开区间 [s, e) 与 [start, end) 是否相交
+        return any(start < e and s < end for (s, e) in protected)
+
+    def repl(match: re.Match[str]) -> str:
+        start, end = match.span()
+        if overlapped(start, end):
+            return match.group(0)
+        # 三行块写法，确保 kramdown 把它当成独立的公式块（& 与 \\\\ 原样透传由
+        # protect_math 的 display() 负责，这里只负责补定界符）。
+        return "$$\n" + match.group(0) + "\n$$"
+
+    return _BEGIN_ENV_RE.sub(repl, text)
+
+
 def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
     """抽出数学公式，返回 (处理后的文本, 公式列表)。
 
-    - ``\\[...\\]`` / ``\\(...\\)`` 先统一成 ``$$...$$`` / ``$...$``。
+    - 先 ``wrap_orphan_math``：把漏写定界符的 ``\\begin{...}...\\end{...}`` 包成 ``$$...$$``。
+    - ``\\[...\\]`` / ``\\(...\\)`` 统一成 ``$$...$$`` / ``$...$``。
     - 块级公式（独占整行或内容跨行）在占位符前后各补一个换行，保证 kramdown 把它
       识别成独立的 math block，而不是和上下段落粘成一段（多余空行后续会被压缩成一个）。
     - ``$$...$$`` 内容原样抽出。kramdown 的 math engine 会把整段内容透传给 MathJax，
@@ -581,6 +617,8 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
     - 两种公式都会先把 HTML 实体（&lt; &gt; &amp;）还原成原始符号。
     """
     formulas: list[str] = []
+    # 先把漏写定界符的 LaTeX 环境包好，再走常规抽取流程
+    text = wrap_orphan_math(text)
     text = normalize_math_delimiters(text)
 
     def stash(raw: str) -> str:

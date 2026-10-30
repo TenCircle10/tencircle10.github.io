@@ -12,7 +12,7 @@ render_with_liquid: false
 
 行内带左中括号：$\left[ a + b \right]$
 
-行内带花括号：$\left\lbrace x \mid x \gt{} 0 \right\rbrace$
+行内带花括号：$\left\lbrace{} x \mid x \gt{} 0 \right\rbrace{}$
 
 行内绝对值：$\left\vert x \right\vert$
 
