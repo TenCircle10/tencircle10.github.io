@@ -4,6 +4,7 @@ title: "∑求和运算律"
 slug: "qiu-he-yun-suan-lv"
 permalink: "/notes/qiu-he-yun-suan-lv/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

@@ -89,6 +89,7 @@ gem "webrick", "~> 1.8"
    或者**双击 `发布博客.bat`**（它是纯 ASCII 启动壳，内部调用 `deploy.ps1`）
 4. 脚本自动完成：
    - 运行 `python sync_notes.py`，把 `origin/{public,hidden}/` 的笔记转换到 `notes/`
+     （**生成前会先清掉上一轮的旧产物**，所以换仓 / 改名 / 删源文件都不会在 `notes/` 里留残余）
    - 检测到改动 → `git add .` + `git commit`（信息形如 `auto: sync notes and deploy 2026-10-18 23:30`）
    - 尝试 `git push origin main`
 5. **实际推送由站长本人手动执行**
@@ -113,6 +114,21 @@ git commit -m "你的信息"
 # push 自己来
 ```
 
+### 2.4 验证与提交约定（重要）
+
+> **约定**：改完脚本**直接提交**，不要自行去做「上线效果验证」。
+
+- **不代替站长做线上检查**：不要起本地服务器、不要装浏览器引擎、不要做 MathJax / Liquid 模拟渲染。
+  脚本改完 + 跑通一次生成 + commit，**到此为止**，剩下的由站长 push 上去自己看。
+- **不写一次性验证脚本**：临时校验脚本用完即删，不要留在仓库里（会产生一堆噪音文件）。
+  需要长期复用的检查，做成 `sync_notes.py` 的开关（例如 `python sync_notes.py --check`），
+  由站长自己决定什么时候跑。
+- **只保留必要的静态自检**：语法检查（`python -m py_compile`）、生成不报错、产物幂等 ——
+  这类检查在提交前顺手做掉即可，不需要额外造工具。
+- **推理由站长本人执行**：见 2.2。
+
+> 换句话说：**少动手，多交付**。把「跑通 + 提交」做扎实，把「上线后长什么样」交给站长。
+
 ---
 
 ## 3. Python 转换脚本 `sync_notes.py`
@@ -122,7 +138,32 @@ git commit -m "你的信息"
 ```powershell
 python sync_notes.py                           # origin/{public,hidden}/ -> notes/
 python sync_notes.py --src other --dest out    # 自定义目录
+python sync_notes.py --no-clean                # 跳过清理（调试用，正常跑不要加）
 ```
+
+### 3.1.1 输出目录清理（每次生成前自动执行）
+
+笔记换仓、改名或删除之后，它在 `notes/` 下的旧文件**不会自己消失**。旧文件里还写着
+`public: true`，主页的 Liquid 只认 `public` 字段，于是照样把它列出来 —— 表现就是
+「明明已经移到隐藏仓了，主页上还是出现」，同时还留下一堆死链。
+
+所以每次生成前，脚本会先清掉「上一轮的产物」，保证 `notes/` 与 `origin/` 一一对应。
+清理规则（自上而下）：
+
+| 情况 | 处理 |
+|---|---|
+| 文件名在 `PRESERVE_NOTE_FILENAMES` 白名单里 | **保留**（`callout-color-test.md` / `hell-math-test.md` / `left-right-test.md` / `math-bug-test.md`） |
+| 文件名含 `test` / `测试` / `demo` / `torture` / `sample` | **保留**（测试稿，与主页排除规则一致） |
+| 本轮还会重新生成 | **保留**（等下覆盖写；源文件转换失败时旧页面还能顶住） |
+| 带 `generated_by: sync_notes.py` 标记 | **删除**（脚本自己的产物） |
+| 长得像老产物（`layout: note` + `permalink: /notes/...`） | **删除**（兼容没有标记的旧版本产物） |
+| 其余（手写页面，没有脚本产物的特征） | **保留** |
+
+被删的文件会在终端里逐条列出来（`[clean] 清掉 N 个上一轮的旧产物：`），不会静默消失。
+
+> 「同名笔记换仓」不算旧文件：文件名没变 → slug 没变 → 同一个文件被**重新生成**，
+> `public` 从 `true` 变成 `false`。这正是想要的效果。只有 slug 变了（改名 / 删源文件）
+> 才会走删除分支。
 
 ### 3.2 分仓：公开笔记 vs 隐藏笔记
 
@@ -153,7 +194,8 @@ python sync_notes.py --src other --dest out    # 自定义目录
 | 拼音 slug | 中文文件名 → `pypinyin.lazy_pinyin()` → 小写 → 非字母数字压成 `-`。例：`数学学习漫谈——Attention` → `shu-xue-xue-xi-man-tan-attention` |
 | emoji 兜底 | 拼音为空时用 `note-<正文 MD5 前 6 位>` |
 | title 自动补 | 没有 `title` 就取原文件名（中文） |
-| 强制注入 | `layout: note`、`permalink: /notes/<slug>/`、`public: true|false`、`render_with_liquid: false` |
+| 强制注入 | `layout: note`、`permalink: /notes/<slug>/`、`public: true|false`、`generated_by: sync_notes.py`、`render_with_liquid: false` |
+| 产物标记 | `generated_by: sync_notes.py` —— 清理逻辑靠它区分「脚本产物」和「手写页面」 |
 | 手写优先 | front matter 里显式写的 `slug` / `title` 永远优先于自动生成 |
 
 **② Liquid 防爆**
@@ -360,22 +402,75 @@ Obsidian 里写：  > [!theorem] 定理 1.0.1
 
 | 字符 | 旧写法（错） | 现在 | 原因 |
 |---|---|---|---|
-| `\{` `\}` | `\\{` `\\}` | **`\lbrace` `\rbrace`** | `\\` 是换行，`\left\\{` = `\left` + 换行 → MathJax 报「找不到定界符」 |
-| `\|` | `\mid ` | **`\vert `** | `\mid` 不是 `\left` 的合法定界符，`\left\vert` 才是 |
+| `\{` `\}` | `\\{` `\\}` | **`\lbrace{}` `\rbrace{}`** | `\\` 是换行，`\left\\{` = `\left` + 换行 → MathJax 报「找不到定界符」 |
+| `\|` | `\mid ` | **`\vert`** | `\mid` 不在 MathJax 的定界符表里，`\left\vert` 才是 |
+| `\|`（双竖线） | `\Vert` | **`\Vert`** | 同上 |
+| `\left|` `\right|` | `\left\vert` | **`\left\vert`**（必要时补 `{}`） | 见下方「命令名连读」 |
+| `\big|` `\big\|` | `\big\vert` | **`\big\vert`** `\big\Vert`（必要时补 `{}`） | `\mid` 不是 `\big` 的合法定界符 |
+| `\middle|` `\middle\|` | — | **`\middle\vert`** `\middle\Vert`（必要时补 `{}`） | `\middle` 后面也必须是合法定界符 |
 | `_` | `\_`（字面下划线） | **`&#95;`，且只在左侧非字母数字时** | `\_` 会让 `p_n` 变成 `p\_n`，`n` 不再是下标；而全量改实体又会让生成物塞满 `&#95;`。只有 `x'_{lj}` 这种左侧是标点的情况才真的触发 Markdown 斜体 |
 | `*` | `\*` | **`&#42;`，同样只在需要时** | `\*` 在 LaTeX 里不是合法命令，会直接报错 |
 | `<` `>` | `\lt ` `\gt ` | 不变，但**排除 `\left<` / `\right>`** | `\left<` 本身是合法定界符，转成 `\left\lt` 反而非法 |
 | `&` | `\&` | **删除该规则** | `&` 在 `bmatrix` / `aligned` 里是对齐符，转成 `\&` 会把矩阵结构弄坏；Markdown 本身不特殊处理 `&` |
 
+> 「必要时补 `{}`」= **只有后面紧跟 ASCII 字母时才补**（`_needs_terminator()`）。
+> 后面是空格 / `{` / `(` / `_` / `\` / 非 ASCII 字符时，MathJax 的 `GetCS()` 会自己停下来，
+> 命令名不会被连读 —— 这时补 `{}` 反而会改变原有排版
+> （比如 `\big\vert_{x=x_0}` 里下标挂载的基元会从 `|` 变成空分组）。
+
 为什么 `&#95;` 能用：kramdown 看到的是 HTML 实体、不认作强调；浏览器渲染时解码回 `_`，MathJax 从 `textContent` 读到的仍是 `_`，下标正常。
 
-**验证方式**（改完这套规则后必跑）：
+### ⚠️ 「命令名连读」——这个坑复发过（2026-10 线上第二次）
+
+**症状**：某一节里连续出现 `Missing or unrecognized delimiter for \left`。
+**根因**：MathJax v3 取定界符的代码是
+
+```js
+var r = this.GetNext();              // 取一个字符
+if (r === "\\") r += this.GetCS();    // 反斜杠 -> 再取一个【控制序列】
+if (!this.contains("delimiter", r)) throw MissingOrUnrecognizedDelim;
+```
+
+而 `GetCS()` 的正则是 `/^(([a-z]+) ?|...)/i` —— **只吃连续字母**。所以：
+
+```
+\left|x_0   ->   \left\vertx_0
+```
+
+控制序列被读成 `"vertx"`（一个未定义命令），`contains("delimiter","vertx")` 为假，
+`\left` 拿不到定界符 → **整条公式报废**。
+
+注意这里**不是** `\left` 和 `\vert` 之间多了空格，而是 `\vert` 和后面的**字母**粘成了一个
+命令名（`\vertx`）。修法是给命令补一个空分组把命令名切断：`\left\vert{}x_0`。
+`{}` 是空分组，视觉上完全没有影响。
+
+**两道防线**：
+
+1. **转换规则**：凡是生成多字母定界符命令的地方，一律补 `{}`（见上表）。
+2. **兜底校验** `enforce_math_delimiters()`：按 MathJax 的同一套规则
+   （`GetDelimiter` + `GetCS` + 合法定界符全集）逐个校验 `\left` / `\right` / `\middle` / `\big`
+   后面跟的定界符，不合法就修（`\mid` → `\vert{}`）或者报出来。
+
+> 合法定界符全集来自 MathJax v3 的 `DelimiterMap`：
+> `( ) [ ] < > / | .` 以及 `\lt \gt \\ \| \vert \Vert \{ \} \lbrace \rbrace \lbrack \rbrack
+> \langle \rangle \lceil \rceil \lfloor \rfloor \uparrow \downarrow \updownarrow
+> \Uparrow \Downarrow \Updownarrow \backslash \lmoustache \rmoustache \lgroup \rgroup
+> \arrowvert \Arrowvert \bracevert`。
+> **`\mid` 不在里面** —— 它只能当关系符用，放在 `\left` 后面一定报错。
+
+**验证方式**（改完这套规则后，站长想验时用这个）：
 
 ```powershell
-# 1. 所有 \left 后面必须是合法定界符（注意排除 \leftarrow / \leftrightarrow 这类独立命令）
-# 2. 全站 &#95; 数量应该是个位数，如果上百说明规则又过度了
-Select-String -Path notes/*.md -Pattern '&#95;' | Measure-Object
+python sync_notes.py --check    # 生成后按 MathJax 的规则校验全站定界符
 ```
+
+它按 MathJax 的同一套判据（`GetDelimiter` + `GetCS` + 合法定界符全集）扫全站，
+不通过就返回非 0 并列出具体位置。
+
+> 校验定界符时别用「肉眼看 `\left` 后面有没有空格」的办法 —— 要按 MathJax 的规则来：
+> 控制序列名只由 ASCII 字母组成，`\left\vertx` 里的 `x` 才是问题所在。
+> `sync_notes.py` 里的 `enforce_math_delimiters()` / `check_output_math()` 就是照着
+> MathJax 的源码写的。
 
 **核心 CSS 结构**
 

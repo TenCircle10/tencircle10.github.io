@@ -4,6 +4,7 @@ title: "集合运算律"
 slug: "ji-he-yun-suan-lv"
 permalink: "/notes/ji-he-yun-suan-lv/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

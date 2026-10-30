@@ -4,6 +4,7 @@ title: "Sylvester 秩不等式"
 slug: "sylvester-zhi-bu-deng-shi"
 permalink: "/notes/sylvester-zhi-bu-deng-shi/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

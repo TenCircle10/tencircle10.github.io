@@ -7,6 +7,7 @@ title: "满秩方阵的单侧可逆蕴含双侧可逆"
 slug: "man-zhi-fang-zhen-de-dan-ce-ke-ni-yun-han-shuang-ce-ke-ni"
 permalink: "/notes/man-zhi-fang-zhen-de-dan-ce-ke-ni-yun-han-shuang-ce-ke-ni/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

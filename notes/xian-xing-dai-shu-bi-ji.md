@@ -4,6 +4,7 @@ title: "线性代数笔记"
 slug: "xian-xing-dai-shu-bi-ji"
 permalink: "/notes/xian-xing-dai-shu-bi-ji/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

@@ -4,6 +4,7 @@ title: "实数集与无理数集不可列证明"
 slug: "shi-shu-ji-yu-wu-li-shu-ji-bu-ke-lie-zheng-ming"
 permalink: "/notes/shi-shu-ji-yu-wu-li-shu-ji-bu-ke-lie-zheng-ming/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

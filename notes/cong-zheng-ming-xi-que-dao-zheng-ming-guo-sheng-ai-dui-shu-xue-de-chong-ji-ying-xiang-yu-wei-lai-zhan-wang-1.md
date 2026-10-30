@@ -16,6 +16,7 @@ status: 整理稿
 slug: "cong-zheng-ming-xi-que-dao-zheng-ming-guo-sheng-ai-dui-shu-xue-de-chong-ji-ying-xiang-yu-wei-lai-zhan-wang-1"
 permalink: "/notes/cong-zheng-ming-xi-que-dao-zheng-ming-guo-sheng-ai-dui-shu-xue-de-chong-ji-ying-xiang-yu-wei-lai-zhan-wang-1/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

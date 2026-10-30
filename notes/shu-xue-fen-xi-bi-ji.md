@@ -4,6 +4,7 @@ title: "数学分析笔记"
 slug: "shu-xue-fen-xi-bi-ji"
 permalink: "/notes/shu-xue-fen-xi-bi-ji/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

@@ -477,14 +477,45 @@ _DISPLAY_LTGT_RULES: list[tuple[re.Pattern[str], str]] = [
 #     \mid 不是 \left 的合法定界符，同样会报错；\left\vert 才是对的。
 #   · ``<`` / ``>`` 在 \left、\right 后面不转义：\left< 是合法定界符，
 #     转成 \left\lt 反而非法。用定长负向后顾排除这两种情况。
+def _needs_terminator(text: str, end: int) -> bool:
+    """紧跟在定界符命令后面的是不是 ASCII 字母。
+
+    是的话必须补一个空分组 ``{}`` 把命令名切断 ——
+    MathJax 的 GetCS() 正则是 ``/^(([a-z]+) ?|...)/i``，**只吃 ASCII 字母**，
+    所以 ``\\vertx`` 会被读成一个未定义命令 ``\\vertx``，``\\left`` 就拿不到
+    定界符，抛 "Missing or unrecognized delimiter for \\left"。
+
+    不是字母（空格 / ``{`` / ``(`` / ``_`` / ``\\`` / 非 ASCII 字符等）时
+    GetCS 会自己停下来，命令名不会被连读 —— 这时**不要**补 ``{}``，
+    以免改变原有排版（例如 ``\\big\\vert_{x=x_0}`` 里下标挂载的位置）。
+    """
+    return end < len(text) and text[end].isascii() and text[end].isalpha()
+
+
+def _make_delim_repl(prefix: str, delim: str):
+    """生成定界符替换函数：``\\left|`` -> ``\\left\\vert``（必要时补 ``{}``）。"""
+
+    def repl(match: re.Match[str]) -> str:
+        suffix = "{}" if _needs_terminator(match.string, match.end()) else ""
+        return prefix + "\\" + delim + suffix
+
+    return repl
+
+
 def _size_vert(match: re.Match[str]) -> str:
-    r"""``\big|`` -> ``\big\vert``（保留尺寸命令与 l/r/m 变体）。"""
-    return "\\" + match.group(1) + match.group(2) + "\\vert"
+    r"""``\big|`` -> ``\big\vert``（保留尺寸命令与 l/r/m 变体）。
+
+    末尾的 ``{}`` 只在「后面紧跟 ASCII 字母」时才补 —— 那时候命令名会被
+    MathJax 连读成 ``\big\vertx``，定界符就废了。其余情况保持原样。
+    """
+    suffix = "{}" if _needs_terminator(match.string, match.end()) else ""
+    return "\\" + match.group(1) + match.group(2) + "\\vert" + suffix
 
 
 def _size_Vert(match: re.Match[str]) -> str:
     r"""``\big\|`` -> ``\big\Vert``。"""
-    return "\\" + match.group(1) + match.group(2) + "\\Vert"
+    suffix = "{}" if _needs_terminator(match.string, match.end()) else ""
+    return "\\" + match.group(1) + match.group(2) + "\\Vert" + suffix
 
 
 # 匹配 LaTeX 环境（matrix / pmatrix / bmatrix / array / cases / align ...），用于保护
@@ -519,18 +550,36 @@ _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], "str | Callable[[re.Match[str]],
     # kramdown 会把行内公式里的 | 当成表格列分隔符，直接把这一行切断，
     # 导致定界符失效、后半段公式漏成源码。\left| / \right| / \left\| / \right\| 里的竖线
     # 虽然 LaTeX 合法，但对 kramdown 来说仍是裸的 |，所以要一起换掉。
-    # \left\vert / \right\vert / \left\Vert / \right\Vert 都是合法定界符，视觉完全一致。
-    (re.compile(r"\\left\\\|"), r"\\left\\Vert"),
-    (re.compile(r"\\right\\\|"), r"\\right\\Vert"),
-    (re.compile(r"\\left\|"), r"\\left\\vert"),
-    (re.compile(r"\\right\|"), r"\\right\\vert"),
+    #
+    # 【为什么有时要补 {}】—— 这是线上 "Missing or unrecognized delimiter for \left"
+    # 的根因（2026-10 线上复发）。MathJax v3 取定界符的代码是：
+    #     var r = this.GetNext();            // 取一个字符
+    #     if (r === "\\") r += this.GetCS();  // 反斜杠 -> 再取一个【控制序列】
+    #     if (!this.contains("delimiter", r)) throw MissingOrUnrecognizedDelim;
+    # 而 GetCS() 的正则是 /^(([a-z]+) ?|...)/i —— **只吃 ASCII 字母**。于是
+    #     \left|x_0   ->  \left\vertx_0
+    # 控制序列被读成 "vertx"（一个未定义命令），contains("delimiter","vertx") 为假，
+    # \left 拿不到定界符，整条公式直接报错。
+    # 修法是给命令补一个空分组 {} 把命令名切断：
+    #     \left\vert{}x_0   ->  定界符是 \vert（合法），{} 是空分组，视觉零差别
+    # 但**只在后面紧跟 ASCII 字母时才补**（见 _needs_terminator），
+    # 其余情况保持原样，避免改变既有排版。
+    (re.compile(r"\\left\\\|"), _make_delim_repl("\\left", "Vert")),
+    (re.compile(r"\\right\\\|"), _make_delim_repl("\\right", "Vert")),
+    (re.compile(r"\\left\|"), _make_delim_repl("\\left", "vert")),
+    (re.compile(r"\\right\|"), _make_delim_repl("\\right", "vert")),
+    # \middle 后面也必须跟合法定界符（\middle 是 AMS 的对称定界符命令）
+    (re.compile(r"\\middle\\\|"), _make_delim_repl("\\middle", "Vert")),
+    (re.compile(r"\\middle\|"), _make_delim_repl("\\middle", "vert")),
     # 尺寸命令 + 竖线：\big| \Big| \bigg| \Bigg|（含 l/r/m 变体 \bigl| \bigm| \bigr| …）
     # 必须换成 \vert（双竖线换成 \Vert），绝不能留裸 |（kramdown 当表格列分隔符），
-    # 也不能换成 \mid（\mid 不是 \big 的合法定界符，MathJax 会报
-    # "Missing or unrecognized delimiter for \big"）。
+    # 也不能换成 \mid（\mid 不在 MathJax 的定界符表里，会报
+    # "Missing or unrecognized delimiter for \big"）。同样要补 {} 切断命令名。
     (re.compile(r"\\(big|Big|bigg|Bigg)([lrm]?)\|"), _size_vert),
     (re.compile(r"\\(big|Big|bigg|Bigg)([lrm]?)\\\|"), _size_Vert),
     # 剩下的：独立的 \| 是范数 -> \Vert{}；裸 | -> \mid{}（环境内部的 | 见 escape_math_body 的保护）
+    # \mid{} 只出现在「没有跟着 \left/\right/\middle/\big」的位置，
+    # 而 \mid 不是合法定界符，所以它绝不会落到 \left 后面（enforce_math_delimiters 兜底）。
     (re.compile(r"\\\|"), r"\\Vert{}"),
     (re.compile(r"(?<!\\)\|"), r"\\mid{}"),
     # 下面三条会替换成字母命令，用 {} 结尾而不是空格：
@@ -549,6 +598,139 @@ _MATH_ESCAPE_RULES: list[tuple[re.Pattern[str], "str | Callable[[re.Match[str]],
 ]
 
 
+# --------------------------------------------------------------------------- #
+# \left / \right 定界符兜底校验
+# --------------------------------------------------------------------------- #
+# 上面那批替换规则解决的是「竖线被 kramdown 当成表格列分隔符」，
+# 但定界符本身还有两道坎，这里用与 MathJax 完全一致的规则做兜底：
+#
+#   1) 定界符命令（\vert / \Vert / \lbrace …）后面紧跟字母时，命令名会被连读
+#      （GetCS 只吃连续字母），必须补空分组 {} 切断；
+#   2) \left / \right / \middle 后面跟的必须是 MathJax 认得的定界符，
+#      取不到就会抛 "Missing or unrecognized delimiter for \left"，整条公式报废。
+#
+# 合法定界符全集来自 MathJax v3 的 DelimiterMap（tex-chtml.js）：
+#   "(": ")"  "[" "]"  "<" ">"  "/"  "|"  "."  "\\"  "\|"  "\vert"  "\Vert"
+#   "\{"  "\}"  "\lbrace"  "\rbrace"  "\lbrack"  "\rbrack"  "\langle"  "\rangle"
+#   "\lceil" "\rceil" "\lfloor" "\rfloor" "\uparrow" "\downarrow" "\updownarrow"
+#   "\Uparrow" "\Downarrow" "\Updownarrow" "\backslash" "\lt" "\gt"
+#   "\lmoustache" "\rmoustache" "\lgroup" "\rgroup"
+#   "\arrowvert" "\Arrowvert" "\bracevert"
+# 注意：\mid 不在里面 —— 它只能当关系符用，放在 \left 后面一定报错。
+_MATHJAX_DELIMITERS = frozenset(
+    {
+        "(", ")", "[", "]", "<", ">", "/", "|", ".",
+        "\\\\", "\\|", "\\vert", "\\Vert",
+        "\\{", "\\}", "\\lbrace", "\\rbrace",
+        "\\lbrack", "\\rbrack", "\\langle", "\\rangle",
+        "\\lceil", "\\rceil", "\\lfloor", "\\rfloor",
+        "\\uparrow", "\\downarrow", "\\updownarrow",
+        "\\Uparrow", "\\Downarrow", "\\Updownarrow",
+        "\\backslash", "\\lt", "\\gt",
+        "\\lmoustache", "\\rmoustache", "\\lgroup", "\\rgroup",
+        "\\arrowvert", "\\Arrowvert", "\\bracevert",
+    }
+)
+
+# 需要跟定界符的「命令位置」：\left \right \middle \big 家族（含 l/r/m 变体）
+_DELIM_CMD_RE = re.compile(r"\\(?:left|right|middle|big|Big|bigg|Bigg)[lrm]?\b")
+# 控制序列名：反斜杠 + 连续字母（与 MathJax 的 GetCS 行为一致）
+_CS_NAME_RE = re.compile(r"\\([a-zA-Z]+)")
+
+
+def _read_delimiter(text: str, index: int) -> tuple[str | None, int]:
+    r"""模拟 MathJax v3 的 GetDelimiter()：从 text[index] 起读取一个定界符 token。
+
+    与 MathJax 的行为严格对齐：
+      · 前导空白会被跳过（GetNext 会跳过空格）；
+      · 单个字符直接作为候选定界符；
+      · 反斜杠 + 连续字母构成控制序列（GetCS 只吃字母）；
+        ``\{`` 这种「反斜杠 + 非字母」只吃一个字符（MathJax 的 GetCS 正则第三支）。
+
+    返回 (token, token 的结束位置)；token 为 None 表示此处取不到定界符。
+    """
+    while index < len(text) and text[index].isspace():
+        index += 1
+    if index >= len(text):
+        return None, index
+    if text[index] != "\\":
+        return text[index], index + 1
+    match = _CS_NAME_RE.match(text, index)
+    if match:
+        return match.group(0), match.end()
+    if index + 1 < len(text):
+        return text[index:index + 2], index + 2
+    return None, index
+
+
+def enforce_math_delimiters(body: str) -> tuple[str, list[str]]:
+    """保证 \\left / \\right / \\middle / \\big 后面一定跟着 MathJax 认得的定界符。
+
+    这是转义规则之外的**最后一道兜底**：
+      · 多字母定界符命令后面紧跟字母 -> 补空分组 ``{}`` 切断命令名
+        （``\\left\\vertx`` -> ``\\left\\vert{}x``），修掉粘连；
+      · 定界符位置出现 ``\\mid``（合法符号但不是定界符）-> 改写成 ``\\vert{}``；
+      · 实在取不到定界符 -> 记一条问题，交给人看，不擅自改写语义。
+
+    返回 (修好的公式, 问题描述列表)。
+    """
+    problems: list[str] = []
+
+    # --- 1) 逐个校验定界符位置 ---
+    # 注意：这里【不做】全局的「命令 + 字母」替换。那样会误伤正文：
+    # 例如 LaTeX 换行 \\ 后面跟着单词 label，全局替换会把 \\label 改成
+    # \\lt{}abel（"label" 变成 "<abel"）。所以只在真正的定界符位置动手。
+    result: list[str] = []
+    position = 0
+    while True:
+        match = _DELIM_CMD_RE.search(body, position)
+        if match is None:
+            result.append(body[position:])
+            break
+        result.append(body[position:match.start()])
+        command = match.group(0)
+        # 保护：``\\ left`` 这种「LaTeX 换行 + 单词 left」不是定界符命令。
+        # 字母本来就不是合法定界符，遇到字母直接跳过，别报假警。
+        peek = match.end()
+        while peek < len(body) and body[peek].isspace():
+            peek += 1
+        if peek < len(body) and body[peek].isascii() and body[peek].isalpha():
+            result.append(command)
+            position = match.end()
+            continue
+        token, end = _read_delimiter(body, match.end())
+        if token is None:
+            problems.append("%s 后面没有定界符" % command)
+            result.append(command)
+            position = match.end()
+            continue
+        if token not in _MATHJAX_DELIMITERS:
+            if token == "\\mid":
+                # \mid 是关系符，MathJax 的定界符表里没有它，
+                # 放在 \left 后面必然报错，改写成视觉一致的 \vert。
+                if body[end:end + 2] == "{}":
+                    end += 2
+                suffix = "{}" if _needs_terminator(body, end) else ""
+                result.append(command + "\\vert" + suffix)
+                problems.append("%s\\mid 改写成 %s\\vert%s" % (command, command, suffix))
+                position = end
+                continue
+            problems.append("%s 后面跟的不是合法定界符：%s" % (command, token))
+            result.append(command)
+            position = match.end()
+            continue
+        # 定界符合法：多字母命令后面紧跟 ASCII 字母时补一个空分组，把命令名切断
+        #   \left\vertx -> \left\vert{}x
+        suffix = ""
+        if token.startswith("\\") and len(token) > 2 and _needs_terminator(body, end):
+            suffix = "{}"
+        result.append(command)
+        result.append(body[match.end():end])
+        result.append(suffix)
+        position = end
+    return "".join(result), problems
+
+
 def escape_math_body(body: str) -> str:
     """转义单条行内公式内部的 kramdown 雷区字符（对已转义的内容幂等）。"""
     # 1) LaTeX 行分隔符 \\ 必须保留：kramdown 的 BackslashEscapes 会把 \\ 还原成单个 \，
@@ -563,6 +745,11 @@ def escape_math_body(body: str) -> str:
     # 4) 还原环境内部的 | 占位符。
     if "\x00ENVPIPE\x00" in body:
         body = body.replace("\x00ENVPIPE\x00", "|")
+    # 5) 兜底：保证 \left / \right / \middle / \big 后面一定跟着合法定界符，
+    #    并且定界符命令不会和后面的字母连读成非法命令。
+    body, problems = enforce_math_delimiters(body)
+    for problem in problems:
+        print("  [warn] 数学定界符：%s" % problem, file=sys.stderr)
     return body
 
 
@@ -664,6 +851,11 @@ def protect_math(text: str, counts: dict[str, int]) -> tuple[str, list[str]]:
         body = re.sub(r"\\\\", r"\\\\\\\\", body)
         body = _DISPLAY_LTGT_RULES[0][0].sub(_DISPLAY_LTGT_RULES[0][1], body)
         body = _DISPLAY_LTGT_RULES[1][0].sub(_DISPLAY_LTGT_RULES[1][1], body)
+        # 块级公式同样做一次定界符兜底：块里的 | 是合法定界符不会被改动，
+        # 但源文件里写坏的 \left\vertx（命令名粘连）在这里会被修好。
+        body, problems = enforce_math_delimiters(body)
+        for problem in problems:
+            print("  [warn] 数学定界符：%s" % problem, file=sys.stderr)
         placeholder = stash("$$" + body + "$$")
         if is_block_math(text, match):
             # 前后各补一个换行，让 kramdown 把它当成独立的公式块
@@ -1037,6 +1229,127 @@ def apply_public(front_matter: str, is_public: bool) -> str:
     return updated.rstrip("\n") + "\n\n"
 
 
+# --------------------------------------------------------------------------- #
+# 6. 输出目录清理
+# --------------------------------------------------------------------------- #
+# 为什么要清理：
+#   笔记从 origin/public/ 挪到 origin/hidden/（或者改名、删掉）之后，它在 notes/
+#   下的旧文件**不会自己消失**。旧文件的 front matter 里还写着 public: true，
+#   主页的 Liquid（notes.md）只认 public 字段，于是照样把它列出来 ——
+#   表现就是「明明已经移到隐藏仓了，主页上还是出现」。
+#   而且旧 slug 会留下一堆死链（/notes/<旧slug>/ 仍然能打开）。
+#
+# 所以每次生成前先把「上一轮的产物」清掉，再重新生成，保证 notes/ 与 origin/ 一一对应。
+#
+# 只删「脚本自己生成的产物」，手写页面和测试稿一律保留：
+#   1. 文件名在 PRESERVE_NOTE_FILENAMES 白名单里      -> 保留
+#   2. 文件名里含 test / 测试 / demo / torture / sample -> 保留（测试稿）
+#   3. 本轮还会重新生成的                            -> 保留（等下覆盖写）
+#   4. 带 generated_by 标记，或者长得像脚本产物         -> 删除
+#   5. 其余（手写页面，没有脚本产物的特征）            -> 保留
+GENERATED_BY = "sync_notes.py"
+
+# 清理时永远不动的文件（白名单）。即使源笔记被删掉，这些测试稿也要留在 notes/ 里。
+PRESERVE_NOTE_FILENAMES = {
+    "callout-color-test.md",
+    "hell-math-test.md",
+    "left-right-test.md",
+    "math-bug-test.md",
+}
+
+# 文件名里含这些片段的一律当成测试稿，清理时跳过（与主页的排除规则保持一致）
+PRESERVE_NAME_HINTS = ("test", "测试", "demo", "torture", "sample")
+
+_GENERATED_BY_LINE_RE = re.compile(r"^[ \t]*generated_by[ \t]*:.*$", re.MULTILINE)
+
+
+def apply_generated_by(front_matter: str) -> str:
+    """写入 ``generated_by: sync_notes.py`` 标记。
+
+    这个标记是清理逻辑的「身份证」：有了它就能百分百确认某个 notes/*.md
+    是脚本生成的产物，清理时可以放心删；没有标记的文件（比如手写页面）
+    一律不碰。
+    """
+    line = "generated_by: %s" % GENERATED_BY
+    if _GENERATED_BY_LINE_RE.search(front_matter):
+        updated = _GENERATED_BY_LINE_RE.sub(lambda _match: line, front_matter, count=1)
+    else:
+        stripped = front_matter.rstrip("\n")
+        if not stripped.endswith("---"):
+            return front_matter
+        head = stripped[:-3].rstrip("\n")
+        updated = head + "\n" + line + "\n---\n"
+    # front matter 与正文之间统一保留一个空行
+    return updated.rstrip("\n") + "\n\n"
+
+
+def _is_generated_artifact(path: Path) -> bool:
+    """判断 notes/ 下的文件是不是脚本生成的产物（可以安全删除）。"""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return False
+    front_matter, _ = split_front_matter(text)
+    if not front_matter:
+        return False
+    fields = read_front_matter_fields(front_matter)
+    if fields.get("generated_by", "").strip() == GENERATED_BY:
+        return True
+    # 老版本产物没有 generated_by 标记，靠「形状」兜底识别：
+    # layout: note + permalink: /notes/... 正是脚本输出 front matter 的形状。
+    permalink = fields.get("permalink", "").strip()
+    return fields.get("layout", "").strip() == "note" and permalink.startswith("/notes/")
+
+
+def _is_preserved_name(name: str) -> bool:
+    """文件名是否属于「一律保留」名单。"""
+    if name in PRESERVE_NOTE_FILENAMES:
+        return True
+    lowered = name.lower()
+    return any(hint in lowered for hint in PRESERVE_NAME_HINTS)
+
+
+def clean_output_dir(dest: Path, planned: set[str]) -> list[str]:
+    """删掉 dest 下「上一轮遗留、本轮不会再生成」的旧产物。
+
+    planned 是本轮会写出的文件（相对 dest 的 posix 路径）。
+    返回被删除的相对路径列表。
+    """
+    removed: list[str] = []
+    if not dest.is_dir():
+        return removed
+    for path in sorted(dest.rglob("*.md")):
+        relative = path.relative_to(dest).as_posix()
+        if relative in planned:
+            continue  # 本轮会重新生成，等下覆盖写就行
+        if _is_preserved_name(path.name):
+            continue  # 测试稿 / 白名单，一律保留
+        if not _is_generated_artifact(path):
+            continue  # 手写页面，没有脚本产物的特征，不动
+        try:
+            path.unlink()
+        except OSError as error:
+            print("[warn] 删除旧产物失败：%s：%s" % (relative, error), file=sys.stderr)
+            continue
+        removed.append(relative)
+    # 清掉因为删文件而空掉的子目录
+    for directory in sorted(
+        (p for p in dest.rglob("*") if p.is_dir()),
+        key=lambda p: len(p.parts),
+        reverse=True,
+    ):
+        try:
+            next(directory.iterdir())
+        except StopIteration:
+            try:
+                directory.rmdir()
+            except OSError:
+                pass
+        except OSError:
+            pass
+    return removed
+
+
 _RENDER_LIQUID_LINE_RE = re.compile(r"^[ \t]*render_with_liquid[ \t]*:.*$", re.MULTILINE)
 
 
@@ -1182,10 +1495,47 @@ def convert_document(
     front_matter = apply_permalink(front_matter, permalink)
     # 分仓可见性：public/ 的笔记进主页列表，hidden/ 的不进（URL 仍可直接访问）
     front_matter = apply_public(front_matter, is_public)
+    # 产物标记：清理逻辑靠它识别「这个文件是脚本生成的」
+    front_matter = apply_generated_by(front_matter)
     # 强制关闭 Liquid 渲染（Jekyll 4+ 生效；GitHub Pages 的 3.9 会忽略，另有 escape 兜底）
     front_matter = apply_render_with_liquid(front_matter)
     # permalink 已经保证 front matter 后面带一个空行，正文开头的空行去掉避免重复
     return front_matter + body.lstrip("\n"), counts, added_front_matter
+
+
+def check_output_math(dest: Path) -> list[str]:
+    """按 MathJax v3 的规则校验生成物里的每一个定界符。
+
+    和 enforce_math_delimiters() 用的是同一套判据（GetDelimiter + GetCS +
+    合法定界符全集），所以这里过了，浏览器里就不会再抛
+    "Missing or unrecognized delimiter for \\left"。
+
+    返回问题描述列表；空列表代表全部通过。
+    """
+    problems: list[str] = []
+    for path in sorted(dest.rglob("*.md")):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        for rx in (_INLINE_MATH_RE, _DISPLAY_MATH_RE):
+            for match in rx.finditer(text):
+                body = match.group(1)
+                for command in _DELIM_CMD_RE.finditer(body):
+                    token, end = _read_delimiter(body, command.end())
+                    where = "%s: %s" % (path.name, command.group(0))
+                    if token is None:
+                        problems.append("%s 后面没有定界符" % where)
+                    elif token not in _MATHJAX_DELIMITERS:
+                        problems.append("%s 后面跟的不是合法定界符：%s" % (where, token))
+                    elif token.startswith("\\") and len(token) > 2:
+                        following = body[end:end + 1]
+                        if following and following.isascii() and following.isalpha():
+                            problems.append(
+                                "%s 的命令名会被连读成 %s%s（未定义命令）"
+                                % (where, token, following)
+                            )
+    return problems
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1194,6 +1544,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--src", default=str(DEFAULT_SRC), help="源目录（默认 ./origin）")
     parser.add_argument("--dest", default=str(DEFAULT_DEST), help="输出目录（默认 ./notes）")
+    parser.add_argument(
+        "--no-clean",
+        action="store_true",
+        help="跳过清理：保留上一轮遗留的旧文件（调试用，正常跑不要加）",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="生成后按 MathJax 的规则校验全站定界符（不通过则返回非 0）",
+    )
     args = parser.parse_args(argv)
 
     src = Path(args.src).resolve()
@@ -1260,6 +1620,26 @@ def main(argv: list[str] | None = None) -> int:
             print(line, file=sys.stderr)
         return 1
 
+    # ---- 清理上一轮遗留的旧产物（在真正生成之前）----
+    # 笔记换仓 / 改名 / 删除之后，它在 notes/ 下的旧文件不会自己消失。
+    # 旧文件里还写着 public: true，主页就会继续把它列出来（死链 + 误显示）。
+    # 这里把「本轮不会再生成、且确实是脚本产物」的文件删掉，
+    # 测试稿和白名单里的文件一律保留。
+    planned = {
+        (inner.parent / (slug + ".md")).as_posix()
+        for _relative, inner, slug, _permalink, _text, _is_public in plans
+    }
+    if args.no_clean:
+        print("[clean] 已跳过（--no-clean）")
+    else:
+        removed = clean_output_dir(dest, planned)
+        if removed:
+            print("[clean] 清掉 %d 个上一轮的旧产物：" % len(removed))
+            for name in removed:
+                print("  - %s" % name)
+        else:
+            print("[clean] 没有需要清理的旧产物")
+
     # 第二遍：逐篇转换。单篇失败只跳过它自己，绝不拖垮整站
     processed = 0
     for relative, inner, slug, permalink, text, is_public in plans:
@@ -1304,6 +1684,18 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     print("[done] 共处理 %d 个文件，输出目录：%s" % (processed, dest))
+
+    if args.check:
+        problems = check_output_math(dest)
+        if problems:
+            print(
+                "[check] 发现 %d 个定界符问题（MathJax 会报错）：" % len(problems),
+                file=sys.stderr,
+            )
+            for problem in problems:
+                print("  - %s" % problem, file=sys.stderr)
+            return 1
+        print("[check] 全站定界符校验通过 ✅")
     return 0
 
 

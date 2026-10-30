@@ -4,6 +4,7 @@ title: "积化和差 和差化积"
 slug: "ji-hua-he-cha-he-cha-hua-ji"
 permalink: "/notes/ji-hua-he-cha-he-cha-hua-ji/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

@@ -4,6 +4,7 @@ title: "分块矩阵性质"
 slug: "fen-kuai-ju-zhen-xing-zhi"
 permalink: "/notes/fen-kuai-ju-zhen-xing-zhi/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

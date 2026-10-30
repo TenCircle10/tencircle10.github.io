@@ -4,6 +4,7 @@ title: "隐藏草稿"
 slug: "yin-cang-cao-gao"
 permalink: "/notes/yin-cang-cao-gao/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

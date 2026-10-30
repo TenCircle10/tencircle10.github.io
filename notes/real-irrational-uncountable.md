@@ -4,6 +4,7 @@ title: "实数集与无理数集不可列证明"
 slug: "real-irrational-uncountable"
 permalink: "/notes/real-irrational-uncountable/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

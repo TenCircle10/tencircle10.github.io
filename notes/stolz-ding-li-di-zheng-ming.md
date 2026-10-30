@@ -4,6 +4,7 @@ title: "Stolz定理的证明"
 slug: "stolz-ding-li-di-zheng-ming"
 permalink: "/notes/stolz-ding-li-di-zheng-ming/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

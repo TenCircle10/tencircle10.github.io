@@ -4,6 +4,7 @@ title: "math-bug-test"
 slug: "math-bug-test"
 permalink: "/notes/math-bug-test/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

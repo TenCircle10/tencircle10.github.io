@@ -4,6 +4,7 @@ title: "callout-color-test"
 slug: "callout-color-test"
 permalink: "/notes/callout-color-test/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

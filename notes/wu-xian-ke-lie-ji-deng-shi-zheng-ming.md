@@ -4,6 +4,7 @@ title: "无限可列集等势证明"
 slug: "wu-xian-ke-lie-ji-deng-shi-zheng-ming"
 permalink: "/notes/wu-xian-ke-lie-ji-deng-shi-zheng-ming/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

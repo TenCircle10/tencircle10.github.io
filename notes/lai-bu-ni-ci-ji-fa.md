@@ -4,6 +4,7 @@ title: "莱布尼茨记法"
 slug: "lai-bu-ni-ci-ji-fa"
 permalink: "/notes/lai-bu-ni-ci-ji-fa/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

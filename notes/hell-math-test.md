@@ -4,6 +4,7 @@ title: "hell-math-test"
 slug: "hell-math-test"
 permalink: "/notes/hell-math-test/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

@@ -12,6 +12,7 @@ title: "满秩矩阵"
 slug: "man-zhi-ju-zhen"
 permalink: "/notes/man-zhi-ju-zhen/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

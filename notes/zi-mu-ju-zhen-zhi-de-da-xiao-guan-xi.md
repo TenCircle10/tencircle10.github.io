@@ -4,6 +4,7 @@ title: "子母矩阵秩的大小关系"
 slug: "zi-mu-ju-zhen-zhi-de-da-xiao-guan-xi"
 permalink: "/notes/zi-mu-ju-zhen-zhi-de-da-xiao-guan-xi/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

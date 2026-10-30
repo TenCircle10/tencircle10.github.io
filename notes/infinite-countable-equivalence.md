@@ -4,6 +4,7 @@ title: "无限可列集等势证明"
 slug: "infinite-countable-equivalence"
 permalink: "/notes/infinite-countable-equivalence/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

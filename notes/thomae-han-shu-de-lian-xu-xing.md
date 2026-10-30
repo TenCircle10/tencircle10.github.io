@@ -4,6 +4,7 @@ title: "Thomae 函数的连续性"
 slug: "thomae-han-shu-de-lian-xu-xing"
 permalink: "/notes/thomae-han-shu-de-lian-xu-xing/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 
@@ -78,13 +79,13 @@ $$\frac{R(x_0 + h) - R(x_0)}{h} = \frac{R(x_0 + h)}{h}$$
 
 $h \notin \mathbb{Q}$ 时差商为 $0$；$h = \dfrac{p}{q} - x_0$ 时差商为 $\dfrac{1/q}{p/q - x_0}$。
 
-**有理逼近**：记 $\Vert{}x\Vert{} = \min\lbrace{}\mid{}x - n\mid{} : n \in \mathbb{Z}\rbrace{}$。对无理数 $x_0$，存在无穷多个既约 $\dfrac{p}{q}$ 使 $\left\vertx_0 - \dfrac{p}{q}\right\vert \lt{} \dfrac{1}{q^{2}}$。
+**有理逼近**：记 $\Vert{}x\Vert{} = \min\lbrace{}\mid{}x - n\mid{} : n \in \mathbb{Z}\rbrace{}$。对无理数 $x_0$，存在无穷多个既约 $\dfrac{p}{q}$ 使 $\left\vert{}x_0 - \dfrac{p}{q}\right\vert \lt{} \dfrac{1}{q^{2}}$。
 
 **证**：$0, \lbrace{}x_0\rbrace{}, \lbrace{}2x_0\rbrace{}, \dots, \lbrace{}Nx_0\rbrace{}$ 共 $N + 1$ 个数落在 $[0, 1)$ 的 $N$ 个等分区间内，存在 $k \ne l$ 使 $\Vert{}(k - l)x_0\Vert{} \lt{} \dfrac{1}{N}$。取 $q = \mid{}k - l\mid{} \le N$，$p$ 为离 $qx_0$ 最近的整数，则
 
 $$\left|x_0 - \frac{p}{q}\right| = \frac{\|qx_0\|}{q} \lt{} \frac{1}{qN} \le \frac{1}{q^{2}}$$
 
-$q$ 无界：若 $q \le Q$，则某个 $q$ 对无穷多个 $N$ 满足 $\Vert{}qx_0\Vert{} \lt{} \dfrac{1}{N}$，得 $qx_0 \in \mathbb{Z}$，与 $x_0$ 无理矛盾。约分后 $q' \le q \le N$，$\left\vertx_0 - \dfrac{p'}{q'}\right\vert \lt{} \dfrac{1}{qN} \le \dfrac{1}{q'^{2}}$ 仍成立，以下写作既约 $\dfrac{p}{q}$。
+$q$ 无界：若 $q \le Q$，则某个 $q$ 对无穷多个 $N$ 满足 $\Vert{}qx_0\Vert{} \lt{} \dfrac{1}{N}$，得 $qx_0 \in \mathbb{Z}$，与 $x_0$ 无理矛盾。约分后 $q' \le q \le N$，$\left\vert{}x_0 - \dfrac{p'}{q'}\right\vert \lt{} \dfrac{1}{qN} \le \dfrac{1}{q'^{2}}$ 仍成立，以下写作既约 $\dfrac{p}{q}$。
 
 于是 $\left\vert\dfrac{1/q}{p/q - x_0}\right\vert \gt{} q$ 无界，差商极限不存在，$R$ 在无理点不可导。
 <a id="thomae-nondiff"></a>

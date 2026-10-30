@@ -4,6 +4,7 @@ title: "数学学习漫谈——Attention is all you need"
 slug: "shu-xue-xue-xi-man-tan-attention-is-all-you-need"
 permalink: "/notes/shu-xue-xue-xi-man-tan-attention-is-all-you-need/"
 public: true
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 

@@ -5,6 +5,7 @@ title: "向量组无关加元素仍无关"
 slug: "xiang-liang-zu-wu-guan-jia-yuan-su-reng-wu-guan"
 permalink: "/notes/xiang-liang-zu-wu-guan-jia-yuan-su-reng-wu-guan/"
 public: false
+generated_by: sync_notes.py
 render_with_liquid: false
 ---
 
