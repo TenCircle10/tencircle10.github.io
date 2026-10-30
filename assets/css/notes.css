@@ -9,6 +9,18 @@
    以免继承主题那套"固定左侧边栏"的骨架。
    ========================================================================== */
 
+/* =============================== 全局滚动 ================================ */
+
+/* 原生 CSS 平滑滚动：浏览器在锚点跳转（含左侧 Tocbot 生成的目录链接、
+   正文里的 # 锚点、浏览器前进/后退）时自动做丝滑滚动，无需任何 JS 拦截。
+   这条规则与下方「锚点跳转偏移」的 scroll-margin-top 配合：
+   - scroll-behavior: smooth 负责「滚动过程平不平滑」；
+   - scroll-margin-top 负责「滚到后标题停在哪（避开 sticky 顶栏）」。
+   两者各管一段，互不干涉，所以 Tocbot 点击和正文 # 锚点都能自然共存。 */
+html {
+  scroll-behavior: smooth;
+}
+
 /* =============================== 页面骨架 ================================ */
 
 /* 顶部导航栏：左侧头像 + 昵称，右侧返回主页 */
@@ -237,8 +249,12 @@ html[data-theme="dark"] .btn-return-home:hover .btn-return-text {
   transition: opacity 0.25s ease;
 }
 
-/* 尊重「减少动态效果」的用户偏好 */
+/* 尊重「减少动态效果」的用户偏好：关掉平滑滚动与内容淡入，避免眩晕 */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .note-main-content.is-ready {
     transition: none;
   }
