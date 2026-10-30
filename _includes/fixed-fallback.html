@@ -1,0 +1,125 @@
+    <!-- ============ X5 / XWeb 内核兜底：position:fixed 失效自愈 ==============
+         腾讯系内置浏览器（QQ、微信）的 X5/XWeb 内核有一个经典 Bug：
+         页面滚动时 position: fixed 会失效并降级成 absolute，元素被"冲走"，
+         沉到整页最底部。
+
+         CSS 侧已经做了三层加固（translate3d 3D 加速 + will-change 合成层 +
+         html/body 清零 transform/filter），绝大多数情况下足以解决。
+         但如果内核仍然降级了 fixed，纯 CSS 无法单方面把它拉回视口，
+         这里再加一层「运行时自愈」作为最后一道保险：
+
+         原理：滚动时检测按钮的视口坐标是否还在预期位置（视口底 - bottom）。
+         一旦发现它被"冲走"了（坐标随页面滚动而漂移），就切换到
+         position: absolute + 手动设置 top 的方案，用 JS 把它钉在视口上。
+
+         关键点：正常设备上永远检测不到失效，因此这段代码完全不介入，
+         不会影响桌面 Chrome / Safari / Edge 的原生行为。 -->
+    <script>
+      (function () {
+        var BTN = [
+          { id: "back-to-top", bottom: 20 },
+          { id: "toc-mobile-btn", bottom: 80 }
+        ];
+
+        function collect() {
+          var list = [];
+          for (var i = 0; i < BTN.length; i++) {
+            var el = document.getElementById(BTN[i].id);
+            if (el) list.push({ el: el, bottom: BTN[i].bottom });
+          }
+          return list;
+        }
+
+        var items = collect();
+        if (!items.length) return;
+
+        // 只在移动端窄屏下才有这两个悬浮球，宽屏没必要
+        function isMobile() {
+          return window.innerWidth <= 900;
+        }
+
+        var broken = false;   // 是否已确认 fixed 失效
+        var ticking = false;
+
+        // 视口底部到按钮底边的距离是否还等于 CSS 里的 bottom 值？
+        // fixed 正常时恒等于；被降级成 absolute 后会随滚动越漂越远。
+        function isDrifted(item) {
+          var rect = item.el.getBoundingClientRect();
+          if (!rect.height) return false;                       // 元素不可见，忽略
+          var expected = window.innerHeight - item.bottom;
+          return Math.abs(rect.bottom - expected) > 8;
+        }
+
+        // 自愈：改用 absolute + 动态 top，把按钮钉在视口上
+        function applyFallback(item) {
+          var el = item.el;
+          el.classList.add("is-fixed-fallback");
+          updateFallback(item);
+        }
+
+        function updateFallback(item) {
+          var el = item.el;
+          if (!el.classList.contains("is-fixed-fallback")) return;
+          // absolute 定位下 top/left 是相对文档的坐标，
+          // 所以要把「视口右下角」换算成文档坐标，才能始终贴在视口边角。
+          var scrollX = window.pageXOffset || document.documentElement.scrollLeft || 0;
+          var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+          var viewportW = window.innerWidth || document.documentElement.clientWidth;
+
+          // 左边距 20px（与原 CSS 的 right: 20px 保持视觉一致）
+          var left = scrollX + viewportW - 20 - el.offsetWidth;
+          // 底边距 = bottom
+          var top = scrollY + window.innerHeight - item.bottom - el.offsetHeight;
+
+          el.style.left = left + "px";
+          el.style.top = top + "px";
+        }
+
+        function updateAll() {
+          for (var i = 0; i < items.length; i++) {
+            if (broken) updateFallback(items[i]);
+          }
+        }
+
+        function check() {
+          if (broken || !isMobile()) return;
+
+          // 至少要滚动过一段距离才做判断，避免首屏误判
+          if (window.pageYOffset < 50) return;
+
+          for (var i = 0; i < items.length; i++) {
+            if (isDrifted(items[i])) {
+              // 确认失效：对所有按钮启用兜底
+              broken = true;
+              for (var j = 0; j < items.length; j++) applyFallback(items[j]);
+              document.documentElement.classList.add("has-fixed-fallback");
+              return;
+            }
+          }
+        }
+
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(function () {
+            ticking = false;
+            check();
+            updateAll();
+          });
+        }
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", function () {
+          if (!ticking) {
+            ticking = true;
+            window.requestAnimationFrame(function () {
+              ticking = false;
+              updateAll();
+            });
+          }
+        }, { passive: true });
+
+        // 兜底启用后，元素从 fixed 切成 absolute，需要按当前滚动位置重算 top
+        window.addEventListener("load", updateAll);
+      })();
+    </script>
