@@ -2,6 +2,22 @@
    注意：@import 必须放在 CSS 文件最顶部（@charset 之后），放在中间会被浏览器直接忽略 */
 @import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.6.0/style.css');
 
+/* ---- 固定定位的「防污染」兜底 ---------------------------------------------
+   html / body 一旦带上 transform、filter、perspective、will-change 或 contain，
+   它们就会成为 position: fixed 元素的包含块 —— 此时子元素的 fixed 会相对
+   这个祖先（而不是视口）定位，表现就是「悬浮按钮沉到整页最底部、
+   一滑动就被冲走」。
+
+   本文件在主页和笔记页都会加载（笔记页的 note.html 也引它），
+   这里显式清零属于永久防线，确保右下角悬浮球在任何设备上都固定在视口。 */
+html,
+body {
+  transform: none !important;
+  filter: none !important;
+  perspective: none !important;
+  will-change: auto !important;
+}
+
 .badge {
     display: inline-block;
     padding: 0.25em 0.4em;

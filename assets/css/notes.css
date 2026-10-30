@@ -21,6 +21,22 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ---- 固定定位的「防污染」兜底 ---------------------------------------------
+   html / body 一旦带上 transform、filter、perspective、will-change 或 contain，
+   它们就会成为 position: fixed 元素的包含块 —— 此时子元素的 fixed 会相对
+   这个祖先（而不是视口）定位，表现就是「按钮沉到整页最底部、一滑动就被冲走」。
+
+   当前仓库里 html/body 并没有这些属性（实测祖先链干净），这里显式清零属于
+   永久防线：以后无论主题怎么改、或者给 body 加了什么入场动画，都不会
+   再把右下角这两个悬浮球的固定定位搞失效。 */
+html,
+body {
+  transform: none !important;
+  filter: none !important;
+  perspective: none !important;
+  will-change: auto !important;
+}
+
 /* =============================== 页面骨架 ================================ */
 
 /* 顶部导航栏：左侧头像 + 昵称，右侧返回主页 */
@@ -708,7 +724,8 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
     padding: 20px 16px 40px;
     background-color: #ffffff;
     box-shadow: -2px 0 24px rgba(0, 0, 0, 0.12);
-    z-index: 1000;
+    /* 高于右下角悬浮球(9999)：抽屉展开时盖住按钮，避免球浮在抽屉上面 */
+    z-index: 10001;
     overflow-y: auto;
     transform: translateX(100%);
     visibility: hidden;
@@ -746,9 +763,9 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
+    position: fixed !important;
+    bottom: 80px !important;
+    right: 20px !important;
     width: 48px;
     height: 48px;
     border: 0;
@@ -756,9 +773,36 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
     background-color: #086ddd;
     color: #ffffff;
     cursor: pointer;
-    z-index: 999;
+    z-index: 9999 !important;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
     transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  /* ---- 右下角两个悬浮球：强制钉在视口 ------------------------------------
+     这两个按钮是 body 的直接子元素，理论上 position: fixed 就够了。
+     但只要祖先（html/body/中间任何一层）出现 transform、filter、perspective、
+     will-change 或 contain，fixed 就会退化成「相对该祖先定位」——
+     也就是沉到整页最底部、一滑动就被冲走。
+
+     这里用 !important 把定位属性显式钉死，并在文件顶部给 html/body 做了
+     清零兜底，双管齐下确保在任何设备上都固定在视口右下角。
+
+     上下错开、不重叠：
+       返回顶部 .back-to-top → bottom 20px（最下方，拇指最容易够到）
+       目录    .toc-mobile-btn → bottom 80px（在其上方 60px）
+     两者高度分别 50px / 48px，间距充裕。 */
+  .back-to-top {
+    position: fixed !important;
+    right: 20px !important;
+    bottom: 20px !important;
+    z-index: 9999 !important;
+  }
+
+  .toc-mobile-btn {
+    position: fixed !important;
+    right: 20px !important;
+    bottom: 80px !important;
+    z-index: 9999 !important;
   }
 
   .toc-mobile-btn:active {
