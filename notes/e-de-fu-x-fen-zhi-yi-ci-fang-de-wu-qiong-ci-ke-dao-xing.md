@@ -120,4 +120,4 @@ $f^{(n)}(0) = 0$ 对一切 $n$，所以 $f$ 在 $0$ 处的泰勒级数恒等于 
 
 - 主线：[数学分析笔记](/notes/shu-xue-fen-xi-bi-ji/)
 - 同期病态函数：[Thomae 函数的连续性](/notes/thomae-han-shu-de-lian-xu-xing/)
-- 用到的求导法则：[[数学分析笔记#^derivative-rules|四则与链式]]
+- 用到的求导法则：[四则与链式](/notes/shu-xue-fen-xi-bi-ji/#derivative-rules)

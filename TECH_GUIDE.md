@@ -234,7 +234,9 @@ python sync_notes.py --no-clean                # 跳过清理（调试用，正�
 | `> [!type] 标题` | `<details class="callout type" data-callout="type">` + `<summary class="callout-title">` |
 | `[!type]+` / `[!type]-` | 带 `open` / 不带 `open`（与 Obsidian 一致：默认和 `+` 展开，只有 `-` 折叠） |
 | `^abc123` | 独占行 → `<a id="abc123"></a>`；标题里或行尾 → 绑到 `<details id="abc123">` |
-| `[[#^abc123\|文字]]` | `[文字](#abc123)` |
+| `[[#^abc123\|文字]]` | `[文字](#abc123)` —— **同页**块引用 |
+| `[[笔记名#^abc123\|文字]]` | `[文字](/notes/<映射后 slug>/#abc123)` —— **跨页**块引用（2026-10 补，之前会原样漏到页面上） |
+| `[[笔记名#^abc123]]` | `[笔记名 (块引用)](/notes/<映射后 slug>/#abc123)` —— 跨页块引用，不带别名时显示笔记名 |
 | `[[笔记]]` / `[[笔记\|文字]]` | `[笔记](/notes/<映射后 slug>/)`，映射表包含**自动生成的拼音 slug** |
 | `[[笔记#标题]]` | `[笔记#标题](/notes/<slug>/#标题)` |
 | `![[图片.png\|300]]` | `<img src="/assets/img/obsidian/图片.png" width="300">` |
@@ -246,6 +248,22 @@ python sync_notes.py --no-clean                # 跳过清理（调试用，正�
 | ` ```dataview ` | 整块删除，替换成 `<!-- Dataview query skipped -->` |
 | ` ```mermaid ` | 包成 `<div class="mermaid">`（要画图还需自行引入 mermaid.js） |
 | `:smile:` 等 | 20 个常用 emoji 短码换成字符 |
+
+> **跨页块引用为什么需要一条独立的正则**（2026-10 线上事故）
+>
+> `[[笔记名#^块ID|别名]]` 这种写法，脚本里**原本没有任何一条规则覆盖**：
+> `_BLOCK_LINK_RE` 只管同页的 `[[#^id]]`；`_ALIAS_LINK_RE` / `_PLAIN_LINK_RE`
+> 的笔记名部分 `[^\]\|#^]+` **显式排除了 `#` 和 `^`**；`_BLOCK_HEADING_RE`
+> 的标题部分 `[^\]\|]+` **又排斥 `|`** —— 于是带别名的跨页块引用谁也匹配不上，
+> 原样漏到页面上（用户截图里直接露出了 `[[数学分析笔记#^derivative-rules 四则与链式]]`）。
+>
+> 现在由 `_CROSS_BLOCK_LINK_RE` + `convert_cross_block_links()` 专门处理，
+> **且必须排在 `convert_block_heading_links()` 之前**：不带别名的
+> `[[笔记名#^块ID]]` 会被标题规则当成「笔记名#标题」，生成指向 `#^块ID` 的死锚点
+> （真实锚点是 `<a id="块ID">`，没有 `^`）。
+>
+> 目标笔记名照样走 `slug_map` 查拼音；查不到就退化成指向未生成页面的链接并打 `[warn]`，
+> **绝不原样输出 `[[...]]`**。
 
 **⑤ 保护与排版清洗**
 

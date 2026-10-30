@@ -27,7 +27,7 @@ render_with_liquid: false
 
 ## 🧠 类比
 
-- 满秩方阵是"**可还原的变换**"：$Ax = b$ 对任意 $b$ 有唯一解，且能原路退回（求逆）。不满秩就是"把信息压扁了"，回不去（[[线性代数笔记#^zero-divisor|零因子]]）。
+- 满秩方阵是"**可还原的变换**"：$Ax = b$ 对任意 $b$ 有唯一解，且能原路退回（求逆）。不满秩就是"把信息压扁了"，回不去（[零因子](/notes/xian-xing-dai-shu-bi-ji/#zero-divisor)）。
 
 ## 📝 费曼讲解
 
@@ -59,7 +59,7 @@ $$A = P_1^{-1}P_2^{-1}\cdots P_s^{-1}$$
 
 ## 🔗 出现在哪里
 
-- [[线性代数笔记#^full-rank-invertible|满秩 ⟺ 可逆]]（主线第 7 节）
+- [满秩 ⟺ 可逆](/notes/xian-xing-dai-shu-bi-ji/#full-rank-invertible)（主线第 7 节）
 - [满秩方阵的单侧可逆蕴含双侧可逆](/notes/man-zhi-fang-zhen-de-dan-ce-ke-ni-yun-han-shuang-ce-ke-ni/)
 - [子母矩阵秩的大小关系](/notes/zi-mu-ju-zhen-zhi-de-da-xiao-guan-xi/)、[Sylvester 秩不等式](/notes/sylvester-zhi-bu-deng-shi/)
 

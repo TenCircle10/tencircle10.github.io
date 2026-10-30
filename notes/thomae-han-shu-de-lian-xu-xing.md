@@ -96,4 +96,4 @@ $q$ 无界：若 $q \le Q$，则某个 $q$ 对无穷多个 $N$ 满足 $\Vert{}qx
 
 - 主线：[数学分析笔记](/notes/shu-xue-fen-xi-bi-ji/)
 - 同期病态函数：[e的负x分之一次方的无穷次可导性](/notes/e-de-fu-x-fen-zhi-yi-ci-fang-de-wu-qiong-ci-ke-dao-xing/)
-- 极限与连续：[[数学分析笔记#^heine|Heine 定理]]、[[数学分析笔记#^continuity-definition|连续的定义]]
+- 极限与连续：[Heine 定理](/notes/shu-xue-fen-xi-bi-ji/#heine)、[连续的定义](/notes/shu-xue-fen-xi-bi-ji/#continuity-definition)

@@ -32,7 +32,8 @@ Markdown，输出到 ``notes/``。
 3. **Obsidian 内部链接**：
    ``[[笔记]]`` -> ``[笔记](/notes/笔记/)``；
    ``[[笔记|文本]]`` -> ``[文本](/notes/笔记/)``；
-   ``[[#^块ID|文本]]`` -> ``[文本](#块ID)``；
+   ``[[#^块ID|文本]]`` -> ``[文本](#块ID)``（同页）；
+   ``[[笔记名#^块ID|文本]]`` -> ``[文本](/notes/笔记拼音/#块ID)``（跨页）；
    单独成行的块 ID ``^块ID`` -> ``<a id="块ID"></a>``。
 4. **图片嵌入**：``![[图片.png]]`` -> ``![图片.png](/assets/img/obsidian/图片.png)``。
 5. **Front Matter（layout 强制注入）**：输出文件的 front matter 一定包含
@@ -324,6 +325,20 @@ _TASK_DONE_RE = re.compile(r"^- \[[xX]\] ", re.MULTILINE)
 # 避免误伤公式里的上标（如 $x^2$）和 kramdown 的 ^上标^ 语法
 _BLOCK_ID_TAIL_RE = re.compile(r"[ \t]+\^([A-Za-z0-9-]{4,})[ \t]*$", re.MULTILINE)
 _BLOCK_HEADING_RE = re.compile(r"\[\[([^\]\|#]+)#([^\]\|]+)\]\]")
+# 跨页块引用：[[笔记名#^块ID]] / [[笔记名#^块ID|别名]]
+#
+# 【为什么必须单独一条正则】—— 上面那四条 wikilink 正则全都漏掉了这个组合：
+#   · _BLOCK_LINK_RE      只匹配同页的 [[#^id|text]]
+#   · _ALIAS_LINK_RE      笔记名部分 [^\]\|#^]+ 显式排除了 # 和 ^
+#   · _PLAIN_LINK_RE      同上
+#   · _BLOCK_HEADING_RE   标题部分 [^\]\|]+ 排斥 |，带别名时匹配不上
+# 结果就是 [[数学分析笔记#^derivative-rules|四则与链式]] 原样漏到页面上。
+#
+# 【顺序要求】必须在 _BLOCK_HEADING_RE 之前处理：不带别名的 [[笔记名#^块ID]]
+# 会被标题规则当成「笔记名#标题」，生成指向 #^块ID 的死锚点（真实锚点没有 ^）。
+_CROSS_BLOCK_LINK_RE = re.compile(
+    r"\[\[([^\]\|#]+)#\^([A-Za-z0-9-]+)(?:\|([^\]\|]+))?\]\]"
+)
 _EMBED_SIZED_RE = re.compile(r"!\[\[([^\]\|]+)\|(\d+)(?:x(\d+))?\]\]")
 _EMBED_ANY_RE = re.compile(r"!\[\[([^\]]+?)\]\]")
 _IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".bmp", ".avif")
@@ -380,6 +395,44 @@ def convert_emoji(text: str, counts: dict[str, int]) -> str:
             counts["extra"] += text.count(token)
             text = text.replace(token, emoji)
     return text
+
+
+def convert_cross_block_links(
+    text: str, counts: dict[str, int], slug_map: dict[str, str], url_prefix: str
+) -> str:
+    """跨页块引用：``[[笔记名#^块ID|别名]]`` -> ``[别名](/notes/slug/#块ID)``。
+
+    这类写法之前没有任何正则覆盖：``_BLOCK_LINK_RE`` 只管同页的 ``[[#^id]]``，
+    而 ``_ALIAS_LINK_RE`` / ``_PLAIN_LINK_RE`` 的笔记名部分显式排除了 ``#`` 和 ``^``，
+    ``_BLOCK_HEADING_RE`` 的标题部分又排斥 ``|`` —— 于是
+    ``[[数学分析笔记#^derivative-rules|四则与链式]]`` 原样漏到页面上。
+
+    块 ID 在目标页里是 ``<a id="块ID"></a>``（没有 ``^``），所以锚点写 ``#块ID``。
+    """
+
+    def replace(match: re.Match[str]) -> str:
+        raw_target = match.group(1).strip()
+        block_id = match.group(2).strip()
+        alias = match.group(3)
+        label = (alias or "").strip() or ("%s (块引用)" % raw_target)
+        target = resolve_note_target(raw_target, slug_map)
+        if target == raw_target:
+            # 目标笔记不在 origin/ 里：退化处理 —— 仍然输出成链接（指向未生成的页面），
+            # 避免又出现「裸 [[...]] 漏到页面上」，但打印告警便于补源文件。
+            print(
+                "  [warn] 跨页块引用指向不存在的笔记：%s#^%s" % (raw_target, block_id),
+                file=sys.stderr,
+            )
+        counts["block_link"] += 1
+        url = "%s%s/#%s" % (url_prefix, target, block_id)
+        # label 里含公式时改用原生 <a>：kramdown 对 [文本](url) 的 label 会做额外处理，
+        # 里面的 $...$ 经常渲染不出来。注意此时公式已被 protect_math 抽成
+        # ZMATHPHnZ 占位符，所以两种形式都要判断。
+        if "$" in label or "ZMATHPH" in label:
+            return '<a href="%s">%s</a>' % (url, label)
+        return "[%s](%s)" % (label, url)
+
+    return _CROSS_BLOCK_LINK_RE.sub(replace, text)
 
 
 def convert_block_heading_links(
@@ -1467,6 +1520,10 @@ def convert_document(
     body = strip_obsidian_comments(body, counts)
     body = convert_highlights(body, counts)
     body = convert_embeds(body, counts)
+    # 跨页块引用必须在 convert_block_heading_links 之前处理：
+    # 不带别名的 [[笔记名#^块ID]] 会被标题规则当成「笔记名#标题」，
+    # 生成指向 #^块ID 的死锚点（真实锚点没有 ^）。
+    body = convert_cross_block_links(body, counts, slug_map, url_prefix)
     body = convert_block_heading_links(body, counts, slug_map, url_prefix)
     body = convert_tasks(body, counts)
     body = convert_emoji(body, counts)

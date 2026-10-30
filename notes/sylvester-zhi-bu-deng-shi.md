@@ -96,5 +96,5 @@ $$\boxed{\,r(AB)\ge r(A)+r(B)-n\,}$$
 
 ## 相关笔记
 
-- 主线：[[线性代数笔记#^rank-further|秩的进一步结论]]
+- 主线：[秩的进一步结论](/notes/xian-xing-dai-shu-bi-ji/#rank-further)
 - 姊妹结论：[分块矩阵性质](/notes/fen-kuai-ju-zhen-xing-zhi/)、[子母矩阵秩的大小关系](/notes/zi-mu-ju-zhen-zhi-de-da-xiao-guan-xi/)

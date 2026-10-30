@@ -30,7 +30,7 @@ $$B(AB)A = B I A = BA \quad \Longrightarrow \quad (BA)^{2} = BA \quad \Longright
 
 ## 为什么不能直接消去
 
-矩阵乘法有 [[线性代数笔记#^zero-divisor|零因子]]，与实数不同：
+矩阵乘法有 [零因子](/notes/xian-xing-dai-shu-bi-ji/#zero-divisor)，与实数不同：
 
 - 实数：$a(a - 1) = 0 \iff a = 0$ 或 $a = 1$；
 - 矩阵：$M(M - I) = O$ **推不出** $M = O$ 或 $M = I$。
@@ -46,7 +46,7 @@ $$
 
 ## 证法一：先证 $BA$ 满秩
 
-由 $AB = I$ 知 $AB$ 满秩。假设 $A$ 不满秩，则用 [[线性代数笔记#^elementary-ops|初等变换]] 可把 $A$ 化成阶梯形：
+由 $AB = I$ 知 $AB$ 满秩。假设 $A$ 不满秩，则用 [初等变换](/notes/xian-xing-dai-shu-bi-ji/#elementary-ops) 可把 $A$ 化成阶梯形：
 
 $$P_s \cdots P_1 A = A_1$$
 
