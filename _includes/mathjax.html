@@ -7,7 +7,11 @@
       processEscapes: true
     },
     options: {
-      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      // mermaid 图表的源码躺在 <div class="mermaid"> 里，要等 mermaid.js 去解析。
+      // 如果 MathJax 先把里面的 $...$ 换成 mjx-container，图表源码就被改坏了，
+      // 画出来是一堆乱码。这个类让 MathJax 整棵子树跳过。
+      ignoreHtmlClass: 'mermaid'
     }
   };
 </script>

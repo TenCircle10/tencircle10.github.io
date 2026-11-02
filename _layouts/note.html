@@ -442,6 +442,9 @@
       })();
     </script>
 
+    <!-- ============ Mermaid 图表（仅页面里真的有图时才加载渲染库） ============ -->
+    {% include mermaid.html %}
+
     <!-- ============ 公式渲染完成前显示三球加载动画 ============ -->
     <script>
       (function () {
@@ -458,28 +461,44 @@
           content.classList.add("is-ready");
         }
 
-        // 正文里没有 $...$ 公式的笔记，没必要等 MathJax（否则会白等 CDN）
+        // 正文里既没有 $...$ 公式、也没有 mermaid 图时，没必要挂着遮罩等
         var text = content.textContent || "";
-        if (!/\$[^$\n]+\$/.test(text) && !/\$\$/.test(text)) {
+        var hasMath = /\$[^$\n]+\$/.test(text) || /\$\$/.test(text);
+        var hasMermaid = !!content.querySelector(".mermaid") || !!window.__mermaidHasNodes;
+
+        if (!hasMath && !hasMermaid) {
           ready();
           return;
         }
 
-        // MathJax 3 的 startup.promise 要等引擎脚本加载完才存在，所以轮询等待
-        var start = Date.now();
-        var TIMEOUT = 3000;   // 兜底：CDN 挂了也不会一直白屏
+        var tasks = [];
 
-        (function poll() {
-          if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
-            MathJax.startup.promise.then(ready).catch(ready);
-            return;
-          }
-          if (Date.now() - start > TIMEOUT) {
-            ready();
-            return;
-          }
-          setTimeout(poll, 50);
-        })();
+        // MathJax 3 的 startup.promise 要等引擎脚本加载完才存在，所以轮询等待
+        if (hasMath) {
+          tasks.push(new Promise(function (resolve) {
+            var start = Date.now();
+            var TIMEOUT = 3000;   // 兜底：CDN 挂了也不会一直白屏
+            (function poll() {
+              if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
+                MathJax.startup.promise.then(resolve, resolve);
+                return;
+              }
+              if (Date.now() - start > TIMEOUT) {
+                resolve();
+                return;
+              }
+              setTimeout(poll, 50);
+            })();
+          }));
+        }
+
+        // mermaid 那边自带 8s 超时兜底（见 _includes/mermaid.html），
+        // 所以这里直接等它，不用再套一层 timeout
+        if (hasMermaid) {
+          tasks.push(window.__mermaidReady || Promise.resolve());
+        }
+
+        Promise.all(tasks).then(ready, ready);
       })();
     </script>
 

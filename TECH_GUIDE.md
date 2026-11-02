@@ -246,7 +246,7 @@ python sync_notes.py --no-clean                # 跳过清理（调试用，正�
 | `- [ ]` / `- [x]` / `- [X]` | `- ☐` / `- ☑` |
 | `#标签` | **保持纯文本**（不做标签系统） |
 | ` ```dataview ` | 整块删除，替换成 `<!-- Dataview query skipped -->` |
-| ` ```mermaid ` | 包成 `<div class="mermaid">`（要画图还需自行引入 mermaid.js） |
+| ` ```mermaid ` | 包成 `<div class="mermaid">`，由 `_includes/mermaid.html` 在浏览器端渲染（见 4.7） |
 | `:smile:` 等 | 20 个常用 emoji 短码换成字符 |
 
 > **跨页块引用为什么需要一条独立的正则**（2026-10 线上事故）
@@ -717,6 +717,33 @@ tocbot.init({
 - 点目录链接后**自动关闭抽屉**（仅 ≤900px）
 - **Esc** 关闭抽屉
 - 窗口从窄变宽（> 900px）时自动清理 `is-open` 状态，避免残留
+
+### 4.7 Mermaid 图表
+
+源笔记里照常写 ` ```mermaid ` 代码块，Obsidian 和网站都能看。链路分两段：
+
+| 阶段 | 谁做 | 产物 |
+|---|---|---|
+| 构建时 | `sync_notes.py` 的「代码块保护」 | `<div class="mermaid">…源码…</div>`（源码逐字节保留，`%%` 注释、`<-->`、`-.->` 都不动） |
+| 浏览器 | `_includes/mermaid.html` | 按需加载 `mermaid@11.17.2`，渲染成内联 `<svg>`，节点带 `data-processed="true"` |
+
+**几个刻意的决定**
+
+| 决定 | 原因 |
+|---|---|
+| **动态注入 `<script>`，不是直接 `<script src>`** | `mermaid.min.js` 有 3.5 MB，全站只有两篇笔记带图，不该让其余页面白白下载 |
+| **`securityLevel: "strict"`（默认值），不放宽** | 节点标签里的 `<br/>` 靠 `run()` 的 `splitBreaks` 切成多行、`<-->` 靠内部 `entityDecode()` 还原（浏览器序列化 `innerHTML` 时会把 `<` `>` 转成 `&lt;` `&gt;`）。两条都不需要 `loose` |
+| **主题切换时整张重画** | mermaid 把颜色内联进 SVG，改 CSS 变量或加 `filter` 都不干净。切换前把 `innerHTML` 存进 `data-mermaid-src`，重画时还原并删掉 `data-processed`（`run()` 见到这个属性就跳过） |
+| **备份 `innerHTML` 而不是 `textContent`** | 节点标签里的 `<br/>` 在 HTML 里是真的 `<br>` 元素，`textContent` 会把它当空文本丢掉，重画后换行就没了 |
+| **页面加载遮罩也等 mermaid** | 否则会先闪一下未渲染的源码。`window.__mermaidReady` 在 `mermaid.html` 里同步建好，`note.html` 底部用 `Promise.all` 等「公式 + 图表」都完成才揭开正文 |
+
+**兜底**
+
+- 库加载失败（CDN 挂了 / 离线）：`script.onerror` 里放行遮罩，`.mermaid` 保留源码，CSS 用等宽字体 + 浅灰底把它显示成「代码块」，至少能读
+- 库加载或渲染超过 8s：`setTimeout` 强制放行，正文不会永久白屏
+- 单张图语法错误：mermaid 会把错误信息画进那个节点，`run()` 的 `.catch` 只记 `console.error`，不影响同页其它图
+
+**样式**（`assets/css/notes.css` 末尾）：`.mermaid` 居中 + `overflow-x: auto` 兜底；`.mermaid:not([data-processed="true"])` 是「未渲染源码」的等宽字体外观，暗色三套选择器与站内其它组件一致。
 
 ---
 

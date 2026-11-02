@@ -1,0 +1,175 @@
+<!--
+  ===========================================================================
+  Mermaid 图表渲染
+  ===========================================================================
+  sync_notes.py 的「代码块保护」阶段已经把 ```mermaid 代码块转成
+  <div class="mermaid">…源码…</div>，这里负责把渲染库拉下来、按当前主题画成 SVG。
+  在那之前，div 里只是一段未渲染的源码文本。
+
+  为什么动态注入 <script> 而不是直接写 <script src>：
+    mermaid.min.js 有 3.5 MB，全站笔记里只有两篇带图，
+    不该让剩下那些没图的页面白白下载。
+
+  为什么这段必须放在正文 loader 之前：
+    loader 要等 window.__mermaidReady 才揭开正文（否则会先闪一下源码），
+    这个 promise 必须在解析阶段就同步建好。
+
+  依赖假设（读 mermaid@11.17.2 的 dist 确认过）：
+    · run() 会跳过带 data-processed 的节点 —— 所以重画前必须把这个属性删掉；
+    · run() 读的是 element.innerHTML，并且内部会做 entityDecode()，
+      所以被浏览器序列化成实体的尖括号箭头，能被正确还原成原始字符；
+      br 标签会被 normalize 再按 splitBreaks 切成多行，strict 级别下不失效。
+  ===========================================================================
+-->
+<script>
+  (function () {
+    var CDN = "https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.min.js";
+    var LOAD_TIMEOUT = 8000;   // CDN 挂了也不能让正文一直白屏
+
+    var nodes = Array.prototype.slice.call(document.querySelectorAll(".mermaid"));
+
+    // 供 note.html 的加载遮罩判断要不要等（渲染后 .mermaid 里是 <svg>，
+    // 用 class 判断仍然成立，但留个显式标志更稳）
+    window.__mermaidHasNodes = nodes.length > 0;
+
+    // 不管有没有图，这个 promise 都要存在：note.html 底部的 loader 统一等它。
+    var resolveReady;
+    window.__mermaidReady = new Promise(function (resolve) {
+      resolveReady = resolve;
+    });
+    window.__renderMermaid = function () {};
+
+    if (!nodes.length) {
+      resolveReady();
+      return;
+    }
+
+    var settled = false;
+    function settle() {
+      if (settled) return;
+      settled = true;
+      resolveReady();
+    }
+    var timer = setTimeout(settle, LOAD_TIMEOUT);
+
+    // ---- 当前主题 ---------------------------------------------------------
+    // 站点用 <html data-theme="dark|light"> 表示手动切换的结果；
+    // 没手动切过时跟着 prefers-color-scheme 走（与 theme-switch.html 的判断一致）。
+    function currentTheme() {
+      var attr = document.documentElement.getAttribute("data-theme");
+      if (attr === "dark" || attr === "light") return attr;
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+
+    // ---- 源码备份 ---------------------------------------------------------
+    // mermaid.run() 会把 div 里的源码整个换成渲染好的 <svg>，原文就没了。
+    // 主题切换要重画，所以第一遍就把源码存进 data-mermaid-src。
+    // 必须存 innerHTML 而不是 textContent：节点标签里的 <br/> 在 HTML 里是
+    // 真正的 <br> 元素，textContent 会把它当成空文本丢掉，重画后换行就没了。
+    function sourceOf(el) {
+      if (!el.hasAttribute("data-mermaid-src")) {
+        el.setAttribute("data-mermaid-src", el.innerHTML);
+      }
+      return el.getAttribute("data-mermaid-src");
+    }
+
+    function reset(el) {
+      // run() 见到 data-processed 就跳过，重画前必须摘掉
+      el.removeAttribute("data-processed");
+      el.innerHTML = sourceOf(el);
+    }
+
+    // ---- 渲染 -------------------------------------------------------------
+    function render() {
+      if (typeof window.mermaid === "undefined") return Promise.resolve();
+
+      nodes.forEach(function (el) {
+        if (el.getAttribute("data-processed") === "true") reset(el);
+        else sourceOf(el);
+      });
+
+      window.mermaid.initialize({
+        startOnLoad: false,
+        // mermaid 把颜色内联进 SVG，切换主题只能整张重画，
+        // 改 CSS 变量 / 加 filter 都不干净。theme 只认内置名。
+        theme: currentTheme() === "dark" ? "dark" : "default",
+        // 默认就是 strict，这里显式写出来是为了说明：
+        // 节点标签里的 br 换行与尖括号箭头由 run() 的 entityDecode + splitBreaks 处理，
+        // strict 下照常工作，不需要为此放宽到 loose。
+        securityLevel: "strict",
+        // 图比版心宽时按容器缩放，窄屏不撑破页面（CSS 里另有横向滚动兜底）
+        flowchart: { htmlLabels: true, useMaxWidth: true },
+        sequence: { useMaxWidth: true },
+        gantt: { useMaxWidth: true },
+        // 正文是 Crimson Pro（衬线），但图表里衬线在小字号下可读性差，
+        // 中文也需要专门的字体回退，所以图表单独用这套无衬线栈
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif'
+      });
+
+      return window.mermaid.run({ nodes: nodes }).catch(function (error) {
+        // 单张图语法错误时 mermaid 会把错误信息画进那个节点，不影响其它图
+        console.error("[mermaid] 渲染失败：", error);
+      });
+    }
+    window.__renderMermaid = render;
+
+    // ---- 主题切换后重画 ---------------------------------------------------
+    var lastTheme = currentTheme();
+    var scheduled = false;
+
+    function onThemeMaybeChanged() {
+      if (scheduled) return;
+      scheduled = true;
+      // 推迟一帧：让改属性的那一方（theme-switch 的 applyTheme）先落盘
+      window.requestAnimationFrame(function () {
+        scheduled = false;
+        var theme = currentTheme();
+        if (theme === lastTheme) return;
+        lastTheme = theme;
+        render();
+      });
+    }
+
+    function watchTheme() {
+      // 1) 手动拨开关 —— 改的是 <html data-theme>
+      new MutationObserver(onThemeMaybeChanged).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"]
+      });
+      // 2) 跟随系统 —— 没手动设过 data-theme 时才生效；
+      //    多挂一个监听没副作用，回调里会先比较主题是否真的变了
+      if (window.matchMedia) {
+        var mq = window.matchMedia("(prefers-color-scheme: dark)");
+        if (mq.addEventListener) mq.addEventListener("change", onThemeMaybeChanged);
+        else if (mq.addListener) mq.addListener(onThemeMaybeChanged);
+      }
+    }
+
+    // ---- 加载渲染库 -------------------------------------------------------
+    var script = document.createElement("script");
+    script.src = CDN;
+    script.onload = function () {
+      watchTheme();
+      render().then(
+        function () {
+          clearTimeout(timer);
+          settle();
+        },
+        function () {
+          clearTimeout(timer);
+          settle();   // 渲染抛错也要放行，别把正文永久锁死
+        }
+      );
+    };
+    script.onerror = function () {
+      // 库没下来：图表位置保留原始源码（至少能读），正文照常显示
+      console.error("[mermaid] 加载失败，图表将显示为源码：" + CDN);
+      clearTimeout(timer);
+      settle();
+    };
+    document.head.appendChild(script);
+  })();
+</script>

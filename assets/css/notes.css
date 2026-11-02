@@ -912,3 +912,57 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
     background-color: #20212b;
   }
 }
+
+/* ==========================================================================
+   Mermaid 图表
+   --------------------------------------------------------------------------
+   生成链路：源笔记里的 ```mermaid 代码块 -> sync_notes.py 转成
+   <div class="mermaid">…源码…</div> -> _includes/mermaid.html 在浏览器端
+   按需加载渲染库、画成内联 <svg>（完成后节点上会有 data-processed="true"）。
+
+   这里只管排版。配色不在这里管 —— mermaid 把颜色内联进 SVG 了，
+   改 CSS 改不动，主题切换靠 JS 整张重画（见 _includes/mermaid.html）。
+   ========================================================================== */
+.mermaid {
+  /* 与公式块、callout 保持同样的纵向节奏 */
+  margin: 1.6em 0;
+  text-align: center;
+  /* 兜底：useMaxWidth 已经把 SVG 缩到容器宽度，正常不会溢出；
+     但图里的节点被写死宽度时，这里能横向滚动而不是撑破版心 */
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 渲染库没加载成功、或图还没来得及画时，div 里留着的是原始源码。
+   给个等宽字体的「代码块」外观，让人一眼看出这是没渲染出来的源码，
+   而不是混在正文里的乱码。（正常情况会被页面加载遮罩挡住，看不到这一帧） */
+.mermaid:not([data-processed="true"]) {
+  font-family: "Ubuntu Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  white-space: pre;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: #f6f7f9;
+  color: #6b7280;
+  overflow-x: auto;
+}
+
+html[data-theme="dark"] .mermaid:not([data-processed="true"]) {
+  background-color: #20212b;
+  color: #9aa3b2;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .mermaid:not([data-processed="true"]) {
+    background-color: #20212b;
+    color: #9aa3b2;
+  }
+}
