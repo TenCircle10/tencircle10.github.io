@@ -724,8 +724,35 @@ tocbot.init({
 
 | 阶段 | 谁做 | 产物 |
 |---|---|---|
-| 构建时 | `sync_notes.py` 的「代码块保护」 | `<div class="mermaid">…源码…</div>`（源码逐字节保留，`%%` 注释、`<-->`、`-.->` 都不动） |
+| 构建时 | `sync_notes.py` 的「代码块保护」+ `prepare_mermaid()` | `<div class="mermaid">…源码…</div>`（源码基本不动，`%%` 注释、`<-->`、`-.->` 都原样；唯一会改的是块内的 Obsidian 双链，见下） |
 | 浏览器 | `_includes/mermaid.html` | 按需加载 `mermaid@11.17.2`，渲染成内联 `<svg>`，节点带 `data-processed="true"` |
+
+**mermaid 里的 Obsidian 双链**
+
+`[ ] ( ) { } |` 在 mermaid 里全是结构性字符，`[[笔记|别名]]` 原样丢进去会被读成
+「节点 ID + subroutine 形状 + 一段非法尾巴」，整张图 parse error。而 mermaid 块在
+「代码块保护」阶段就整块抽走了，wikilink 转换根本碰不到它 —— 所以
+`prepare_mermaid()` 在还原之前单独处理：
+
+| 源写法 | 产物 |
+|---|---|
+| `B[[笔记#^块ID\|别名]]`（节点整体就是双链） | `B["别名"]` + `click B "/notes/<slug>/#块ID"` |
+| `B["[[笔记\|别名]]"]`（引号标签） | `B["别名"]` + `click B "/notes/<slug>/"` |
+| `A -->\|[[笔记\|别名]]\| B`（边标签） | `A -->\|别名\| B`（拿不到节点 ID，只留文字） |
+| `C[[Some Text]]`（mermaid 自己的 subroutine 形状） | 原样保留 |
+| `A[![[图.png\|300]]]` | `A[图.png]`（`\|300` 是宽度，不是别名） |
+
+判断依据：`[[...]]` 里带 `|` 或 `#`，或者方括号里正好是一篇存在的笔记，才认定是双链；
+否则当 subroutine 形状放过 —— `B[[Some Text]]` 本来就是合法 mermaid，不能一律改写。
+
+其余约定：
+
+- 目标笔记不在 `origin/` 里时**不生成 click**（拼一个 `/notes/中文原名/` 只会是死链），只留文字并打 `[warn]`
+- 同页引用 `[[#^块ID]]` 也只留文字 —— 图上跳自己没有意义
+- 非 `flowchart` / `graph` 的图（`sequenceDiagram`、`stateDiagram`…）没有 `ID[...]` 这种形状，只做文字替换，绝不猜节点
+- 手写的 `click` 优先，同一节点不重复下发；生成的 `click` 一律追加在图末尾（写在子图内部会指到错的节点）
+- 标签文字里的 `|` `"` `[` `]` 换成全角，避免刚替换完又撞上结构字符
+- `sync_notes.py --check` 会扫全站 mermaid 块：残留 `[[...]]`、`click` 指向未定义节点都算失败
 
 **几个刻意的决定**
 

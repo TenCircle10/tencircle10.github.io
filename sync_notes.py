@@ -60,7 +60,8 @@ Markdown，输出到 ``notes/``。
    块 ID 支持两种写法：独占一行的 ``^abc123``、以及行尾的 ``内容 ^abc123``
    （含 callout 标题里的 ``> [!note] 标题 ^abc123``），都转成 ``<a id="abc123"></a>``。
    ```dataview 查询块整块删除、```mermaid 块包成 ``<div class="mermaid">``
-   （渲染由 ``_includes/mermaid.html`` 在浏览器端负责，这里只做包装，源码逐字节保留），
+   （渲染由 ``_includes/mermaid.html`` 在浏览器端负责；块内的 Obsidian 双链会在
+   还原前改写成 mermaid 自己的语法，见下面的「mermaid 块里的 Obsidian 双链」），
    这两者与 ``` 代码块一样在「代码块保护」阶段处理，块内内容不会被其它规则改写。
 8. **排版清洗与容错**：漏打空格的 ``##标题`` 自动补成 ``## 标题``（单个 ``#标签`` 不动，
    以免把标签变成 H1）；标题 / 引用块 / 列表首项 / 水平线 / 独占整行的链接上方强制留空行；
@@ -138,7 +139,8 @@ DEFAULT_BUCKET = BUCKET_PUBLIC
 # --------------------------------------------------------------------------- #
 # 代码块保护：先整段抽出来，最后再原样放回，保证代码块里不做任何替换。
 # dataview 查询块在 Obsidian 里也是代码块，直接整块删掉；mermaid 代码块转成
-# <div class="mermaid"> 但同样走占位符，块内内容不会被后续规则改写。
+# <div class="mermaid"> 但同样走占位符，块内内容不会被后续规则改写
+# （块内的 Obsidian 双链由 prepare_mermaid() 在还原前单独处理）。
 # --------------------------------------------------------------------------- #
 _CODE_PLACEHOLDER = "\x00SYNC_CODE_BLOCK_{}\x00"
 _MERMAID_PLACEHOLDER = "\x00SYNC_MERMAID_{}\x00"
@@ -212,6 +214,178 @@ def restore_code_blocks(
             '<div class="mermaid">\n%s\n</div>' % block,
         )
     return text
+
+
+# --------------------------------------------------------------------------- #
+# mermaid 块里的 Obsidian 双链
+#
+# mermaid 的流程图里 [ ] { } ( ) | 全是结构性字符，双链原样丢进去必然出事：
+#   B[[数学分析笔记#^derivative-rules|四则与链式]]
+# 会被读成「B 的 subroutine 形状」+ 一段非法尾巴，整张图 parse error，
+# 页面上只剩一行红字。而 mermaid 块在「代码块保护」阶段就整块抽走了，
+# wikilink 转换根本碰不到它 —— 所以必须在还原之前单独处理。
+#
+# 处理原则：宁可退化成纯文字，也绝不把 [[...]] 原样送进 mermaid。
+#   B[[笔记#^id|别名]]  ->  B["别名"]  +  click B "/notes/<slug>/#id"
+#   A["[[笔记]]"]       ->  A["笔记"]   （已经在引号/标签里的，只留显示文字）
+# --------------------------------------------------------------------------- #
+_MERMAID_GRAPH_RE = re.compile(r"^[ \t]*(?:flowchart|graph)\b", re.MULTILINE)
+# 一步到位地匹配「节点 ID + [[...]]」或「裸 [[...]]」：
+# 分成两步会把 B[[Some Text]]（mermaid 自己的 subroutine 形状）的方括号吃掉，
+# 变成 BSome Text —— 节点 ID 和形状一起消失，图就废了。
+_MERMAID_LINK_RE = re.compile(
+    r"(?P<embed>!?)(?:(?P<node>[A-Za-z_][A-Za-z0-9_\-]*)[ \t]*)?"
+    r"\[\[(?P<inner>[^\[\]\n]+)\]\]"
+)
+# 引号标签里的双链：A["[[笔记|别名]]"] —— 拿得到节点 ID，可以直接挂 click
+_MERMAID_QUOTED_NODE_RE = re.compile(
+    r"(?P<node>[A-Za-z_][A-Za-z0-9_\-]*)[ \t]*\[[ \t]*\"\[\[(?P<inner>[^\[\]\n]+)\]\]\"[ \t]*\]"
+)
+_MERMAID_CLICK_RE = re.compile(
+    r"^[ \t]*click[ \t]+(?P<node>[A-Za-z_][A-Za-z0-9_\-]*)", re.MULTILINE
+)
+
+
+def _mermaid_label(text: str) -> str:
+    """把会破坏 mermaid 语法的字符换成全角。
+
+    ``|`` 是边标签的分隔符，``[`` ``]`` 是形状定界符，``"`` 会截断带引号的标签。
+    这几个字符出现在标签文字里，mermaid 会把整张图判成语法错误；
+    换成全角后视觉几乎无差，但解析器不再认为它们是结构字符。
+    """
+    for source, target in (("|", "｜"), ('"', "＂"), ("[", "［"), ("]", "］")):
+        text = text.replace(source, target)
+    return text
+
+
+def _split_wikilink(inner: str) -> tuple[str, str]:
+    """``笔记名#锚点|别名`` -> (目标, 别名)。别名本身可能含 |，只按第一个切。"""
+    target, _, alias = inner.partition("|")
+    return target.strip(), alias.strip()
+
+
+def _wikilink_display(target: str, alias: str, embed: bool = False) -> str:
+    """双链在图上显示的文字：别名 > 笔记名 > 锚点。
+
+    ``embed`` 是 ``![[图.png|300]]`` 这种嵌入：竖线后面是宽度而不是别名，
+    所以显示文件名，不认 alias。
+    """
+    if embed:
+        note, _, _ = target.partition("#")
+        return note.strip() or "附件"
+    if alias:
+        return alias
+    note, _, anchor = target.partition("#")
+    if note.strip():
+        return note.strip()
+    return anchor.lstrip("^").strip() or "链接"
+
+
+def _wikilink_url(
+    target: str, slug_map: dict[str, str], url_prefix: str
+) -> str | None:
+    """把双链目标解析成站内 URL；解析不出来就返回 None（不生成 click）。
+
+    目标笔记不在 origin/ 里时故意不造链接 —— 拼一个 ``/notes/中文原名/``
+    出来只会是死链，还不如让节点保持纯文字。
+    """
+    note, _, anchor = target.partition("#")
+    note = note.strip()
+    if not note:
+        return None  # 同页引用，在图上跳自己毫无意义
+    resolved = resolve_note_target(note, slug_map)
+    if resolved == note and note not in slug_map:
+        return None
+    anchor = anchor.lstrip("^").strip()
+    suffix = "#" + anchor if anchor else ""
+    return "%s%s/%s" % (url_prefix, resolved, suffix)
+
+
+def _looks_like_wikilink(inner: str, slug_map: dict[str, str]) -> bool:
+    """判断 ``[[...]]`` 是双链，还是 mermaid 自己的 subroutine 形状。
+
+    ``B[[Some Text]]`` 在 mermaid 里本来就是合法形状，不能一律改写。
+    只有带了 ``|`` / ``#``，或者方括号里正好是一篇存在的笔记时，才认定是双链。
+    """
+    if "|" in inner or "#" in inner:
+        return True
+    return inner.strip() in slug_map
+
+
+def prepare_mermaid(
+    block: str, counts: dict[str, int], slug_map: dict[str, str], url_prefix: str
+) -> tuple[str, list[str]]:
+    """把 mermaid 块里的双链改写成 mermaid 语法，返回 (新块, 告警列表)。
+
+    在 flowchart / graph 里，节点整体就是一条双链时（``B[[笔记|别名]]`` 或
+    ``B["[[笔记|别名]]"]``）改写成 ``B["别名"]`` 并追加一条 ``click`` 指令；
+    其它位置（边标签里 / 子图标题里 / 一格里串了多条链接）只留显示文字 ——
+    拿不到确切的节点 ID，硬造 click 只会指错节点。
+
+    非流程图的图（sequenceDiagram、stateDiagram…）压根没有 ``ID[...]`` 这种形状，
+    一律只做文字替换，绝不猜节点。
+    """
+    clicks: dict[str, str] = {}
+    warnings: list[str] = []
+    is_flowchart = bool(_MERMAID_GRAPH_RE.search(block))
+
+    def link_node(node: str, inner: str) -> str:
+        """节点整体是一条双链时返回标签文字；不是双链则返回空串。"""
+        if not _looks_like_wikilink(inner, slug_map):
+            return ""
+        target, alias = _split_wikilink(inner)
+        counts["wikilink"] += 1
+        url = _wikilink_url(target, slug_map, url_prefix)
+        if url:
+            clicks[node] = url
+        elif target and not target.startswith("#"):
+            warnings.append("mermaid 双链找不到目标笔记「%s」，只保留文字" % target)
+        return _mermaid_label(_wikilink_display(target, alias))
+
+    def quoted_node(match: re.Match[str]) -> str:
+        if not is_flowchart:
+            return match.group(0)  # 非流程图，留给下一轮只做文字替换
+        node = match.group("node")
+        display = link_node(node, match.group("inner"))
+        if not display:
+            return match.group(0)
+        return '%s["%s"]' % (node, display)
+
+    def replace_link(match: re.Match[str]) -> str:
+        inner = match.group("inner")
+        if match.group("embed"):
+            # 图上画不出附件，只把文件名当文字留下来
+            target, _ = _split_wikilink(inner)
+            counts["extra"] += 1
+            return _mermaid_label(_wikilink_display(target, "", embed=True))
+        node = match.group("node") if is_flowchart else None
+        if node is not None:
+            display = link_node(node, inner)
+            if not display:
+                return match.group(0)  # 真正的 subroutine 形状，原样保留
+            return '%s["%s"]' % (node, display)
+        target, alias = _split_wikilink(inner)
+        counts["wikilink"] += 1
+        return _mermaid_label(_wikilink_display(target, alias))
+
+    lines = block.split("\n")
+    for index, line in enumerate(lines):
+        if line.lstrip().startswith("%%"):
+            continue  # mermaid 注释与 %%{init: ...}%% 指令，原样保留
+        line = _MERMAID_QUOTED_NODE_RE.sub(quoted_node, line)
+        lines[index] = _MERMAID_LINK_RE.sub(replace_link, line)
+
+    # 手写的 click 优先：同一个节点不重复下发指令
+    declared = {match.group("node") for match in _MERMAID_CLICK_RE.finditer("\n".join(lines))}
+    tail = [
+        'click %s "%s"' % (node, url)
+        for node, url in clicks.items()
+        if node not in declared
+    ]
+    if tail:
+        # 追加在图末尾：写在子图内部会指到错的节点上
+        lines.extend(tail)
+    return "\n".join(lines), warnings
 
 
 # --------------------------------------------------------------------------- #
@@ -1537,7 +1711,15 @@ def convert_document(
     # 所以不会影响 $$ 块内部原有的空行）
     body = re.sub(r"\n{3,}", "\n\n", body)
     body = restore_math(body, formulas)
-    body = restore_code_blocks(body, code_blocks, mermaid_blocks)
+    # mermaid 块在第一步就被整块抽走了，双链转换（convert_links 等）根本碰不到它，
+    # 所以要在还原之前把块内的 [[...]] 单独改写成 mermaid 语法，否则整张图 parse error。
+    prepared_mermaid: list[str] = []
+    for block in mermaid_blocks:
+        prepared, warnings = prepare_mermaid(block, counts, slug_map, url_prefix)
+        for message in warnings:
+            print("  [warn] %s: %s" % (stem, message), file=sys.stderr)
+        prepared_mermaid.append(prepared)
+    body = restore_code_blocks(body, code_blocks, prepared_mermaid)
     # 最后一步：转义 {{ / {%，防止 Jekyll 把它们当成 Liquid 模板去执行
     body = escape_liquid_delimiters(body)
 
@@ -1593,6 +1775,36 @@ def check_output_math(dest: Path) -> list[str]:
                                 "%s 的命令名会被连读成 %s%s（未定义命令）"
                                 % (where, token, following)
                             )
+    return problems
+
+
+_MERMAID_DIV_RE = re.compile(r'<div class="mermaid">\n(.*?)\n</div>', re.DOTALL)
+_MERMAID_NODE_DEF_RE = re.compile(r"(?<![A-Za-z0-9_\-])([A-Za-z_][A-Za-z0-9_\-]*)[ \t]*[\[\({]")
+
+
+def check_output_mermaid(dest: Path) -> list[str]:
+    """校验生成物里的 mermaid 块：没有漏进双链，click 也只指向存在的节点。
+
+    ``[[...]]`` 一旦漏进去，mermaid 会把方括号当形状定界符，整张图 parse error
+    —— 页面上只剩一行错误提示，比不画还糟。这里按块扫，改完脚本跑一遍即可确认。
+
+    返回问题描述列表；空列表代表全部通过。
+    """
+    problems: list[str] = []
+    for path in sorted(dest.rglob("*.md")):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        for block in _MERMAID_DIV_RE.findall(text):
+            if "[[" in block or "]]" in block:
+                problems.append("%s: mermaid 块里残留 [[...]]" % path.name)
+            defined = set(_MERMAID_NODE_DEF_RE.findall(block))
+            for match in _MERMAID_CLICK_RE.finditer(block):
+                if match.group("node") not in defined:
+                    problems.append(
+                        "%s: click 指向未定义的节点 %s" % (path.name, match.group("node"))
+                    )
     return problems
 
 
@@ -1744,16 +1956,16 @@ def main(argv: list[str] | None = None) -> int:
     print("[done] 共处理 %d 个文件，输出目录：%s" % (processed, dest))
 
     if args.check:
-        problems = check_output_math(dest)
+        problems = check_output_math(dest) + check_output_mermaid(dest)
         if problems:
             print(
-                "[check] 发现 %d 个定界符问题（MathJax 会报错）：" % len(problems),
+                "[check] 发现 %d 个问题（MathJax / mermaid 会报错）：" % len(problems),
                 file=sys.stderr,
             )
             for problem in problems:
                 print("  - %s" % problem, file=sys.stderr)
             return 1
-        print("[check] 全站定界符校验通过 ✅")
+        print("[check] 全站定界符与 mermaid 块校验通过 ✅")
     return 0
 
 
