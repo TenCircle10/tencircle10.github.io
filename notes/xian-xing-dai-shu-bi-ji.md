@@ -541,6 +541,59 @@ $$r(A+B) \le r(A) + r(B)$$
 </div>
 </details>
 
+### 5.8 小结：向量组、秩与方程组
+
+向量组与矩阵互为表里，线性表出与线性相关是同一件事的两种说法；矩阵的秩既是极大无关组的向量个数，又决定解空间（基础解系）的规模。
+
+<div class="mermaid">
+graph TD
+    %% 模块一：基础视角
+    subgraph 基础视角
+        V[向量组 / 行向量]
+        M[矩阵]
+        V <--> |互为表里| M
+    end
+
+    %% 模块二：向量组核心逻辑
+    subgraph 向量组核心
+        LinExp[线性表出]
+        LinRel[线性相关]
+        LinIndep[线性无关]
+        MaxIndep[极大无关组]
+    end
+
+    %% 模块三：矩阵与方程组
+    subgraph 矩阵与方程组
+        Rank[秩]
+        Eq[线性方程组]
+        Sol[解的结构]
+        FundSol[基础解系]
+    end
+
+    %% 向量组内部关系
+    V --> LinRel
+    V --> LinExp
+    LinExp <--> |等价| LinRel
+    LinRel --> LinIndep
+    LinRel --> MaxIndep
+    LinIndep <--> |本质相同| MaxIndep
+
+    %% 矩阵与向量组的桥梁
+    M --> Rank
+    Rank <--> |向量个数=秩| MaxIndep
+    Rank <--> |列向量组的秩| FundSol
+
+    %% 矩阵与方程组关系
+    M --> Eq
+    Eq --> Sol
+    Sol <--> |决定解空间| FundSol
+
+    %% 跨模块联系
+    MaxIndep -.-> |可表出所有解| FundSol
+</div>
+
+---
+
 ## 6 初等矩阵与矩阵等价
 
 <details class="callout definition" id="elementary-matrix" data-callout="definition" open>
@@ -601,11 +654,11 @@ $$
 </div>
 </details>
 
-细节见 [满秩矩阵](/notes/man-zhi-ju-zhen/)、[满秩方阵的单侧可逆蕴含双侧可逆](/notes/man-zhi-fang-zhen-de-dan-ce-ke-ni-yun-han-shuang-ce-ke-ni/)。
+满秩的定义与判别（含 $AB = I$ 时的秩结论、矩形单侧逆 $r(B) = m$）见 [满秩矩阵](/notes/man-zhi-ju-zhen/)；由单侧逆 $AB = I$ 推出 $BA = I$ 的证明见 [满秩方阵的单侧可逆蕴含双侧可逆](/notes/man-zhi-fang-zhen-de-dan-ce-ke-ni-yun-han-shuang-ce-ke-ni/)。
 
 ### 7.1 逆矩阵的运算
 
-<details class="callout formula" id="inverse-properties" data-callout="formula" open>
+<details class="callout theorem" id="inverse-properties" data-callout="theorem" open>
 <summary class="callout-title">逆矩阵的运算</summary>
 <div class="callout-content" markdown="block">
 
@@ -631,7 +684,7 @@ $$
 
 ### 8.1 二阶公式
 
-<details class="callout formula" id="inverse-formula-2x2" data-callout="formula" open>
+<details class="callout theorem" id="inverse-formula-2x2" data-callout="theorem" open>
 <summary class="callout-title">二阶求逆公式</summary>
 <div class="callout-content" markdown="block">
 

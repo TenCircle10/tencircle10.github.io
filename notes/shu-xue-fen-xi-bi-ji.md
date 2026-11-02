@@ -11,7 +11,7 @@ render_with_liquid: false
 # 数学分析
 
 <details class="callout abstract" data-callout="abstract" open>
-<summary class="callout-title">主线</summary>
+<summary class="callout-title">主线（保留自己的话）</summary>
 <div class="callout-content" markdown="block">
 
 思考：**无穷小分析** —— 用"要多小有多小"的语言（$\varepsilon$、$\delta$、$N$）把"趋势"写成可以逐条验证的不等式。
@@ -44,7 +44,7 @@ $\varnothing \subset A$ 里的符号要理解为"包含于"（$\subseteq$）；�
 
 $A \cap B$ 交，$A \cup B$ 并，$A \setminus B = \lbrace{}x \mid x \in A \text{ 且 } x \notin B\rbrace{}$ 差，$A^{c}$ 补（相对于全集 $X$）。运算律（交换、结合、分配、幂等、吸收、补集、德摩根、差集与对称差恒等式）见 [集合运算律](/notes/ji-he-yun-suan-lv/)。
 
-<details class="callout formula" id="de-morgan" data-callout="formula" open>
+<details class="callout theorem" id="de-morgan" data-callout="theorem" open>
 <summary class="callout-title">德摩根律（de Morgan）</summary>
 <div class="callout-content" markdown="block">
 
@@ -139,7 +139,7 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 
 - 所有可列集的元素个数都相同（同一基数 $\aleph_0$），见 [无限可列集等势证明](/notes/wu-xian-ke-lie-ji-deng-shi-zheng-ming/)；
 - 有理数集与无理数集都**稠密**；
-- 但稠密不等于可列：无理数集不可列，见 [实数集与无理数集不可列证明](/notes/shi-shu-ji-yu-wu-li-shu-ji-bu-ke-lie-zheng-ming/)。
+- 但稠密不等于可列：无理数集 $\mathbb{R} \setminus \mathbb{Q}$ 不可列，见 [实数集与无理数集不可列证明](/notes/shi-shu-ji-yu-wu-li-shu-ji-bu-ke-lie-zheng-ming/)。
 
 ---
 
@@ -270,7 +270,7 @@ $$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ |
 </div>
 </details>
 
-### 4.2 $\varepsilon – N$ 证明的实践
+### 4.2 $\varepsilon$–$N$ 证明的实践
 
 <details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">自己的经验（保留）</summary>
@@ -285,16 +285,16 @@ $$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ |
 
 **例**：$\lim\limits_{n \to \infty} \dfrac{1}{n} = 0$。对 $\forall \varepsilon \gt{} 0$，取 $N = \left\lceil \dfrac{1}{\varepsilon} \right\rceil$，当 $n \gt{} N$ 时 $\left\vert \dfrac{1}{n} - 0 \right\vert = \dfrac{1}{n} \lt{} \varepsilon$。
 
-<details class="callout formula" data-callout="formula" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">该记住的常见极限</summary>
 <div class="callout-content" markdown="block">
 
 $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 1\ (k \gt{} 0), \qquad \lim_{n \to \infty} \frac{n^{k}}{2^{n}} = 0$$
 
+**思考**：若 $\lim\limits_{n \to \infty} a_n = a$，则 $\lim\limits_{n \to \infty} \dfrac{a_1 + a_2 + \cdots + a_n}{n} = a$。
+
 </div>
 </details>
-
-**思考**：若 $\lim\limits_{n \to \infty} a_n = a$，则 $\lim\limits_{n \to \infty} \dfrac{a_1 + a_2 + \cdots + a_n}{n} = a$。
 
 ### 4.3 极限的性质
 
@@ -437,6 +437,8 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 
 单调有界定理只保证极限存在，不给值 —— $\gamma$ 就是这类量。
 
+#### 4.7.1 例 1：Euler 常数 $\gamma$ 存在
+
 <details class="callout example" data-callout="example" open>
 <summary class="callout-title">例 1：Euler 常数 $\gamma$ 存在</summary>
 <div class="callout-content" markdown="block">
@@ -452,6 +454,8 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 - **有下界**：$\ln n = \sum_{k=1}^{n-1} \ln\!\left(1 + \dfrac{1}{k}\right) \lt{} \sum_{k=1}^{n-1} \dfrac{1}{k} \lt{} 1 + \dfrac{1}{2} + \cdots + \dfrac{1}{n}$，故 $c_n \gt{} 0$。
 
 由 [单调有界定理](#monotone-bounded)，$c_n$ 收敛，其极限记为 **Euler 常数 $\gamma$**。
+
+#### 4.7.2 例 2：递推数列
 
 <details class="callout example" data-callout="example" open>
 <summary class="callout-title">例 2：$x_{n+1} = x_n(1 - x_n)$</summary>
@@ -624,7 +628,7 @@ $$\sqrt[n+1]{\left(\frac{n}{n+1}\right)^{n+1} \cdot 1} \le \frac{\frac{n}{n+1}(n
 
 ### 5.3 $e$ 的级数表示
 
-<details class="callout formula" id="e-series" data-callout="formula" open>
+<details class="callout theorem" id="e-series" data-callout="theorem" open>
 <summary class="callout-title">$e$ 的级数表示</summary>
 <div class="callout-content" markdown="block">
 
@@ -664,20 +668,20 @@ $$0 \lt{} r \lt{} \lim_{n \to \infty}\left[\frac{1}{q+1} + \left(\frac{1}{q+1}\r
 
 ### 5.5 与 $e$ 有关的几个极限
 
-<details class="callout formula" data-callout="formula" open>
+<details class="callout keypoint" data-callout="keypoint" open>
 <summary class="callout-title">与 $e$ 有关的几个极限</summary>
 <div class="callout-content" markdown="block">
 
 若 $p_n \gt{} 0$ 是正无穷大量，则 $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{p_n}\right)^{p_n} = e$。
-
-</div>
-</details>
 
 **证**：由 $\left(1+\frac1n\right)^n \to e$，$\exists N_1$ 使 $n \gt{} N_1$ 时 $\left\vert\left(1+\frac1n\right)^n - e\right\vert \lt{} \varepsilon$；又 $p_n \to +\infty$，$\exists N_2$ 使 $n \gt{} N_2$ 时 $p_n \gt{} N_1$，故 $n \gt{} N_2$ 时 $\left\vert\left(1+\frac{1}{p_n}\right)^{p_n} - e\right\vert \lt{} \varepsilon$。
 
 - $\lim\limits_{n \to \infty}\left(1 + \dfrac{1}{n^{2} + n}\right)^{n} = \lim\limits_{n \to \infty}\left[\left(1 + \dfrac{1}{n^{2}+n}\right)^{n^{2}+n}\right]^{\frac{n}{n^{2}+n}} = e^{0} = 1$；
 - $\lim\limits_{n \to \infty} a_n^{b_n} = a^{b}$（$\lim a_n = a \gt{} 0$，$\lim b_n = b$）：由 $\lim\limits_{n \to \infty} e^{b_n \ln a_n} = e^{b \ln a} = a^{b}$；
 - $\lim\limits_{x \to \infty}\left(1 + \dfrac{\alpha}{x}\right)^{\beta x} = e^{\alpha\beta}$（函数版推广，见下章）。
+
+</div>
+</details>
 
 ---
 
@@ -830,7 +834,7 @@ $(a - \delta, a)$ 上单调有界 $\Rightarrow \lim\limits_{x \to a^{-}} f(x)$ �
 
 ### 7.6 两个重要极限
 
-<details class="callout formula" id="important-limits" data-callout="formula" open>
+<details class="callout theorem" id="important-limits" data-callout="theorem" open>
 <summary class="callout-title">基本款</summary>
 <div class="callout-content" markdown="block">
 
@@ -924,7 +928,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 
 ### 9.2 常用等价无穷小（$x \to 0$）
 
-<details class="callout formula" id="equivalent-infinitesimals" data-callout="formula" open>
+<details class="callout keypoint" id="equivalent-infinitesimals" data-callout="keypoint" open>
 <summary class="callout-title">背下来的一串</summary>
 <div class="callout-content" markdown="block">
 
@@ -1078,7 +1082,6 @@ $$
 <div class="callout-content" markdown="block">
 
 **防止在 $x_0$ 的邻域内 $u(x) - u(x_0)$ 的零点极多**。
-比如对任意的 $x \in \mathbb{Q}$，$U(x)-U(x_0)=0$，则任取一个邻域必然有零点。
 $x \to u$ 映射，$u \to y$ 映射，**由外向内逐层求导**。
 
 </div>
@@ -1086,7 +1089,9 @@ $x \to u$ 映射，$u \to y$ 映射，**由外向内逐层求导**。
 
 由 $f^{-1}(f(x)) = x$ 两边对 $x$ 求导得 $\left(f^{-1}\right)'(f(x))\cdot f'(x) = 1$，即
 
-<details class="callout formula" id="inverse-derivative" data-callout="formula" open>
+#### 11.2.1 反函数求导
+
+<details class="callout theorem" id="inverse-derivative" data-callout="theorem" open>
 <summary class="callout-title">反函数求导</summary>
 <div class="callout-content" markdown="block">
 
@@ -1108,7 +1113,7 @@ $$\left(f^{-1}\right)'(y) = \frac{1}{f'(x)} = \frac{1}{f'\big(f^{-1}(y)\big)}$$
 </div>
 </details>
 
-**隐函数求导**：设 $f(x, y) = 0$ 确定了 $x \mapsto y$ 的规则。当 $y$ 难以被 $x$ 显式表示时，把 $y$ 看成 $x$ 的函数、两边对 $x$ 求导，再解出 $y'$，就能研究 $y$ 的变化率。
+**隐函数求导**：设 $f(x, y) = 0$ 确定了 $x \mapsto y$ 的规则。当 $y$ 难以被 $x$ 显式表示时，把 $y$ 看成 $x$ 的函数、两边对 $x$ 求导，再解出 $y'$，就能研究 $y$ 的变化率（完整演算见 <a href="/notes/lai-bu-ni-ci-ji-fa/#implicit-example-circle">$x^{2}+y^{2}=1$ 的二阶导</a>）。
 
 **对数求导法 / 幂指函数**：对 $y = u(x)^{v(x)}$（$u \gt{} 0$，$u, v$ 可导），取对数 $\ln y = v\ln u$，两边求导得 $\dfrac{y'}{y} = v'\ln u + \dfrac{u'}{u}v$，即
 
@@ -1139,14 +1144,11 @@ $$\frac{dy}{dx} = \frac{1}{\frac{dx}{dy}} = \frac{1}{\cos y} = \frac{1}{\cos(\ar
 
 ### 11.4 由两个重要极限导出的一组极限
 
-<details class="callout formula" data-callout="formula" open>
+<details class="callout keypoint" id="standard-derivative-limits" data-callout="keypoint" open>
 <summary class="callout-title">由两个重要极限导出的一组极限</summary>
 <div class="callout-content" markdown="block">
 
 $\lim\limits_{x \to 0}\dfrac{\sin x}{x} = 1$（多项式与三角）导出
-
-</div>
-</details>
 
 $$\lim_{x \to 0} \frac{\sin x}{x} = \lim_{x \to 0} \frac{\tan x}{x} = \lim_{x \to 0} \frac{\arcsin x}{x} = \lim_{x \to 0} \frac{\arctan x}{x} = 1, \qquad \lim_{x \to 0} \frac{1 - \cos x}{x^{2}} = \frac{1}{2}$$
 
@@ -1158,7 +1160,8 @@ $$\lim_{x \to 0} \frac{\ln(1 + x)}{x} = \lim_{x \to 0}\ln(1 + x)^{\frac{1}{x}} =
 
 $$\frac{a^{x} - 1}{x} = \frac{e^{x\ln a} - 1}{x\ln a}\cdot\ln a \longrightarrow \ln a, \qquad \frac{(1 + x)^{a} - 1}{x} = \frac{(1 + x)^{a} - 1}{a\ln(1 + x)}\cdot\frac{a\ln(1 + x)}{x} \longrightarrow a$$
 
-<a id="standard-derivative-limits"></a>
+</div>
+</details>
 
 ### 11.5 函数的连续
 
@@ -1221,7 +1224,7 @@ $f$ 在 $x_0$ 处可导 $\iff$ $f$ 在 $x_0$ 处可微；此时 $A = f'(x_0)$，
 
 ### 12.3 微分法则与局部线性化
 
-<details class="callout formula" id="differential-rules" data-callout="formula" open>
+<details class="callout theorem" id="differential-rules" data-callout="theorem" open>
 <summary class="callout-title">微分法则（同求导法则）</summary>
 <div class="callout-content" markdown="block">
 
@@ -1251,7 +1254,7 @@ $n \ge 2$ 时，$f^{(n)}(x) = \left(f^{(n-1)}(x)\right)'$，记 $\dfrac{d^{n}y}{
 
 $m$ 次多项式求 $m+1$ 阶导即得 $0$：$f(x) = a_m x^{m} + \cdots + a_1 x + a_0$ 时 $f^{(m+1)} \equiv 0$。
 
-<details class="callout formula" id="nth-derivative-formulas" data-callout="formula" open>
+<details class="callout keypoint" id="nth-derivative-formulas" data-callout="keypoint" open>
 <summary class="callout-title">常用 $n$ 阶导</summary>
 <div class="callout-content" markdown="block">
 
@@ -1330,8 +1333,14 @@ $dy = f'(x)dx$ 在 $x$ 为自变量时成立，在 $x = \varphi(t)$ 为中间变
 
 $$\frac{d^{2}x}{dy^{2}} = \frac{d}{dy}\left(\frac{1}{f'(x)}\right) = \frac{d}{dx}\left(\frac{1}{f'(x)}\right)\cdot\frac{dx}{dy} = -\frac{f''(x)}{f'(x)^{3}}$$
 
+<a id="inverse-higher-derivative"></a>
+
+由 $\dfrac{d}{dy} = \dfrac{dx}{dy}\dfrac{d}{dx}$ 逐步凑出该式的记法推导见 [反函数的二阶导](/notes/lai-bu-ni-ci-ji-fa/#inverse-second-derivative)。
+
 **参数方程**：$x = x(t)$，$y = y(t)$ 时 $\dfrac{dy}{dx} = \dfrac{y'(t)\,dt}{x'(t)\,dt} = \dfrac{y'(t)}{x'(t)}$（$x'(t) \neq 0$）。
 <a id="parametric-derivative"></a>
+
+二阶导 $\dfrac{d^{2}y}{dx^{2}} = \dfrac{\frac{d}{dt}\left(\frac{dy}{dx}\right)}{\frac{dx}{dt}}$ 见 [参数方程的二阶导](/notes/lai-bu-ni-ci-ji-fa/#parametric-second-derivative)。
 
 ---
 
@@ -1348,6 +1357,300 @@ $$\frac{d^{2}x}{dy^{2}} = \frac{d}{dy}\left(\frac{1}{f'(x)}\right) = \frac{d}{dx
 **Dirichlet 函数**：$D(x) = 1\ (x \in \mathbb{Q})$，$0\ (x \notin \mathbb{Q})$。$T \in \mathbb{Q}$、$T \neq 0$ 时 $D(x + T) = D(x)$，故每个非零有理数都是周期；**无理数不是周期**（$x$ 与 $x + T$ 的有理性相反）。任一点取有理数列与无理数列逼近，$D$ 的极限分别是 $1$ 与 $0$，故极限处处不存在。
 
 **Thomae 函数**：$R(x) = \dfrac{1}{q}\ (x = \dfrac{p}{q}\ \text{既约},\ q \gt{} 0)$，$0\ (x \notin \mathbb{Q})$。分母越大值越小，所以有理点的稠密不破坏它在无理点收敛到 $0$。无理点处也不可导：差商沿无理方向为 $0$，沿有理方向无界。证明见 [Thomae 函数的连续性](/notes/thomae-han-shu-de-lian-xu-xing/)。
+
+---
+
+## 15 中值定理
+
+### 15.1 Fermat 定理
+
+<details class="callout theorem" id="fermat-theorem" data-callout="theorem" open>
+<summary class="callout-title">Fermat 定理</summary>
+<div class="callout-content" markdown="block">
+
+$f(x)$ 在 $x_0$ 点及附近有定义、在 $x_0$ 处可微。若 $x_0$ 为极值点，则 $f'(x_0) = 0$。
+
+</div>
+</details>
+
+只要求 $x_0$ 处可导，不涉及邻域内导函数是否连续。
+
+<details class="callout keypoint" id="stationary-point" data-callout="keypoint" open>
+<summary class="callout-title">极值点 $\Rightarrow$ 驻点，反之不成立</summary>
+<div class="callout-content" markdown="block">
+
+极小值可能大于极大值；极大值不一定是最大值，极小值不一定是最小值。
+$f'(x_0) = 0$ 的点 $x_0$ 称**驻点**（稳定点）。
+
+</div>
+</details>
+
+**证明**：不妨设 $x_0$ 为极大值点。则存在 $\delta \gt{} 0$，当 $0 \lt{} \mid{}\Delta x\mid{} \lt{} \delta$ 时 $f(x_0 + \Delta x) \le f(x_0)$。于是
+
+$$
+f'_+(x_0) = \lim_{\Delta x \to 0^{+}}\frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} \le 0, \qquad
+f'_-(x_0) = \lim_{\Delta x \to 0^{-}}\frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} \ge 0.
+$$
+
+因 $f'(x_0)$ 存在，左右导数相等，故 $f'(x_0) = 0$。极小值同理。
+
+### 15.2 Rolle 中值定理
+
+<details class="callout theorem" id="rolle-theorem" data-callout="theorem" open>
+<summary class="callout-title">Rolle 定理</summary>
+<div class="callout-content" markdown="block">
+
+$f(x)$ 在 $[a, b]$ 连续、在 $(a, b)$ 可导，且 $f(a) = f(b)$，则 $\exists c \in (a, b)$，使 $f'(c) = 0$。
+
+</div>
+</details>
+
+### 15.3 Rolle 定理的例题
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 1：证明 $5x^{4} - 4x + 1 = 0$ 在 $(0, 1)$ 内有解</summary>
+<div class="callout-content" markdown="block">
+
+证明该方程在 $(0, 1)$ 内至少有一个根。
+
+</div>
+</details>
+
+**证明**：令 $f(x) = x^{5} - 2x^{2} + x + C$，则 $f'(x) = 5x^{4} - 4x + 1$。取 $C$ 使 $f(0) = 0$，则 $f(1) = 1 - 2 + 1 = 0$。由 [Rolle 定理](#rolle-theorem)，$\exists c \in (0, 1)$，使 $f'(c) = 0$，即 $5c^{4} - 4c + 1 = 0$。
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 2：$f$ 在 $[0, 1]$ 连续、$(0, 1)$ 可导，$f(1) = 0$，求证 $\exists c \in (0, 1)$，$f(c) + cf'(c) = 0$</summary>
+<div class="callout-content" markdown="block">
+
+结论等价于 $(xf(x))'\big\vert&#95;{x=c} = 0$。
+
+</div>
+</details>
+
+**证明**：令 $F(x) = xf(x)$，则 $F'(x) = f(x) + xf'(x)$。又 $F(0) = 0$、$F(1) = f(1) = 0$。由 Rolle 定理，$\exists c \in (0, 1)$，使 $F'(c) = 0$，即 $f(c) + cf'(c) = 0$。
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">例 3：$P_n(x) = a_nx^{n} + a_{n-1}x^{n-1} + \cdots + a_0$（$a_n \neq 0$）不能有 $n + 1$ 个不同实根</summary>
+<div class="callout-content" markdown="block">
+
+证明 $n$ 次实系数多项式至多有 $n$ 个不同实根。
+
+</div>
+</details>
+
+**证明**：$P_n^{(n)}(x) = n!\,a_n \neq 0$。若 $P_n$ 有 $n + 1$ 个不同实根 $x_1 \lt{} \cdots \lt{} x_{n+1}$，反复使用 Rolle 定理，可得 $P_n^{(n)}(x)$ 至少有一个实根，与 $P_n^{(n)}(x) \equiv n!\,a_n \neq 0$ 矛盾。
+
+### 15.4 Lagrange 中值定理
+
+<details class="callout theorem" id="lagrange-mvt" data-callout="theorem" open>
+<summary class="callout-title">Lagrange 中值定理</summary>
+<div class="callout-content" markdown="block">
+
+$f(x)$ 在 $[a, b]$ 连续、在 $(a, b)$ 可导，则 $\exists c \in (a, b)$，使
+
+$$f'(c) = \frac{f(b) - f(a)}{b - a}$$
+
+</div>
+</details>
+
+**证明**：令 $F(x) = f(x) - \dfrac{f(b) - f(a)}{b - a}(x - a)$，则 $F(a) = F(b)$，由 [Rolle 定理](#rolle-theorem) 得 $F'(c) = 0$，即 $f'(c) = \dfrac{f(b) - f(a)}{b - a}$。
+
+**有限增量形式**：$f(b) - f(a) = f'(c)(b - a)$，或写为 $c = a + \theta(b - a)$（$\theta \in (0, 1)$），或
+
+$$f(x + \Delta x) - f(x) = f'(x + \theta\Delta x)\,\Delta x.$$
+
+**常数定理**：$f'(x) \equiv 0 \Rightarrow f(x) \equiv C$。
+
+<details class="callout keypoint" id="monotone-by-derivative" data-callout="keypoint" open>
+<summary class="callout-title">单调性与导数的符号</summary>
+<div class="callout-content" markdown="block">
+
+$f'(x) \ge 0 \Rightarrow f$ 单调增；$f'(x) \le 0 \Rightarrow f$ 单调减；$f'(x) \gt{} 0 \Rightarrow$ 严格增；$f'(x) \lt{} 0 \Rightarrow$ 严格减。
+严格增**不要求** $f' \gt{} 0$：$y = x^{3}$ 严格增，但 $f'(0) = 0$。
+
+</div>
+</details>
+
+### 15.5 导数不等式：$\mid{}f'\mid{} \le C\mid{}f\mid{}$ 型
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">题型：$f$ 在 $[0, 1]$ 连续、$(0, 1)$ 可导、$f(0) = 0$</summary>
+<div class="callout-content" markdown="block">
+
+(1) 若 $\mid{}f'(x)\mid{} \le \mid{}f(x)\mid{}$，证明 $f(x) \equiv 0$；
+(2) 若 $\mid{}f'(x) + f(x)\mid{} \le \mid{}f(x)\mid{}$，证明 $f(x) \equiv 0$。
+
+</div>
+</details>
+
+**(1) 证明**：令 $F(x) = \dfrac{f^{2}(x)}{e^{2x}}$，则
+
+$$F'(x) = \frac{2f(x)\left(f'(x) - f(x)\right)}{e^{2x}}.$$
+
+由 $\mid{}f'(x)\mid{} \le \mid{}f(x)\mid{}$ 得 $f(x)f'(x) \le \mid{}f(x)\mid{}\mid{}f'(x)\mid{} \le f^{2}(x)$，故 $f(x)\left(f'(x) - f(x)\right) \le 0$，即 $F'(x) \le 0$。又 $F(0) = 0$、$F(x) \ge 0$，故 $F(x) \equiv 0$，$f(x) \equiv 0$。
+
+**(2) 证明**：由题设平方得 $(f' + f)^{2} \le f^{2}$，即 $f'^{2} + 2ff' \le 0$，故 $ff' \le -\dfrac{f'^{2}}{2} \le 0$。令 $g(x) = f^{2}(x)$，则 $g'(x) = 2f(x)f'(x) \le 0$；又 $g(0) = 0$、$g(x) \ge 0$，故 $g(x) \equiv 0$，$f(x) \equiv 0$。
+
+**(2) 另一构造**：由 $\mid{}f' + f\mid{} \le \mid{}f\mid{}$ 得 $\mid{}f'\mid{} \le \mid{}f' + f\mid{} + \mid{}f\mid{} \le 2\mid{}f\mid{}$，于是 $f(x)f'(x) \le 2f^{2}(x)$。令 $F(x) = \dfrac{f^{2}(x)}{e^{4x}}$，则 $F'(x) = \dfrac{2f(x)\left(f'(x) - 2f(x)\right)}{e^{4x}} \le 0$，同理 $F(x) \equiv 0$。
+
+<details class="callout keypoint" id="auxiliary-function-constructions" data-callout="keypoint" open>
+<summary class="callout-title">六大辅助函数</summary>
+<div class="callout-content" markdown="block">
+
+1. $\left[e^{x}f(x)\right]' = e^{x}\left(f(x) + f'(x)\right)$
+2. $\left[\dfrac{f(x)}{e^{x}}\right]' = \dfrac{f'(x) - f(x)}{e^{x}}$
+3. $\left[xf(x)\right]' = f(x) + xf'(x)$
+4. $\left[e^{\lambda x}f(x)\right]' = e^{\lambda x}\left(\lambda f(x) + f'(x)\right)$
+5. $\left[\dfrac{f(x)}{e^{\lambda x}}\right]' = \dfrac{f'(x) - \lambda f(x)}{e^{\lambda x}}$
+6. $\left[\dfrac{f(x)}{x}\right]' = \dfrac{xf'(x) - f(x)}{x^{2}}$
+
+</div>
+</details>
+
+### 15.6 综合例：$f''(\eta) = f(\eta)$
+
+<details class="callout example" data-callout="example" open>
+<summary class="callout-title">题目</summary>
+<div class="callout-content" markdown="block">
+
+$f(x)$ 在 $[0, 1]$ 二阶可导，且 $\lim\limits_{x \to 0^{+}}\dfrac{f(x)}{x} = 1$、$\lim\limits_{x \to 1^{-}}\dfrac{f(x)}{x - 1} = 2$。求证 $\exists \eta \in [0, 1]$，使 $f''(\eta) = f(\eta)$。
+
+</div>
+</details>
+
+**分析**：由极限存在得 $f(0) = 0$、$f(1) = 0$；由导数定义得 $f'(0) = 1$、$f'(1) = 2$。又 $x \to 0^{+}$ 时 $f(x)/x \to 1 \gt{} 0$，故 $x \gt{} 0$ 充分小时 $f(x) \gt{} 0$；$x \to 1^{-}$ 时 $f(x)/(x - 1) \to 2 \gt{} 0$ 而 $x - 1 \lt{} 0$，故 $x \lt{} 1$ 且充分接近 $1$ 时 $f(x) \lt{} 0$。因此 $f$ 在 $(0, 1)$ 内取得负的最小值，设最小值点为 $c$，则 $f(c) \lt{} 0$、$f'(c) = 0$。
+
+**证明**：令 $F(x) = f(x) + f'(x)$，则
+
+$$F(0) = f(0) + f'(0) = 1, \qquad F(1) = f(1) + f'(1) = 2, \qquad F(c) = f(c) + f'(c) = f(c) \lt{} 0.$$
+
+令 $G(x) = e^{-x}F(x)$，则 $G(0) = 1$、$G(c) \lt{} 0$、$G(1) = \dfrac{2}{e}$。由[介值定理](#intermediate-value)，$\exists \theta \in (0, c)$，使 $G(\theta) = \dfrac{2}{e} = G(1)$；再由 Rolle 定理，$\exists \eta \in (\theta, 1)$，使 $G'(\eta) = 0$。而 $G'(x) = e^{-x}\left(F'(x) - F(x)\right)$，故 $F'(\eta) - F(\eta) = 0$，即 $f'(\eta) + f''(\eta) - f(\eta) - f'(\eta) = 0$，得 $f''(\eta) = f(\eta)$。
+
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">理解</summary>
+<div class="callout-content" markdown="block">
+
+中值定理是对下一阶导数的性质描写。利用 $F(x) = f(x) + f'(x)$，有 $F'(x) = f'(x) + f''(x)$，再乘 $e^{-x}$ 统一变量，得到 $f''(\eta) = f(\eta)$。若不这样操作，很难得到统一的 $\eta$。构造 $f(x) - f'(x)$ 也可类似处理，核心是乘一个具体函数来统一导数关系。
+
+</div>
+</details>
+
+### 15.7 广义 Rolle 定理
+
+<details class="callout theorem" id="generalized-rolle" data-callout="theorem" open>
+<summary class="callout-title">广义 Rolle 定理</summary>
+<div class="callout-content" markdown="block">
+
+$f(x)$ 在 $\mathbb{R}$ 上可导，且 $\lim\limits_{x \to +\infty}f(x) = \lim\limits_{x \to -\infty}f(x) = A$ 存在，则 $\exists \xi \in \mathbb{R}$，$f'(\xi) = 0$。
+
+</div>
+</details>
+
+**证明**：① 若 $f(x) \equiv A$，则 $f'(x) = 0$ 恒成立。
+
+② 若 $f(x) \not\equiv A$，则存在 $x_0$ 使 $f(x_0) \neq A$，不妨设 $f(x_0) \gt{} A$。取 $\varepsilon = \dfrac{f(x_0) - A}{2} \gt{} 0$，由双侧极限定义，存在 $M \gt{} \mid{}x_0\mid{}$，当 $\mid{}x\mid{} \gt{} M$ 时 $\mid{}f(x) - A\mid{} \lt{} \varepsilon$。于是
+
+$$f(-M) \lt{} A + \varepsilon \lt{} f(x_0), \qquad f(M) \lt{} A + \varepsilon \lt{} f(x_0).$$
+
+由[介值定理](#intermediate-value)，存在 $x_2 \in (-M, x_0)$、$x_1 \in (x_0, M)$，使 $f(x_2) = f(x_1) = A + \varepsilon$。在 $[x_2, x_1]$ 上用 Rolle 定理，即得 $\exists \xi \in (x_2, x_1)$，$f'(\xi) = 0$。
+
+### 15.8 导函数的介值定理（达布定理）
+
+<details class="callout theorem" id="darboux" data-callout="theorem" open>
+<summary class="callout-title">达布定理</summary>
+<div class="callout-content" markdown="block">
+
+设 $f(x)$ 在 $[a, b]$ 上可导。若 $\lambda$ 介于 $f'(a)$ 与 $f'(b)$ 之间，则 $\exists \xi \in (a, b)$，使 $f'(\xi) = \lambda$。
+特别地，若 $f'(a) \lt{} 0 \lt{} f'(b)$，则 $\exists \xi \in (a, b)$，$f'(\xi) = 0$。
+
+</div>
+</details>
+
+**证明**：构造 $F(x) = f(x) - \lambda x$。设 $f'(a) \lt{} \lambda \lt{} f'(b)$，则 $F'(a) = f'(a) - \lambda \lt{} 0$、$F'(b) = f'(b) - \lambda \gt{} 0$。由单侧导数符号可知 $F$ 在端点附近小于端点值，故最小值不能在端点取得，只能在内部某点 $c \in (a, b)$ 取得。由 [Fermat 定理](#fermat-theorem)，$F'(c) = 0$，即 $f'(c) = \lambda$。
+
+### 15.9 导数极限定理
+
+<details class="callout theorem" id="derivative-limit-theorem" data-callout="theorem" open>
+<summary class="callout-title">导数极限定理</summary>
+<div class="callout-content" markdown="block">
+
+$f(x)$ 在 $x_0$ 的某邻域内连续、在去心邻域内可导，且 $\lim\limits_{x \to x_0}f'(x)$ 存在，则 $f$ 在 $x_0$ 处可导，且 $f'(x_0) = \lim\limits_{x \to x_0}f'(x)$。
+
+</div>
+</details>
+
+**证明**：对左导数，由 Lagrange 中值定理，存在 $\xi \in (x_0 - \delta, x_0)$，使 $f'(\xi) = \dfrac{f(x_0) - f(x_0 - \delta)}{\delta}$。令 $\delta \to 0^{+}$，则 $\xi \to x_0^{-}$，故 $f'&#95;-(x_0) = \lim\limits_{x \to x_0^{-}}f'(x)$；同理 $f'&#95;+(x_0) = \lim\limits_{x \to x_0^{+}}f'(x)$。因双侧导数极限存在且相等，故 $f'(x_0)$ 存在且等于 $\lim\limits_{x \to x_0}f'(x)$。
+
+### 15.10 导函数无第一类间断点
+
+<details class="callout corollary" id="no-first-kind-discontinuity" data-callout="corollary" open>
+<summary class="callout-title">导函数没有第一类间断点</summary>
+<div class="callout-content" markdown="block">
+
+若 $f(x)$ 在 $[a, b]$ 上可导，则 $f'(x)$ 在 $[a, b]$ 上不存在第一类间断点；特别地，导函数没有可去间断点。
+
+</div>
+</details>
+
+**证明**：若存在可去间断点，由 [导数极限定理](#derivative-limit-theorem)，$f'$ 在该点连续，矛盾。若存在跳跃间断点 $x_0$，设
+
+$$\lim_{x \to x_0^{-}}f'(x) = A, \qquad \lim_{x \to x_0^{+}}f'(x) = B, \qquad A \neq B.$$
+
+由 [达布定理](#darboux)，$f'$ 在 $x_0$ 两侧区间内具有介值性，不能只取接近 $A$ 与接近 $B$ 的两组值而跳过中间值，矛盾。
+
+注意：不能简单说"导函数单调 $\Rightarrow$ 连续"。正确逻辑是导函数有达布介值性，若它单调则不能有跳跃间断，故连续。
+
+### 15.11 导函数的单侧极限与单侧导数
+
+**左极限** $\lim\limits_{x \to x_0^{-}}f'(x)$ 与**左导数** $\lim\limits_{x \to x_0^{-}}\dfrac{f(x) - f(x_0)}{x - x_0}$ 是两个不同的对象。
+
+$f(x)$ 在 $x_0$ 处连续、在去心邻域内可导，且 $\lim\limits_{x \to x_0^{-}}f'(x)$ 存在时：由 Lagrange 中值定理，存在 $c \in (x_0 - \delta, x_0)$，使 $f'(c) = \dfrac{f(x_0) - f(x_0 - \delta)}{\delta}$。令 $\delta \to 0^{+}$，则 $c \to x_0^{-}$，得
+
+$$\lim_{c \to x_0^{-}}f'(c) = \lim_{\delta \to 0^{+}}\frac{f(x_0) - f(x_0 - \delta)}{\delta} = f'_-(x_0).$$
+
+<details class="callout keypoint" id="one-sided-derivative-limit" data-callout="keypoint" open>
+<summary class="callout-title">左导数存在 $\Leftarrow$ 左极限存在，反之不成立</summary>
+<div class="callout-content" markdown="block">
+
+原函数的左导数存在，且等于导函数的左极限；右导数同理。反过来由左导数推不出导函数的左极限存在。
+
+</div>
+</details>
+
+### 15.12 逻辑关系
+
+- 可导 $\Rightarrow$ 原函数连续。
+- [达布定理](#darboux) $\Rightarrow$ 导函数有介值性 $\Rightarrow$ 导函数无第一类间断点。
+- [导数极限定理](#derivative-limit-theorem) $\Rightarrow$ 导函数无可去间断点。
+- 可导 $\Rightarrow$ 导函数无无穷间断点。
+- 导函数单调且有达布介值性 $\Rightarrow$ 导函数连续。
+
+<div class="mermaid">
+graph TD
+    classDef thm fill:#2b3a4a,stroke:#4a6b8c,stroke-width:2px,color:#fff;
+    classDef darboux fill:#3a2b4a,stroke:#6c4a8c,stroke-width:2px,color:#fff;
+    classDef disc fill:#4a2b2b,stroke:#8c4a4a,stroke-width:2px,color:#fff;
+
+    F[费马定理] --> R[罗尔定理]
+    R --> L[拉格朗日中值定理]
+    L --> C[柯西中值定理]
+
+    R --> GR[广义罗尔定理]
+    L --> DLT[导数极限定理]
+
+    F --> DB[达布定理<br/>导数介值定理]
+
+    DB -.-> D1
+    DLT -.-> D1
+
+    D1[第一类 / 可去间断点<br/>导函数不存在]
+    D1 --- D2[无穷间断点<br/>导函数不存在]
+    D2 --- D3[振荡间断点<br/>可能存在]
+
+    class F,R,GR,L,C,DLT thm;
+    class DB darboux;
+    class D1,D2,D3 disc;
+</div>
 
 ---
 
