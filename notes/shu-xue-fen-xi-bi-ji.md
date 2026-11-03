@@ -127,6 +127,15 @@ $$
 \end{matrix}
 $$
 
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">Understand</summary>
+<div class="callout-content" markdown="block">
+
+这种取法与[无限可列集等势证明](/notes/wu-xian-ke-lie-ji-deng-shi-zheng-ming/)中所用方法相似
+
+</div>
+</details>
+
 ### 2.3 $\mathbb{Q}$ 是可列集
 
 记 $A_n = [n, n+1] \cap \mathbb{Q}$（$n \in \mathbb{Z}$），则 $\bigcup_{n \in \mathbb{Z}} A_n = \mathbb{Q}$。这是**可列个**集合之并，由 [可列个可列集之并仍可列](#countable-union)，只需证 $A_0$ 可列：
@@ -161,13 +170,13 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 </div>
 </details>
 
-有上界就必有**无限多个**上界（上界往上都还是上界）；上确界是把"所有上界"压到最紧的那一个，**它不一定属于 $E$**。
+有上界就必有**无限多个**上界（上界往上都还是上界）；上确界是"所有上界"最小的那一个，**它不一定属于 $E$**。
 
 <details class="callout understand" data-callout="understand" open>
 <summary class="callout-title">理解</summary>
 <div class="callout-content" markdown="block">
 
-确界"取一个不一定取到，但取一段一定包含"：它是界的**边界**，未必落在集合里。
+确界"在附近取一个不一定取到，但取一段一定包含"：它是界的**边界**，未必落在集合里。
 
 </div>
 </details>
@@ -179,6 +188,7 @@ $$A_0 = \Big\{0,\ 1,\ \tfrac{1}{2},\ \tfrac{1}{3},\ \tfrac{2}{3},\ \tfrac{1}{4},
 <div class="callout-content" markdown="block">
 
 $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有下界的子集必有下确界。
+这等价于实数集完备
 
 </div>
 </details>
@@ -194,7 +204,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 </div>
 </details>
 
-有最值一定有界，有界不一定有最值（$(0,1)$ 有界但无最值）。
+有最值一定有界，有界不一定有最值（比如$(0,1)$ 有界但无最值）。
 
 ### 3.3 闭区间套定理
 
@@ -210,7 +220,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 ### 3.4 Bolzano–Weierstrass 定理
 
 <details class="callout theorem" data-callout="theorem" open>
-<summary class="callout-title">有界序列必有收敛子列（Bolzano–Weierstrass）</summary>
+<summary class="callout-title">Bolzano–Weierstrass 定理（凝聚定理）</summary>
 <div class="callout-content" markdown="block">
 
 若 $a \le x_n \le b$（$n = 1, 2, \dots$），则 $\lbrace{}x_n\rbrace{}$ 有收敛子列。
@@ -232,7 +242,7 @@ $\mathbb{R}$ 的任一非空、有上界的子集必有上确界；非空、有�
 
 ### 4.1 定义与记号
 
-**数列**：按自然数 $1, 2, 3, \dots$ 编号依次排列的一列数 $x_1, x_2, x_3, \dots$，要点是 ① 无穷 ② 依次排列（即定义在 $\mathbb{N}^{&#42;}$ 上的函数）。**单调增**指 $x_n \le x_{n+1}$；**有界**指既有上界又有下界，等价地 $\exists M \gt{} 0,\ \forall n,\ \mid{}x_n\mid{} \le M$。
+**数列**：按自然数 $1, 2, 3, \dots$ 编号依次排列的一列数 $x_1, x_2, x_3, \dots$，要点是 ① 无穷 ② 依次排列（即定义在 $\mathbb{N}^{&#42;}$ 上的函数$f(n)$）。**单调增**指 $x_n \le x_{n+1}$；**有界**指既有上界又有下界，等价地 $\exists M \gt{} 0,\ \forall n,\ \mid{}x_n\mid{} \le M$。
 
 <details class="callout definition" id="sequence-limit" data-callout="definition" open>
 <summary class="callout-title">数列极限</summary>
@@ -244,10 +254,10 @@ $\forall \varepsilon \gt{} 0$，$\exists N \in \mathbb{N}$，只要 $n \gt{} N$ 
 </div>
 </details>
 
-去掉有限项不改变敛散性，所以极限只约束**尾部**。
+去掉有限项不改变敛散性，所以极限只约束**尾部**（趋于无穷）。
 
 <details class="callout definition" id="limit-tail" data-callout="definition" open>
-<summary class="callout-title">数列极限的等价刻画（"有限项"形式）</summary>
+<summary class="callout-title">数列极限的等价刻画</summary>
 <div class="callout-content" markdown="block">
 
 $\lim\limits_{n \to \infty} a_n = l \iff$ 对 $l$ 的任意 $\varepsilon$ 邻域 $U(l, \varepsilon)$，**只有有限项** $a_n \notin U(l, \varepsilon)$。
@@ -255,7 +265,8 @@ $\lim\limits_{n \to \infty} a_n = l \iff$ 对 $l$ 的任意 $\varepsilon$ 邻域
 </div>
 </details>
 
-**如果把"只有有限项在邻域外"改成"有无穷项在邻域外"，对吗？** 不对，两者含义恰好相反：收敛数列对每个邻域外只有有限项（条件不必要）；而满足"有无穷项在外"的数列可以完全不收敛（条件不充分），连无界数列 $n$ 都满足它（取 $l = 1$、$\varepsilon = 1$，$n \gt{} 2$ 的项全在外）。
+**如果把"只有有限项在邻域外"改成"有无穷项在邻域外"，对吗？** 
+	**不对**，两者含义恰好相反：收敛数列对每个邻域外只有有限项（条件不必要）；而满足"有无穷项在外"的数列可以完全不收敛（条件不充分），连无界数列 $n$ 都满足它（取 $l = 1$、$\varepsilon = 1$，$n \gt{} 2$ 的项全在外）。
 
 反例：$a_n = (-1)^{n} + \dfrac{1}{n}$，取 $l = 1$、$\varepsilon = \dfrac{1}{2}$。奇数项 $a_{2n-1} = -1 + \dfrac{1}{2n-1} \le 1 - \dfrac{1}{2}$ 全部落在邻域外，有无穷多项；但它不收敛 —— $a_{2n} \to 1$ 而 $a_{2n-1} \to -1$，由极限唯一性 $1 \neq -1$，矛盾。
 
@@ -265,7 +276,8 @@ $\lim\limits_{n \to \infty} a_n = l \iff$ 对 $l$ 的任意 $\varepsilon$ 邻域
 
 $$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ |a_n - A| \ge \varepsilon$$
 
-判断"不收敛"时不要拿 $(-1)^{n}/n$ 当反例 —— 它是**收敛**的（趋于 $0$）。
+即为上述命题的反命题
+判断"不收敛"时不可用 $(-1)^{n}/n$ 作为反例 —— 它是**收敛**的（趋于 $0$）。
 
 </div>
 </details>
@@ -273,7 +285,7 @@ $$\exists \varepsilon \gt{} 0,\ \forall N \in \mathbb{N},\ \exists n \gt{} N,\ |
 ### 4.2 $\varepsilon$–$N$ 证明的实践
 
 <details class="callout keypoint" data-callout="keypoint" open>
-<summary class="callout-title">自己的经验（保留）</summary>
+<summary class="callout-title">$\varepsilon - N$放缩经验（保留）</summary>
 <div class="callout-content" markdown="block">
 
 - $\varepsilon$ 尽量**放成一次的**，$N$ 才好找；
@@ -324,10 +336,11 @@ $$\lim_{n \to \infty} \sqrt[n]{n} = 1, \qquad \lim_{n \to \infty} \sqrt[n]{k} = 
 
 **推论 3**：$\lbrace{}a_n\rbrace{}, \lbrace{}b_n\rbrace{}$ 收敛于 $A, B$，若存在 $N$ 使 $n \gt{} N$ 时 $a_n \le b_n$，则 $A \le B$。
 
-**思考**：把 $A \gt{} B$ 换成 $A \ge B$，还能得到"存在 $N$，当 $n \gt{} N$ 时 $a_n \ge b_n$"吗？不能，反例 $a_n = 0,\ b_n = \dfrac{1}{n}$：此时 $A = B = 0$，但 $a_n \lt{} b_n$ 对一切 $n$ 成立。严格的大小关系在取极限后会被"抹平"。
+**思考**：把 $A \gt{} B$ 换成 $A \ge B$，还能得到"存在 $N$，当 $n \gt{} N$ 时 $a_n \ge b_n$"吗？
+	**不能**，反例 $a_n = 0,\ b_n = \dfrac{1}{n}$：此时 $A = B = 0$，但 $a_n \lt{} b_n$ 对一切 $n$ 成立。严格的大小关系在取极限后会被"抹平"。
 
 <details class="callout keypoint" data-callout="keypoint" open>
-<summary class="callout-title">$a_n \le b_n$ 推不出"$a_n \le B$"</summary>
+<summary class="callout-title">$a_n \le b_n$ 推不出 $a_n \le B$</summary>
 <div class="callout-content" markdown="block">
 
 已知 $a_n \le b_n\ (n \gt{} N)$、$\lbrace{}a_n\rbrace{} \to A$、$\lbrace{}b_n\rbrace{} \to B$，能得到的只有 $A \le B$；**得不到**"存在 $N$，当 $n \gt{} N$ 时 $a_n \le B$"。
@@ -370,10 +383,8 @@ $$|\sqrt{a_n} - \sqrt{a}| = \frac{|a_n - a|}{\sqrt{a_n} + \sqrt{a}} \le \frac{|a
 
 注意别把取完极限的分母提前代入写成 $\dfrac{0 \cdot \mid{}a_n - a\mid{}}{2\sqrt a}$；要保留上界 $\dfrac{\mid{}a_n - a\mid{}}{\sqrt a}$，再由 $a_n \to a$ 得结论。
 
-**两道"分母有理化"的题**：
-
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">例 1：分子分母同乘共轭</summary>
+<summary class="callout-title">例 1：分子有理化（分子分母同乘分子共轭）</summary>
 <div class="callout-content" markdown="block">
 
 求 $\lim\limits_{n \to \infty} n\left(\sqrt{n^{2}+1} - \sqrt{n^{2}-1}\right)$。
@@ -431,6 +442,7 @@ $$\lim_{n \to \infty} \sqrt[n]{a^{n} + b^{n}} = \max\{a, b\}, \qquad \lim_{n \to
 <div class="callout-content" markdown="block">
 
 用小数表示看：$x_n = m_n + 0.a_1^{(n)} a_2^{(n)} \cdots$。单调增有上界保证整数部分 $m_n$ 最终不再变化；再看小数位，上一位一旦"锁定"，下一位只能从 $\lbrace{}0, 1, \dots, 9\rbrace{}$ 中取，于是逐位锁定出一个小数 —— 它就是上确界。
+参见[3.5 实数的小数表示](#decimal-representation)
 
 </div>
 </details>
@@ -740,7 +752,7 @@ $$\lim_{x \to a} f(x) = L \iff \text{对任意 } x_n \to a\ (x_n \neq a)\text{�
 </div>
 </details>
 
-用途：反证极限不存在 —— 只要找出两条趋于 $a$ 的序列 $x_n, x_n'$ 使 $f(x_n)$ 与 $f(x_n')$ 极限不同即可。
+用途：反证极限不存在 —— 只要找出两条趋于 $a$ 的序列 $x_n, x_n'$ 使 $f(x_n)$ 与 $f(x_n')$ 极限不同即可。类比参见[子列继承极限](#subsequence)
 
 ### 7.3 性质
 
@@ -781,7 +793,7 @@ $$\lim_{x \to a}(f \pm g) = A \pm B,\quad \lim_{x \to a}(f g) = AB,\quad \lim_{x
 $$\lim_{x \to 1} \frac{x^{n} - 1}{x^{m} - 1} = \lim_{x \to 1} \frac{x^{n-1} + x^{n-2} + \cdots + 1}{x^{m-1} + x^{m-2} + \cdots + 1} = \frac{n}{m}$$
 
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">例 2：$\varepsilon$–$\delta$ 模板</summary>
+<summary class="callout-title">例 2：$\varepsilon$–$\delta$</summary>
 <div class="callout-content" markdown="block">
 
 用定义证明 $\lim\limits_{x \to 2} x^{2} = 4$。
@@ -929,7 +941,7 @@ $$0 \le \frac{\ln(1+t)}{t} \le \frac{2(\sqrt{1+t} - 1)}{t} = \frac{2}{\sqrt{1+t}
 ### 9.2 常用等价无穷小（$x \to 0$）
 
 <details class="callout keypoint" id="equivalent-infinitesimals" data-callout="keypoint" open>
-<summary class="callout-title">背下来的一串</summary>
+<summary class="callout-title">实记常用等价无穷小</summary>
 <div class="callout-content" markdown="block">
 
 $$\sin x \sim x \sim \tan x \sim \arcsin x \sim \arctan x \sim e^{x} - 1 \sim \ln(1 + x)$$
@@ -956,6 +968,17 @@ $$a^{x} - 1 \sim x\ln a\ (a \gt{} 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \fra
 ### 9.4 $O$ 记号与阶
 
 **$O$ 记号**：$\mid{}\alpha(x)\mid{} \le C\mid{}\beta(x)\mid{}$（$x$ 在某个范围里）记作 $\alpha(x) = O(\beta(x))$。
+ $o$ **记号**：
+
+$$
+\alpha(x)=o(\beta(x))\quad (x\to a)
+$$
+
+意思是：当 $x\to a$ 时，$\alpha(x)$ 相对于 $\beta(x)$ 是“高阶无穷小”，即
+
+$$
+\frac{\alpha(x)}{\beta(x)}\to 0.
+$$
 
 **$k$ 阶无穷小**：$x \to a$ 时若 $\alpha \sim (x - a)^{k}$，称 $\alpha$ 是 $k$ 阶无穷小。
 
@@ -971,7 +994,7 @@ $$a^{x} - 1 \sim x\ln a\ (a \gt{} 0,\ a \neq 1), \qquad \log_a (1 + x) \sim \fra
 ### 10.1 $\mathrm{AM} \ge \mathrm{GM}$（柯西归纳法）
 
 <details class="callout theorem" data-callout="theorem" open>
-<summary class="callout-title">$\mathrm{AM} \ge \mathrm{GM}$（柯西归纳法）</summary>
+<summary class="callout-title">$\mathrm{AM} \ge \mathrm{GM}$</summary>
 <div class="callout-content" markdown="block">
 
 $$\frac{1}{n}\sum_{i=1}^{n} a_i \ \ge\ \sqrt[n]{\prod_{i=1}^{n} a_i} \qquad (a_i \ge 0)$$
@@ -998,7 +1021,7 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 
 ① 抛弃常数项（$n \to \infty$ 时常数可忽略）；
 ② 抛弃"非决定项"（只留起决定作用的项）；
-③ 常数 $1$ 是好用的垫脚石（凑 $\mathrm{AM}$–$\mathrm{GM}$、凑"$1$ 的变形"）。
+③ 常数 $1$ 的妙用（凑 $\mathrm{AM}$–$\mathrm{GM}$、凑"$1$ 的变形"）。
 
 </div>
 </details>
@@ -1006,7 +1029,7 @@ $$\left(\frac{1}{n}\sum_{i=1}^{n} a_i\right)^{n} = \left(y + \frac{a_n - y}{n}\r
 ### 10.3 综合例：$\dfrac{(n!)^{\alpha}}{n^{n}}$ 的极限
 
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">综合例：讨论 $\dfrac{(n!)^{\alpha}}{n^{n}}$ 的极限</summary>
+<summary class="callout-title">综合例：$(n!)^{\alpha}/n^{n}$</summary>
 <div class="callout-content" markdown="block">
 
 分别求 $\alpha \gt{} 1$ 与 $\alpha \le 1$ 时的极限。
@@ -1045,12 +1068,12 @@ $$\lim_{\Delta x \to 0^{+}} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} = \lim_{
 </details>
 
 **可导的必要条件：连续**。$f$ 在 $x_0$ 处必须 ① 有定义；② $\lim\limits_{x \to x_0^{+}} f(x) = \lim\limits_{x \to x_0^{-}} f(x) = f(x_0)$。反之不成立（$\mid{}x\mid{}$ 在 $0$ 处连续但不可导）。
-
+ 
 <details class="callout keypoint" id="derivative-continuity-warning" data-callout="keypoint" open>
 <summary class="callout-title">导函数不保证连续</summary>
 <div class="callout-content" markdown="block">
 
-相对于原函数"变差"：$f$ 在 $[a, b]$ 上可导，**$f'(x)$ 不一定也在 $[a, b]$ 上连续**。所以不能默认"求完导还能再对 $f'$ 用连续性的结论"。
+导函数性质相对于原函数"变差"：$f$ 在 $[a, b]$ 上可导，**$f'(x)$ 不一定也在 $[a, b]$ 上连续**。所以不能默认"求完导还能再对 $f'$ 用连续性的结论"。
 
 </div>
 </details>
@@ -1063,7 +1086,7 @@ $$\lim_{\Delta x \to 0^{+}} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} = \lim_{
 
 $$(f \pm g)' = f' \pm g', \qquad (fg)' = f'g + fg', \qquad \left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^{2}}$$
 
-复合：$\dfrac{dy}{dx} = \dfrac{dy}{du}\cdot\dfrac{du}{dx}$，即 $(f(g(x)))' = f'(g(x))\,g'(x)$；多重复合 $\dfrac{dy}{dx} = \dfrac{dy}{du_n}\dfrac{du_n}{du_{n-1}}\cdots\dfrac{du_1}{dx}$（有限项）。
+复合：$\dfrac{dy}{dx} = \dfrac{dy}{du}\cdot\dfrac{du}{dx}$，即 $(f(g(x)))' = f'(g(x))\,g'(x)$；多重复合 $\dfrac{dy}{dx} = \dfrac{dy}{du_n}\dfrac{du_n}{du_{n-1}}\cdots\dfrac{du_1}{dx}$（有限项）。参见[莱布尼茨记法](/notes/lai-bu-ni-ci-ji-fa/)
 
 </div>
 </details>
@@ -1082,6 +1105,7 @@ $$
 <div class="callout-content" markdown="block">
 
 **防止在 $x_0$ 的邻域内 $u(x) - u(x_0)$ 的零点极多**。
+若有理数均为零点，则任意邻域必存在零点，无法避开。
 $x \to u$ 映射，$u \to y$ 映射，**由外向内逐层求导**。
 
 </div>
@@ -1095,9 +1119,15 @@ $x \to u$ 映射，$u \to y$ 映射，**由外向内逐层求导**。
 <summary class="callout-title">反函数求导</summary>
 <div class="callout-content" markdown="block">
 
-设 $y = f(x) \iff x = f^{-1}(y)$，则
+设 $y=f(x)\iff x=f^{-1}(y)$，则在 $f'(x)\neq 0$ 且反函数可导时，
 
-$$\left(f^{-1}\right)'(y) = \frac{1}{f'(x)} = \frac{1}{f'\big(f^{-1}(y)\big)}$$
+$$
+\left(f^{-1}\right)'(y)
+=
+\frac{1}{f'(x)}
+=
+\frac{1}{f'\big(f^{-1}(y)\big)}.
+$$
 
 </div>
 </details>
@@ -1121,6 +1151,15 @@ $$y' = u^{v}\left(v'\ln u + \frac{u' v}{u}\right)$$
 
 （等价写法：$y = e^{v \ln u}$，直接对指数求导。）
 <a id="logarithmic-derivative"></a>
+
+<details class="callout understand" data-callout="understand" open>
+<summary class="callout-title">Understand</summary>
+<div class="callout-content" markdown="block">
+
+很经典的方法，求类似$x^x$的导数尤为有效
+
+</div>
+</details>
 
 ### 11.3 反三角函数的导数
 
@@ -1287,7 +1326,7 @@ $$[f(x)g(x)]^{(n)} = \sum_{k=0}^{n}\binom{n}{k}f^{(k)}(x)\,g^{(n-k)}(x)$$
 类同二项式定理。若 $f$ 是 $m$ 次多项式，则 $k \gt{} m$ 时 $f^{(k)} \equiv 0$，和式只剩前 $m+1$ 项。求商的 $n$ 阶导时写 $\left[\dfrac{f}{g}\right]^{(n)} = \left[f\cdot\dfrac{1}{g}\right]^{(n)}$，把问题转成乘积。
 
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">例：$y = \arctan x$，求 $y^{(n)}(0)$</summary>
+<summary class="callout-title">例：$y = \arctan x$</summary>
 <div class="callout-content" markdown="block">
 
 求 $y = \arctan x$ 在 $x = 0$ 处的 $n$ 阶导数。
@@ -1307,7 +1346,7 @@ $$y^{(2k+1)}(0) = (-1)^{k}(2k)!$$
 <summary class="callout-title">理解：为何如此构造？</summary>
 <div class="callout-content" markdown="block">
 
-利用隐函数求导，去掉分式结构，找到递推。
+利用隐函数求导，去掉分式结构，找到递推。很巧妙的变形，绕开了分数求导。
 
 </div>
 </details>
@@ -1376,10 +1415,10 @@ $f(x)$ 在 $x_0$ 点及附近有定义、在 $x_0$ 处可微。若 $x_0$ 为极�
 只要求 $x_0$ 处可导，不涉及邻域内导函数是否连续。
 
 <details class="callout keypoint" id="stationary-point" data-callout="keypoint" open>
-<summary class="callout-title">极值点 $\Rightarrow$ 驻点，反之不成立</summary>
+<summary class="callout-title">极值点与驻点</summary>
 <div class="callout-content" markdown="block">
 
-极小值可能大于极大值；极大值不一定是最大值，极小值不一定是最小值。
+极值点 $\Rightarrow$ 驻点，反之不成立。极小值可能大于极大值；极大值不一定是最大值，极小值不一定是最小值。
 $f'(x_0) = 0$ 的点 $x_0$ 称**驻点**（稳定点）。
 
 </div>
@@ -1408,7 +1447,7 @@ $f(x)$ 在 $[a, b]$ 连续、在 $(a, b)$ 可导，且 $f(a) = f(b)$，则 $\exi
 ### 15.3 Rolle 定理的例题
 
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">例 1：证明 $5x^{4} - 4x + 1 = 0$ 在 $(0, 1)$ 内有解</summary>
+<summary class="callout-title">例 1：$5x^{4} - 4x + 1 = 0$</summary>
 <div class="callout-content" markdown="block">
 
 证明该方程在 $(0, 1)$ 内至少有一个根。
@@ -1419,9 +1458,10 @@ $f(x)$ 在 $[a, b]$ 连续、在 $(a, b)$ 可导，且 $f(a) = f(b)$，则 $\exi
 **证明**：令 $f(x) = x^{5} - 2x^{2} + x + C$，则 $f'(x) = 5x^{4} - 4x + 1$。取 $C$ 使 $f(0) = 0$，则 $f(1) = 1 - 2 + 1 = 0$。由 [Rolle 定理](#rolle-theorem)，$\exists c \in (0, 1)$，使 $f'(c) = 0$，即 $5c^{4} - 4c + 1 = 0$。
 
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">例 2：$f$ 在 $[0, 1]$ 连续、$(0, 1)$ 可导，$f(1) = 0$，求证 $\exists c \in (0, 1)$，$f(c) + cf'(c) = 0$</summary>
+<summary class="callout-title">例 2：$f(c) + cf'(c) = 0$</summary>
 <div class="callout-content" markdown="block">
 
+$f(x)$ 在 $[0, 1]$ 连续、在 $(0, 1)$ 可导，$f(1) = 0$，求证 $\exists c \in (0, 1)$，$f(c) + cf'(c) = 0$。
 结论等价于 $(xf(x))'\big\vert&#95;{x=c} = 0$。
 
 </div>
@@ -1430,10 +1470,10 @@ $f(x)$ 在 $[a, b]$ 连续、在 $(a, b)$ 可导，且 $f(a) = f(b)$，则 $\exi
 **证明**：令 $F(x) = xf(x)$，则 $F'(x) = f(x) + xf'(x)$。又 $F(0) = 0$、$F(1) = f(1) = 0$。由 Rolle 定理，$\exists c \in (0, 1)$，使 $F'(c) = 0$，即 $f(c) + cf'(c) = 0$。
 
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">例 3：$P_n(x) = a_nx^{n} + a_{n-1}x^{n-1} + \cdots + a_0$（$a_n \neq 0$）不能有 $n + 1$ 个不同实根</summary>
+<summary class="callout-title">例 3：至多 $n$ 个实根</summary>
 <div class="callout-content" markdown="block">
 
-证明 $n$ 次实系数多项式至多有 $n$ 个不同实根。
+$P_n(x) = a_nx^{n} + a_{n-1}x^{n-1} + \cdots + a_0$（$a_n \neq 0$）不能有 $n + 1$ 个不同实根。
 
 </div>
 </details>
@@ -1474,9 +1514,10 @@ $f'(x) \ge 0 \Rightarrow f$ 单调增；$f'(x) \le 0 \Rightarrow f$ 单调减；
 ### 15.5 导数不等式：$\mid{}f'\mid{} \le C\mid{}f\mid{}$ 型
 
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">题型：$f$ 在 $[0, 1]$ 连续、$(0, 1)$ 可导、$f(0) = 0$</summary>
+<summary class="callout-title">题型：$\mid{}f'\mid{} \le C\mid{}f\mid{}$</summary>
 <div class="callout-content" markdown="block">
 
+$f(x)$ 在 $[0, 1]$ 连续、在 $(0, 1)$ 可导、$f(0) = 0$。
 (1) 若 $\mid{}f'(x)\mid{} \le \mid{}f(x)\mid{}$，证明 $f(x) \equiv 0$；
 (2) 若 $\mid{}f'(x) + f(x)\mid{} \le \mid{}f(x)\mid{}$，证明 $f(x) \equiv 0$。
 
@@ -1494,7 +1535,7 @@ $$F'(x) = \frac{2f(x)\left(f'(x) - f(x)\right)}{e^{2x}}.$$
 **(2) 另一构造**：由 $\mid{}f' + f\mid{} \le \mid{}f\mid{}$ 得 $\mid{}f'\mid{} \le \mid{}f' + f\mid{} + \mid{}f\mid{} \le 2\mid{}f\mid{}$，于是 $f(x)f'(x) \le 2f^{2}(x)$。令 $F(x) = \dfrac{f^{2}(x)}{e^{4x}}$，则 $F'(x) = \dfrac{2f(x)\left(f'(x) - 2f(x)\right)}{e^{4x}} \le 0$，同理 $F(x) \equiv 0$。
 
 <details class="callout keypoint" id="auxiliary-function-constructions" data-callout="keypoint" open>
-<summary class="callout-title">六大辅助函数</summary>
+<summary class="callout-title">辅助函数</summary>
 <div class="callout-content" markdown="block">
 
 1. $\left[e^{x}f(x)\right]' = e^{x}\left(f(x) + f'(x)\right)$
@@ -1510,7 +1551,7 @@ $$F'(x) = \frac{2f(x)\left(f'(x) - f(x)\right)}{e^{2x}}.$$
 ### 15.6 综合例：$f''(\eta) = f(\eta)$
 
 <details class="callout example" data-callout="example" open>
-<summary class="callout-title">题目</summary>
+<summary class="callout-title">2023期中数学分析试题</summary>
 <div class="callout-content" markdown="block">
 
 $f(x)$ 在 $[0, 1]$ 二阶可导，且 $\lim\limits_{x \to 0^{+}}\dfrac{f(x)}{x} = 1$、$\lim\limits_{x \to 1^{-}}\dfrac{f(x)}{x - 1} = 2$。求证 $\exists \eta \in [0, 1]$，使 $f''(\eta) = f(\eta)$。
@@ -1530,7 +1571,7 @@ $$F(0) = f(0) + f'(0) = 1, \qquad F(1) = f(1) + f'(1) = 2, \qquad F(c) = f(c) + 
 <summary class="callout-title">理解</summary>
 <div class="callout-content" markdown="block">
 
-中值定理是对下一阶导数的性质描写。利用 $F(x) = f(x) + f'(x)$，有 $F'(x) = f'(x) + f''(x)$，再乘 $e^{-x}$ 统一变量，得到 $f''(\eta) = f(\eta)$。若不这样操作，很难得到统一的 $\eta$。构造 $f(x) - f'(x)$ 也可类似处理，核心是乘一个具体函数来统一导数关系。
+中值定理是对下一阶导数的性质描写。利用 $F(x) = f(x) + f'(x)$，有 $F'(x) = f'(x) + f''(x)$，再乘 $e^{-x}$ 统一变量，得到 $f''(\eta) = f(\eta)$。若不这样操作，无法得到统一的 $\eta$。构造 $f(x) - f'(x)$ 也可类似处理，核心是乘一个具体函数来统一导数关系。
 
 </div>
 </details>
@@ -1609,10 +1650,10 @@ $f(x)$ 在 $x_0$ 处连续、在去心邻域内可导，且 $\lim\limits_{x \to 
 $$\lim_{c \to x_0^{-}}f'(c) = \lim_{\delta \to 0^{+}}\frac{f(x_0) - f(x_0 - \delta)}{\delta} = f'_-(x_0).$$
 
 <details class="callout keypoint" id="one-sided-derivative-limit" data-callout="keypoint" open>
-<summary class="callout-title">左导数存在 $\Leftarrow$ 左极限存在，反之不成立</summary>
+<summary class="callout-title">左导数与左极限</summary>
 <div class="callout-content" markdown="block">
 
-原函数的左导数存在，且等于导函数的左极限；右导数同理。反过来由左导数推不出导函数的左极限存在。
+左导数存在 $\Leftarrow$ 左极限存在，反之不成立：原函数的左导数存在，且等于导函数的左极限；右导数同理。反过来由左导数推不出导函数的左极限存在。
 
 </div>
 </details>
@@ -1636,18 +1677,23 @@ graph TD
     L --> C[柯西中值定理]
 
     R --> GR[广义罗尔定理]
+
     L --> DLT[导数极限定理]
+    L --> ODLT[单侧导数极限定理]
+
+    ODLT -->|双侧连续<br/>左右极限相等| DLT
 
     F --> DB[达布定理<br/>导数介值定理]
 
     DB -.-> D1
     DLT -.-> D1
+    ODLT -.-> D1
 
     D1[第一类 / 可去间断点<br/>导函数不存在]
     D1 --- D2[无穷间断点<br/>导函数不存在]
     D2 --- D3[振荡间断点<br/>可能存在]
 
-    class F,R,GR,L,C,DLT thm;
+    class F,R,GR,L,C,DLT,ODLT thm;
     class DB darboux;
     class D1,D2,D3 disc;
 </div>
