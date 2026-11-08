@@ -77,3 +77,12 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 .publications ol.bibliography li div.abstract.hidden.open { border-color: var(--global-text-color); }
 
 .publications ol.bibliography li .teaser { border-radius: 8px; box-shadow: 3px 3px 6px #888; height: 123px; width: 270px; margin-top: 5px; margin-left: 5px; margin-bottom: 5px; object-fit: cover; }
+
+/* 减少动态效果：三球加载动画是无限循环，必须停掉。
+   保留静态小球作为「仍在加载」的指示，不引入淡入或位移。 */
+@media (prefers-reduced-motion: reduce) {
+  .loader-balls-circle,
+  .loader-balls-shadow {
+    animation: none;
+  }
+}

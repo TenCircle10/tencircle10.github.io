@@ -82,8 +82,42 @@
     }
 
     // ---- 渲染 -------------------------------------------------------------
+    // 主题切换整张重画时，reset() 会把 innerHTML 换回源码：那一瞬间容器高度
+    // 塌成「一坨等宽文本」，再涨回 SVG 高度，正文与下方评论区跟着跳两下，
+    // 还会闪一帧灰底源码。这里在重画前把已渲染节点的高度锁住、内容临时藏起来，
+    // run() 结束后一次性释放 —— 高度只变化一次，中间态用户看不到。
+    // getBoundingClientRect() 只在主题切换时读一次，不在滚动帧里，不构成每帧抖动。
+    // 初次渲染不锁：那时正文还被加载遮罩盖着，且释放与淡入落在同一帧。
+    var rendering = null;
+    var queued = false;
+
     function render() {
+      // 上一轮还没画完时排队，不能丢掉这次切换（否则图表会停在旧主题）。
+      // 只留一个排队位：连续拨开关最多补画一次，且用的是最新主题。
+      if (rendering) {
+        if (queued) return rendering;
+        queued = true;
+        return rendering.then(
+          function () { queued = false; return render(); },
+          function () { queued = false; return render(); }
+        );
+      }
       if (typeof window.mermaid === "undefined") return Promise.resolve();
+
+      var locked = [];
+      nodes.forEach(function (el) {
+        if (el.getAttribute("data-processed") !== "true") return;
+        el.style.minHeight = el.getBoundingClientRect().height + "px";
+        el.classList.add("is-redrawing");
+        locked.push(el);
+      });
+
+      function release() {
+        locked.forEach(function (el) {
+          el.style.minHeight = "";
+          el.classList.remove("is-redrawing");
+        });
+      }
 
       nodes.forEach(function (el) {
         if (el.getAttribute("data-processed") === "true") reset(el);
@@ -109,10 +143,18 @@
           '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif'
       });
 
-      return window.mermaid.run({ nodes: nodes }).catch(function (error) {
+      var result = window.mermaid.run({ nodes: nodes }).catch(function (error) {
         // 单张图语法错误时 mermaid 会把错误信息画进那个节点，不影响其它图
         console.error("[mermaid] 渲染失败：", error);
       });
+
+      // Promise.finally 在老内核没有，用 then 两个分支兜住成功与失败：
+      // 渲染库抛错也必须把 min-height / is-redrawing 清掉，否则图会被永久压扁。
+      rendering = result.then(
+        function (value) { release(); rendering = null; return value; },
+        function (error) { release(); rendering = null; throw error; }
+      );
+      return rendering;
     }
     window.__renderMermaid = render;
 

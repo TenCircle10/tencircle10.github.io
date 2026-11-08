@@ -336,11 +336,53 @@
 
         window.addEventListener("scroll", scheduleFollow, { passive: true });
 
-        // 抽屉刚打开时也定位一次
+        // 抽屉刚打开时也定位一次：等 CSS transition 真正结束，不把时长写死在 JS 里。
+        // 旧版写死的 320ms 延时既和 CSS 的 0.25s 失配，改 CSS 时长还会再次漂移。
+        // 减少动效 / 没有过渡时不会触发 transitionend，直接定位；过渡被打断时
+        // 用 transitioncancel 清掉监听（老内核没有这个事件也无妨：下一次点击会先
+        // clearFollowEnd()，而全局滚动监听本来就会持续跟随）。
+        var reduceMotion = window.matchMedia
+          ? window.matchMedia("(prefers-reduced-motion: reduce)")
+          : { matches: false };
+
+        var followEnd = null;
+        function clearFollowEnd() {
+          if (!followEnd || !sidebar) return;
+          sidebar.removeEventListener("transitionend", followEnd.onEnd);
+          sidebar.removeEventListener("transitioncancel", followEnd.onCancel);
+          followEnd = null;
+        }
+
         function followAfterOpen() {
-          if (sidebar && sidebar.classList.contains("is-open")) {
-            setTimeout(scheduleFollow, 320);   // 等抽屉滑入动画结束
+          clearFollowEnd();
+          if (!sidebar || !sidebar.classList.contains("is-open")) return;
+
+          var dur = parseFloat(getComputedStyle(sidebar).transitionDuration) || 0;
+          if (reduceMotion.matches || dur === 0) {
+            scheduleFollow();
+            return;
           }
+
+          // 抽屉的 transition 同时声明了 transform 与 visibility，
+          // 只认 transform 那一次，避免被 visibility 的结束事件提前触发。
+          var handlers = {
+            onEnd: function (e) {
+              // 已被后来的点击接管（或事件在 remove 之后补发）时直接忽略：
+              // 否则旧 handler 会调共享的 clearFollowEnd() 误清掉当前有效的监听。
+              if (followEnd !== handlers) return;
+              if (e.target !== sidebar || e.propertyName !== "transform") return;
+              clearFollowEnd();
+              scheduleFollow();
+            },
+            onCancel: function (e) {
+              if (followEnd !== handlers) return;
+              if (e.target !== sidebar || e.propertyName !== "transform") return;
+              clearFollowEnd();
+            }
+          };
+          followEnd = handlers;
+          sidebar.addEventListener("transitionend", handlers.onEnd);
+          sidebar.addEventListener("transitioncancel", handlers.onCancel);
         }
         if (btn) btn.addEventListener("click", followAfterOpen);
 

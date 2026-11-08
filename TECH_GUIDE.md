@@ -656,7 +656,7 @@ assets/css/obsidian-callouts.css.bak
 | 1 | **单行截断**，防止长标题撑爆布局 | `notes.css` `.toc-link` | `white-space: nowrap` + `overflow: hidden` + `text-overflow: ellipsis`，并同时作用于 `.toc-text` / `> span`（Tocbot 把标题包在 span 里）；`.toc-number` 不参与截断 |
 | 2 | **手机端打开抽屉时锁定 body 滚动** | `note.html` `setOpen()` | `document.body.style.overflow = open ? "hidden" : ""`；否则手指滑动会穿透到正文 |
 | 3 | **长目录必须内部滚动** | `.toc-sidebar` | 桌面 `max-height: calc(100vh - 110px)` + `overflow-y: auto`；移动端 `height: 100vh` + `overflow-y: auto` |
-| 3b | **高亮项自动跟随** | `note.html` `followActive()` | 监听 `scroll`（passive）→ `requestAnimationFrame` 合并 → 当前项跑出可视区（上下各留 40px）时才 `sidebar.scrollTo({ behavior: window.siteScrollBehavior() })`；抽屉打开后延时 320ms 再定位一次（等滑入动画结束）。`siteScrollBehavior()` 在 `<body>` 开头的 helper 里定义：用户开启「减少动态效果」时返回 `instant`，否则 `smooth`，避免 JS 覆盖 `notes.css` 里 `@media (prefers-reduced-motion)` 的降级 |
+| 3b | **高亮项自动跟随** | `note.html` `followActive()` | 监听 `scroll`（passive）→ `requestAnimationFrame` 合并 → 当前项跑出可视区（上下各留 40px）时才 `sidebar.scrollTo({ behavior: window.siteScrollBehavior() })`；抽屉打开后等 `.toc-sidebar` 的 `transitionend`（只认 `propertyName === "transform"`，`transitioncancel` 清监听）再定位一次，不把 CSS 时长硬编码进 JS；减少动效或 computed `transitionDuration === 0` 时不会触发事件，直接定位。`siteScrollBehavior()` 在 `<body>` 开头的 helper 里定义：用户开启「减少动态效果」时返回 `instant`，否则 `smooth`，避免 JS 覆盖 `notes.css` 里 `@media (prefers-reduced-motion)` 的降级 |
 | 4 | **目录为空时自动隐藏侧边栏** | `note.html` `hideSidebarIfEmpty()` | 初始化后统计 `.js-toc a.toc-link` 数量，为 0 时给 `#toc-sidebar` 和 `#toc-mobile-btn` 加 `.is-empty`；CSS 里 `.is-empty { display: none }` |
 | 5 | **悬停提示补全完整标题**（弥补单行截断的信息损失） | `note.html` `tocbot.init({ onCreate })` | 目录 DOM 生成后遍历 `.js-toc a.toc-link`，取内部 `.toc-text` 的 `textContent`，折叠连续空白后写入该 `<a>` 的 `title` 属性。**不超长的标题也照加** —— 行为统一，浏览器只在真被截断时才弹出提示 |
 | 6 | **移动端长标题折行显示**（移动端无 hover，用物理空间换信息） | `notes.css` `@media (max-width: 900px)` | 在 900px 断点内取消 `.toc-link` / `.toc-text` 的 `nowrap` 与 `ellipsis`：`white-space: normal !important` + `text-overflow: clip !important` + `overflow: visible !important`，`line-height: 1.4`，并给每条加 `margin-bottom: 2px` 防止两行条目贴身；`.toc-text` 改成 `display: inline` 让它随容器折行 |
@@ -761,6 +761,7 @@ tocbot.init({
 | **动态注入 `<script>`，不是直接 `<script src>`** | `mermaid.min.js` 有 3.5 MB，全站只有两篇笔记带图，不该让其余页面白白下载 |
 | **`securityLevel: "strict"`（默认值），不放宽** | 节点标签里的 `<br/>` 靠 `run()` 的 `splitBreaks` 切成多行、`<-->` 靠内部 `entityDecode()` 还原（浏览器序列化 `innerHTML` 时会把 `<` `>` 转成 `&lt;` `&gt;`）。两条都不需要 `loose` |
 | **主题切换时整张重画** | mermaid 把颜色内联进 SVG，改 CSS 变量或加 `filter` 都不干净。切换前把 `innerHTML` 存进 `data-mermaid-src`，重画时还原并删掉 `data-processed`（`run()` 见到这个属性就跳过） |
+| **重画时锁高度 + 排队补画** | `reset()` 换回源码会瞬间塌高度并闪一帧源码文本。重画前给已渲染节点写 inline `min-height` 并加 `.is-redrawing`（`notes.css` 里 `visibility: hidden`，不能用 `display:none`，否则量不到 SVG），`run()` 结束（含失败）统一释放；`getBoundingClientRect()` 只在切主题时读一次，不进滚动帧。连续切主题用 `queued` 合并补画一次，既不丢最后一次切换、也不并发重画 |
 | **备份 `innerHTML` 而不是 `textContent`** | 节点标签里的 `<br/>` 在 HTML 里是真的 `<br>` 元素，`textContent` 会把它当空文本丢掉，重画后换行就没了 |
 | **页面加载遮罩也等 mermaid** | 否则会先闪一下未渲染的源码。`window.__mermaidReady` 在 `mermaid.html` 里同步建好，`note.html` 底部用 `Promise.all` 等「公式 + 图表」都完成才揭开正文 |
 
@@ -770,7 +771,7 @@ tocbot.init({
 - 库加载或渲染超过 8s：`setTimeout` 强制放行，正文不会永久白屏
 - 单张图语法错误：mermaid 会把错误信息画进那个节点，`run()` 的 `.catch` 只记 `console.error`，不影响同页其它图
 
-**样式**（`assets/css/notes.css` 末尾）：`.mermaid` 居中 + `overflow-x: auto` 兜底；`.mermaid:not([data-processed="true"])` 是「未渲染源码」的等宽字体外观，暗色三套选择器与站内其它组件一致。
+**样式**（`assets/css/notes.css` 末尾）：`.mermaid` 居中 + `overflow-x: auto` 兜底；`.mermaid:not([data-processed="true"])` 是「未渲染源码」的等宽字体外观，暗色三套选择器与站内其它组件一致。三份 CSS（`notes.css` / `publications.css` / `publications-no-dark-mode.css`）末尾都有 `@media (prefers-reduced-motion: reduce)`：停掉三球 loader 的无限动画、关掉抽屉 / 遮罩 / 悬浮球的过渡；`notes.css` 那段必须放在文件末尾，才能压过后面 `@media (max-width: 900px)` 里的抽屉规则。
 
 ---
 

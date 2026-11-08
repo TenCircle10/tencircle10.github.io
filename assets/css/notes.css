@@ -962,6 +962,13 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
   vertical-align: middle;
 }
 
+/* 主题切换重画期间：JS 锁住容器高度（inline min-height），这里把内容藏起来，
+   避免「SVG -> 源码文本 -> 新 SVG」的两次高度跳变与源码闪现。
+   用 visibility 而不是 display:none —— 后者会让 mermaid 量不到 SVG 尺寸。 */
+.mermaid.is-redrawing {
+  visibility: hidden;
+}
+
 /* 渲染库没加载成功、或图还没来得及画时，div 里留着的是原始源码。
    给个等宽字体的「代码块」外观，让人一眼看出这是没渲染出来的源码，
    而不是混在正文里的乱码。（正常情况会被页面加载遮罩挡住，看不到这一帧） */
@@ -987,5 +994,19 @@ html[data-theme="dark"] .mermaid:not([data-processed="true"]) {
   html:not([data-theme="light"]) .mermaid:not([data-processed="true"]) {
     background-color: #20212b;
     color: #9aa3b2;
+  }
+}
+
+/* ==========================================================================
+   减少动态效果（放在文件末尾：要压过后面出现的 @media (max-width: 900px)
+   抽屉规则，同特异性下后写的才生效）
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  /* 抽屉 / 遮罩 / 悬浮球直接落到终态，不做位移与淡入 */
+  .toc-sidebar,
+  .toc-overlay,
+  .back-to-top,
+  .back-to-top__icon {
+    transition: none;
   }
 }
