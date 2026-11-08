@@ -72,24 +72,28 @@
   user-select:none;width:3.6rem}
 
 .icon-button span{
-  border-radius:0;
+  border-radius:3.6rem;
   display:block;
-  height:0;
+  height:3.6rem;
   left:50%;
-  margin:0;
+  margin:-1.8rem;
   position:absolute;
   top:50%;
-  -webkit-transition:all 0.3s;
-  -moz-transition:all 0.3s;
-  -o-transition:all 0.3s;
-  transition:all 0.3s;
-  width:0}
+  /* hover 从中心展开圆：尺寸固定，只动 transform: scale(0 -> 1)，
+     不再过渡 width / height / margin / border-radius 四个布局属性。
+     与 .icon-button i 一致写字面量曲线，避免 Sass 处理 var() 的不确定性。 */
+  -webkit-transition:transform 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  -moz-transition:transform 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  -o-transition:transform 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  transition:transform 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  -webkit-transform:scale(0);
+  transform:scale(0);
+  transform-origin:center;
+  width:3.6rem}
 
 .icon-button:hover span{
-  width:3.6rem;
-  height:3.6rem;
-  border-radius:3.6rem;
-  margin:-1.8rem}
+  -webkit-transform:scale(1);
+  transform:scale(1)}
 
 .twitter span{
   background-color:#4099ff}

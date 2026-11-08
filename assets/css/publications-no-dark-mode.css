@@ -12,7 +12,7 @@
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.25rem;
-    transition: color .15s var(--ease-out),background-color .15s var(--ease-out),border-color .15s var(--ease-out),box-shadow .15s var(--ease-out);
+    transition: color 0.25s var(--ease-out),background-color 0.25s var(--ease-out),border-color 0.25s var(--ease-out),box-shadow 0.25s var(--ease-out);
 }
 
 .badge {
@@ -64,13 +64,22 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 
 .publications ol.bibliography li .links a.btn:hover { color: var(--global-theme-color); border-color: var(--global-theme-color); }
 
-.publications ol.bibliography li .hidden { font-size: 0.875rem; max-height: 0px; overflow: hidden; text-align: justify; -webkit-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -moz-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -ms-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -o-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); }
+/* 论文摘要折叠：grid 行插值（0fr -> 1fr），高度连续变化，不再靠
+   max-height: 0 -> 100em 猜一个「够大」的上限（内容超过 100em 会被截断，
+   远小于 100em 时前大半段动画又毫无视觉变化）。
+   契约：.hidden 自身是 grid 容器，折叠内容必须放在唯一的 .hidden-inner 里；
+   内层 min-height:0 + overflow:hidden，否则 grid 行的自动最小尺寸会顶到
+   内容高度，0fr 压不下去。当前模板未启用折叠（见 TECH_GUIDE 4.8），
+   这段按预留样式保留；将来启用时模板必须包这一层。 */
+.publications ol.bibliography li .hidden { font-size: 0.875rem; display: grid; grid-template-rows: 0fr; overflow: hidden; text-align: justify; -webkit-transition:grid-template-rows 0.25s var(--ease-out), border-color 0.25s var(--ease-out); -moz-transition:grid-template-rows 0.25s var(--ease-out), border-color 0.25s var(--ease-out); -ms-transition:grid-template-rows 0.25s var(--ease-out), border-color 0.25s var(--ease-out); -o-transition:grid-template-rows 0.25s var(--ease-out), border-color 0.25s var(--ease-out); transition:grid-template-rows 0.25s var(--ease-out), border-color 0.25s var(--ease-out); }
+
+.publications ol.bibliography li .hidden > .hidden-inner { min-height: 0; overflow: hidden; }
 
 .publications ol.bibliography li .hidden p { line-height: 1.4em; margin: 10px; }
 
 .publications ol.bibliography li .hidden pre { font-size: 1em; line-height: 1.4em; padding: 10px; }
 
-.publications ol.bibliography li .hidden.open { max-height: 100em; -webkit-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -moz-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -ms-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -o-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); }
+.publications ol.bibliography li .hidden.open { grid-template-rows: 1fr; }
 
 .publications ol.bibliography li div.abstract.hidden { border: dashed 1px var(--global-bg-color); }
 
@@ -84,5 +93,9 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   .loader-balls-circle,
   .loader-balls-shadow {
     animation: none;
+  }
+  /* 摘要折叠：减少动效时直接开合，不做行插值 */
+  .publications ol.bibliography li .hidden {
+    transition: none;
   }
 }

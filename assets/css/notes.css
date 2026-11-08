@@ -671,7 +671,7 @@ html[data-theme="light"] .back-to-top {
   line-height: 1.5;
   text-decoration: none !important;
   border-left: 2px solid transparent;
-  transition: color 0.15s var(--ease-out), border-color 0.15s var(--ease-out), background-color 0.15s var(--ease-out);
+  transition: color 0.25s var(--ease-out), border-color 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
   /* 单行截断：长标题不换行、超出用省略号，避免把 250px 的侧边栏撑爆 */
   white-space: nowrap;
   overflow: hidden;

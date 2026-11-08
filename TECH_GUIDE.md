@@ -773,6 +773,38 @@ tocbot.init({
 
 **样式**（`assets/css/notes.css` 末尾）：`.mermaid` 居中 + `overflow-x: auto` 兜底；`.mermaid:not([data-processed="true"])` 是「未渲染源码」的等宽字体外观，暗色三套选择器与站内其它组件一致。三份 CSS（`notes.css` / `publications.css` / `publications-no-dark-mode.css`）末尾都有 `@media (prefers-reduced-motion: reduce)`：停掉三球 loader 的无限动画、关掉抽屉 / 遮罩 / 悬浮球的过渡；`notes.css` 那段必须放在文件末尾，才能压过后面 `@media (max-width: 900px)` 里的抽屉规则。
 
+### 4.8 论文摘要折叠（`.hidden`）与剩余动效约定
+
+`.hidden` 目前是**预留样式**：`_includes/publications.md`、
+`_data/publications.yml` 里都没有摘要折叠块，也没有切换 `.open` 的脚本，
+所以这轮改造属于技术债清理，不影响任何现有页面。
+
+- 两个主页 CSS（`publications.css` / `publications-no-dark-mode.css`，
+  **后者后加载会覆盖前者**）必须同步：`.hidden` 用 `display: grid` +
+  `grid-template-rows: 0fr → 1fr`，`.open` 时切到 `1fr`；transition 只声明
+  `grid-template-rows` 与 `border-color`，不再用 `max-height: 0 → 100em`。
+- **契约**：`grid-template-rows` 作用在容器的直接子元素上，所以折叠内容必须
+  放在唯一的 `.hidden-inner` 里，内层 `min-height: 0 + overflow: hidden`
+  （否则 auto 最小尺寸会把 `0fr` 顶开，与 Callout 的 `.callout-grid` 同理）。
+  将来若在模板里启用折叠，记得包这一层；`.hidden p` / `.hidden pre` 是后代
+  选择器，包了之后仍然生效。**本批不改任何模板或 include，
+  `_includes/publications.md` 里不预埋 HTML、也不留注释**；该依赖约定只
+  记录在本节，启用折叠时按此实现。
+- 过渡时长统一 `0.25s var(--ease-out)`：本批把 `.hidden` 与按钮 / 标签 hover
+  里残留的 `0.15s`（含 `.15s` 写法）一并清掉，全站生效样式不再有 `0.15s`
+  这一历史遗留档位。`html_source_file/` 是原始主题快照，不参与 Jekyll 构建，
+  保持原样。
+- 两份 CSS 末尾的 `@media (prefers-reduced-motion: reduce)` 把 `.hidden` 的
+  过渡也关掉，减少动效时直接开合。
+- 不为老内核加 `@supports` 能力探测：不支持 `fr` 行插值的内核会瞬间开合
+  （无动画、内容仍完整可见）；`.hidden` 是预留死代码，这个退化可以接受。
+- `_sass` 里 `.icon-button span` 的 hover 从「四个布局属性过渡」改成固定尺寸
+  + `transform: scale(0 → 1)`；`.icon-button` 全站没有使用，属主题死代码，
+  改动零页面影响。
+- 全站除 loader 的三球动画外，已无 `max-height` / `height` 过渡残留
+  （`notes.css` 里的 `max-height: calc(...)`、各处固定 `height` 都是静态尺寸，
+  不参与动画）。
+
 ---
 
 ## 5. 常见故障排查
