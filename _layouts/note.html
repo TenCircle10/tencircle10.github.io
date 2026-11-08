@@ -349,95 +349,102 @@
       })();
     </script>
 
-    <!-- ============ Callout 展开/收起过渡动画 ============ -->
+    <!-- ============ Callout 展开/收起过渡动画（WAAPI，可打断） ============ -->
     <script>
       (function () {
-        var DURATION = 300;   // 与 CSS 里 0.3s 保持一致
+        var DURATION = 300;   // 保持原时长；缓动统一放到下一批处理
+        var EASING = "ease";
 
-        // ---- 事件委托：只在 document 上挂一个监听器 ----
-        // 不随 callout 数量增长（67 个 callout 也只占 1 个监听器），
-        // 且对之后动态插入的内容同样生效（比如 Giscus 加载后重排）。
+        // 每个 details 的「当前动画 + 该动画的目标开合状态」。
+        // 用 WeakMap 存状态：不往 DOM 写标记，也没有「动画中」的布尔锁。
+        var states = new WeakMap();
+        var reduceMotion = window.matchMedia
+          ? window.matchMedia("(prefers-reduced-motion: reduce)")
+          : { matches: false };
+
+        function clearInline(content) {
+          content.style.height = "";
+          content.style.opacity = "";
+          content.style.overflow = "";
+        }
+
+        // 事件委托：整页只挂一个监听器，之后动态插入的 callout 同样生效
         document.addEventListener("click", function (e) {
           var target = e.target;
           if (!target || typeof target.closest !== "function") return;
 
-          // 向上找标题：点标题里的 <span>、公式（mjx-container）等都能命中
           var summary = target.closest("summary.callout-title");
           if (!summary) return;
-
-          // 校验它确实是 callout 的标题（避免误伤别处同名类）
           var details = summary.parentElement;
           if (!details || !details.matches("details.callout")) return;
 
           var content = details.querySelector(".callout-content");
           if (!content) return;   // 空 callout 保持浏览器原生行为
+          if (target.closest("a")) return;   // 标题里的链接照常跳转
 
-          // 标题里如果有链接，优先让链接正常跳转：
-          // e.preventDefault() 在 document 上会连 <a> 的跳转一起拦掉。
-          // 这种情况下退回原生折叠（无动画，但功能正确）。
-          if (target.closest("a")) return;
+          // <details> 默认瞬间切换，这里拦下来自己做动画。
+          // 不能用 toggle 事件 —— 它在 open 变化之后才触发，拦不住闪跳。
+          e.preventDefault();
 
-          // 每个 details 独立的状态锁（存在 dataset 上），
-          // 所以同时点两个不同的 callout 不会互相阻塞。
-          if (details.dataset.animating === "1") {
-            e.preventDefault();   // 动画中的再次点击直接吞掉，避免叠加
+          var previous = states.get(details);
+          // 方向不能看 details.open：收起动画期间 open 仍为 true
+          // （要等动画结束才置 false，否则内容会瞬间消失），连点两次会判反。
+          var targetOpen = previous ? !previous.open : !details.open;
+
+          // 不支持 WAAPI 或用户要求减少动效 -> 直接切换，功能不打折
+          if (typeof content.animate !== "function" || reduceMotion.matches) {
+            if (previous) { previous.animation.cancel(); states.delete(details); }
+            clearInline(content);
+            details.open = targetOpen;
             return;
           }
 
-          // <details> 默认是"瞬间切换"，这里拦下来自己算高度做动画。
-          // 不能用 toggle 事件 —— 它在 open 已经变化之后才触发，拦不住闪跳。
-          e.preventDefault();
-          details.dataset.animating = "1";
+          // 1) 先读「此刻真正渲染出来的」高度与透明度。动画进行中这两个值
+          //    就是中间态，从它们起步才能无缝反向；必须在 cancel() 之前读，
+          //    cancel 会让元素瞬间回到基础样式。
+          var fromHeight = content.getBoundingClientRect().height;
+          var fromOpacity = parseFloat(getComputedStyle(content).opacity);
+          if (isNaN(fromOpacity)) fromOpacity = 1;
 
-          function cleanup() {
-            content.style.transition = "";
-            content.style.overflow = "";
-            content.style.opacity = "";
-            delete details.dataset.animating;
+          // 2) 撤销上一次动画。不是「吞掉这次点击」，而是让新动画接管。
+          if (previous) { previous.animation.cancel(); states.delete(details); }
+          clearInline(content);
+
+          // 3) 展开要先真的打开 details 才能量到自然高度；
+          //    收起动画期间保持 open=true，动画结束才合上。
+          if (targetOpen) details.open = true;
+          var fullHeight = content.scrollHeight;
+          var toHeight = targetOpen ? fullHeight : 0;
+          var toOpacity = targetOpen ? 1 : 0;
+
+          if (Math.abs(fromHeight - toHeight) < 1 &&
+              Math.abs(fromOpacity - toOpacity) < 0.01) {
+            details.open = targetOpen;   // 已经到位，不必起动画
+            return;
           }
 
-          if (details.open) {
-            // ---- 收起：auto -> 0 ----
-            content.style.height = content.offsetHeight + "px";
-            content.style.overflow = "hidden";
-            content.style.transition = "none";
+          content.style.overflow = "hidden";
 
-            requestAnimationFrame(function () {
-              content.style.transition =
-                "height " + DURATION + "ms ease, opacity " + DURATION + "ms ease";
-              content.style.height = "0px";
-              content.style.opacity = "0";
-            });
+          // 4) WAAPI：fill:"both" 顺带替代原来的「transition:none + rAF」起手式，
+          //    不用 setTimeout 钉死时序，onfinish 自己收尾。
+          var animation = content.animate(
+            [
+              { height: fromHeight + "px", opacity: fromOpacity },
+              { height: toHeight + "px", opacity: toOpacity }
+            ],
+            { duration: DURATION, easing: EASING, fill: "both" }
+          );
+          var entry = { animation: animation, open: targetOpen };
+          states.set(details, entry);
 
-            setTimeout(function () {
-              details.open = false;
-              // 清理内联样式，避免影响下次展开时的高度计算
-              content.style.height = "";
-              cleanup();
-            }, DURATION);
-          } else {
-            // ---- 展开：0 -> scrollHeight ----
-            details.open = true;
-            var targetHeight = content.scrollHeight;
-
-            content.style.transition = "none";
-            content.style.height = "0px";
-            content.style.overflow = "hidden";
-            content.style.opacity = "0";
-
-            requestAnimationFrame(function () {
-              content.style.transition =
-                "height " + DURATION + "ms ease, opacity " + DURATION + "ms ease";
-              content.style.height = targetHeight + "px";
-              content.style.opacity = "1";
-            });
-
-            setTimeout(function () {
-              // 回落成 auto，这样窗口缩放、图片加载、公式渲染后高度都能自适应
-              content.style.height = "auto";
-              cleanup();
-            }, DURATION);
-          }
+          animation.onfinish = function () {
+            if (states.get(details) !== entry) return;   // 已被后来的点击接管
+            // 先合上再撤销 fill，收起时不会露出基础高度闪一下
+            details.open = targetOpen;
+            animation.cancel();
+            clearInline(content);
+            states.delete(details);
+          };
         });
       })();
     </script>

@@ -175,7 +175,7 @@ body {
 }
 
 .btn-return-home .btn-return-circle {
-  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  transition: width 0.45s cubic-bezier(0.65, 0, 0.076, 1), background-color 0.45s cubic-bezier(0.65, 0, 0.076, 1);
   position: relative;
   display: block;
   margin: 0;
@@ -186,7 +186,7 @@ body {
 }
 
 .btn-return-home .btn-return-circle .btn-return-icon {
-  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  transition: background-color 0.45s cubic-bezier(0.65, 0, 0.076, 1);
   position: absolute;
   top: 0;
   bottom: 0;
@@ -195,7 +195,7 @@ body {
 }
 
 .btn-return-home .btn-return-circle .btn-return-icon.btn-return-arrow {
-  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  transition: background-color 0.45s cubic-bezier(0.65, 0, 0.076, 1), transform 0.45s cubic-bezier(0.65, 0, 0.076, 1);
   left: 0.5rem;
   width: 0.95rem;
   height: 0.1rem;
@@ -215,7 +215,7 @@ body {
 }
 
 .btn-return-home .btn-return-text {
-  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  transition: color 0.45s cubic-bezier(0.65, 0, 0.076, 1);
   position: absolute;
   top: 0;
   left: 0;
@@ -485,7 +485,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .back-to-top__icon {
   width: 12px;
-  transition-duration: 0.3s;
+  transition: transform 0.3s ease;
 }
 
 /* 图标跟随按钮文字色（原来写死了 fill: white，亮色模式下会看不见） */
@@ -502,7 +502,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .back-to-top:hover .back-to-top__icon {
-  transition-duration: 0.3s;
   transform: translateY(-200%);
 }
 
@@ -513,13 +512,13 @@ h1, h2, h3, h4, h5, h6 {
   color: currentColor;
   font-size: 0;
   white-space: nowrap;
+  transition: font-size 0.3s ease, bottom 0.3s ease;
 }
 
 .back-to-top:hover::before {
   font-size: 13px;
   opacity: 1;
   bottom: unset;
-  transition-duration: 0.3s;
 }
 
 /* 系统偏好暗色：深底 + 白图标 + 紫色光晕 */
