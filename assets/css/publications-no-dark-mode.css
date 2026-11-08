@@ -1,3 +1,7 @@
+/* 与 publications.css / notes.css 同名同值；非 auto_dark_mode 分支
+   只加载本文件，不加载 publications.css，所以必须在这里自带一份。 */
+:root { --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
+
 .badge {
     display: inline-block;
     padding: 0.25em 0.4em;
@@ -8,7 +12,7 @@
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: color .15s var(--ease-out),background-color .15s var(--ease-out),border-color .15s var(--ease-out),box-shadow .15s var(--ease-out);
 }
 
 .badge {
@@ -60,13 +64,13 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 
 .publications ol.bibliography li .links a.btn:hover { color: var(--global-theme-color); border-color: var(--global-theme-color); }
 
-.publications ol.bibliography li .hidden { font-size: 0.875rem; max-height: 0px; overflow: hidden; text-align: justify; -webkit-transition: max-height 0.15s ease, border-color 0.15s ease; -moz-transition: max-height 0.15s ease, border-color 0.15s ease; -ms-transition: max-height 0.15s ease, border-color 0.15s ease; -o-transition: max-height 0.15s ease, border-color 0.15s ease; transition: max-height 0.15s ease, border-color 0.15s ease; }
+.publications ol.bibliography li .hidden { font-size: 0.875rem; max-height: 0px; overflow: hidden; text-align: justify; -webkit-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -moz-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -ms-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -o-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); }
 
 .publications ol.bibliography li .hidden p { line-height: 1.4em; margin: 10px; }
 
 .publications ol.bibliography li .hidden pre { font-size: 1em; line-height: 1.4em; padding: 10px; }
 
-.publications ol.bibliography li .hidden.open { max-height: 100em; -webkit-transition: max-height 0.15s ease, border-color 0.15s ease; -moz-transition: max-height 0.15s ease, border-color 0.15s ease; -ms-transition: max-height 0.15s ease, border-color 0.15s ease; -o-transition: max-height 0.15s ease, border-color 0.15s ease; transition: max-height 0.15s ease, border-color 0.15s ease; }
+.publications ol.bibliography li .hidden.open { max-height: 100em; -webkit-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -moz-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -ms-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -o-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); }
 
 .publications ol.bibliography li div.abstract.hidden { border: dashed 1px var(--global-bg-color); }
 

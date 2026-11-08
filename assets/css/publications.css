@@ -28,7 +28,7 @@ body {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: color .15s var(--ease-out),background-color .15s var(--ease-out),border-color .15s var(--ease-out),box-shadow .15s var(--ease-out);
 }
 
 .badge {
@@ -39,6 +39,8 @@ body {
 }
 
 :root { --global-bg-color: #ffffff; --global-code-bg-color: rgba(181, 9, 172, 0.05); --global-text-color: #000000; --global-text-color-light: #828282; --global-theme-color: #002D72; --global-hover-color: #ffb81c; --global-footer-bg-color: #1c1c1c; --global-footer-text-color: #e8e8e8; --global-footer-link-color: #ffffff; --global-distill-app-color: #828282; }
+
+:root { --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
 
 @media (prefers-color-scheme: dark) { :root { --global-theme-color: rgb(36, 150, 203);}}
 
@@ -87,13 +89,13 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
 
 .publications ol.bibliography li .links a.btn:hover { color: var(--global-theme-color); border-color: var(--global-theme-color); }
 
-.publications ol.bibliography li .hidden { font-size: 0.875rem; max-height: 0px; overflow: hidden; text-align: justify; -webkit-transition: max-height 0.15s ease, border-color 0.15s ease; -moz-transition: max-height 0.15s ease, border-color 0.15s ease; -ms-transition: max-height 0.15s ease, border-color 0.15s ease; -o-transition: max-height 0.15s ease, border-color 0.15s ease; transition: max-height 0.15s ease, border-color 0.15s ease; }
+.publications ol.bibliography li .hidden { font-size: 0.875rem; max-height: 0px; overflow: hidden; text-align: justify; -webkit-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -moz-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -ms-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -o-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); }
 
 .publications ol.bibliography li .hidden p { line-height: 1.4em; margin: 10px; }
 
 .publications ol.bibliography li .hidden pre { font-size: 1em; line-height: 1.4em; padding: 10px; }
 
-.publications ol.bibliography li .hidden.open { max-height: 100em; -webkit-transition: max-height 0.15s ease, border-color 0.15s ease; -moz-transition: max-height 0.15s ease, border-color 0.15s ease; -ms-transition: max-height 0.15s ease, border-color 0.15s ease; -o-transition: max-height 0.15s ease, border-color 0.15s ease; transition: max-height 0.15s ease, border-color 0.15s ease; }
+.publications ol.bibliography li .hidden.open { max-height: 100em; -webkit-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -moz-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -ms-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); -o-transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); transition: max-height 0.15s var(--ease-out), border-color 0.15s var(--ease-out); }
 
 .publications ol.bibliography li div.abstract.hidden { border: dashed 1px var(--global-bg-color); }
 
@@ -170,7 +172,7 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   padding: 0 14px;
   z-index: 3;
   opacity: 1;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.25s var(--ease-out);
   /* 最多 4 行，超出用省略号截断 */
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -196,7 +198,7 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   z-index: 2;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .social-hover-panel:hover .social-hover-cards,
@@ -219,7 +221,7 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   border: 1px solid rgba(255, 255, 255, 0.3);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  transition: background-color 0.25s var(--ease-out), transform 0.2s var(--ease-out), box-shadow 0.25s var(--ease-out);
 }
 
 .social-hover-card:hover {
@@ -233,7 +235,7 @@ blockquote { background: var(--global-bg-color); border-left: 2px solid var(--gl
   height: 28px;
   fill: currentColor;
   opacity: 1;
-  transition: color 0.2s ease-in-out;
+  transition: color 0.2s var(--ease-out);
 }
 
 .social-hover-icon--github   { color: #181717; }
@@ -403,8 +405,8 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   --stars-color: #fff8e1;
   --clouds-color: #f4f4f4;
   --back-clouds-color: #bacfe0;
-  --transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
-  --circle-transition: 0.3s cubic-bezier(0, -0.02, 0.35, 1.17);
+  --transition: 0.2s var(--ease-out);
+  --circle-transition: 0.25s var(--ease-out);
   display: inline-block;
 
   /* 默认回归文档流：具体摆放交给外层容器决定
@@ -609,7 +611,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   box-shadow:
     0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset,
     0em -0.062em 0.062em 0em #969696 inset;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s var(--ease-out);
   position: relative;
 }
 
@@ -626,7 +628,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   border-radius: var(--container-radius);
   background-color: var(--spot-color);
   box-shadow: 0em 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.25s var(--ease-out);
   filter: url(#sketchy-sm);
 }
 
@@ -672,7 +674,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
     4.625em -1.75em 0 0.437em var(--clouds-color),
     4em -0.625em var(--back-clouds-color),
     4.125em -2.125em 0 0.437em var(--back-clouds-color);
-  transition: bottom 0.5s cubic-bezier(0, -0.02, 0.4, 1.25), transform 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
+  transition: bottom 0.2s var(--ease-out), transform 0.2s var(--ease-out);
   filter: url(#sketchy-sm);
 }
 
@@ -748,7 +750,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   );
   border-radius: 50%;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .theme-switch__sun-moon-container:hover::after {
@@ -763,7 +765,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   top: 20%;
   left: -10%;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .theme-switch__shooting-star-2 {
@@ -774,7 +776,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   top: 35%;
   left: -10%;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .theme-switch__meteor {
@@ -787,7 +789,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   left: 50%;
   opacity: 0;
   filter: blur(1px);
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .theme-switch__checkbox:checked
@@ -812,7 +814,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .theme-switch__stars-cluster .star {
@@ -866,7 +868,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   opacity: 0;
   filter: blur(4px);
   transform: translateY(-100%);
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .theme-switch__comets {
@@ -874,7 +876,7 @@ html[data-theme="light"] .social-hover-icon--x      { color: #000000; }
   inset: 0;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .theme-switch__comets .comet {

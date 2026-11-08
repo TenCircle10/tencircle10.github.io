@@ -10,7 +10,8 @@
 
          原理：滚动时检测按钮的视口坐标是否还在预期位置（视口底 - bottom）。
          一旦发现它被"冲走"了（坐标随页面滚动而漂移），就切换到
-         position: absolute + 手动设置 top 的方案，用 JS 把它钉在视口上。
+         position: absolute + transform: translate3d(x, y, 0) 的方案，
+         用 JS 把它钉在视口上；尺寸只在 resize / load 时读，滚动帧不碰布局。
 
          关键点：正常设备上永远检测不到失效，因此这段代码完全不介入，
          不会影响桌面 Chrome / Safari / Edge 的原生行为。 -->
@@ -25,7 +26,8 @@
           var list = [];
           for (var i = 0; i < BTN.length; i++) {
             var el = document.getElementById(BTN[i].id);
-            if (el) list.push({ el: el, bottom: BTN[i].bottom });
+            // w / h 先占位，真正的尺寸只在 measureAll() 里读一次
+            if (el) list.push({ el: el, bottom: BTN[i].bottom, w: 0, h: 0 });
           }
           return list;
         }
@@ -33,46 +35,56 @@
         var items = collect();
         if (!items.length) return;
 
-        // 只在移动端窄屏下才有这两个悬浮球，宽屏没必要
+        // 视口与按钮尺寸全部缓存：只在初始化 / resize / load 时读一次。
+        // 滚动帧里绝不读 offsetWidth / offsetHeight —— 那是强制同步布局的元凶。
+        var viewport = { w: 0, h: 0 };
+
+        function measureAll() {
+          viewport.w = window.innerWidth || document.documentElement.clientWidth;
+          viewport.h = window.innerHeight || document.documentElement.clientHeight;
+          for (var i = 0; i < items.length; i++) {
+            items[i].w = items[i].el.offsetWidth;
+            items[i].h = items[i].el.offsetHeight;
+          }
+        }
+
         function isMobile() {
-          return window.innerWidth <= 900;
+          return viewport.w <= 900;
         }
 
         var broken = false;   // 是否已确认 fixed 失效
         var ticking = false;
 
-        // 视口底部到按钮底边的距离是否还等于 CSS 里的 bottom 值？
-        // fixed 正常时恒等于；被降级成 absolute 后会随滚动越漂越远。
+        // 检测阶段仍要读一次 rect，但一旦确认失效（broken=true）check() 会直接返回，
+        // 之后每帧只读滚动值；且 check() 排在写入之前，读写不交错。
         function isDrifted(item) {
           var rect = item.el.getBoundingClientRect();
           if (!rect.height) return false;                       // 元素不可见，忽略
-          var expected = window.innerHeight - item.bottom;
+          var expected = viewport.h - item.bottom;
           return Math.abs(rect.bottom - expected) > 8;
         }
 
-        // 自愈：改用 absolute + 动态 top，把按钮钉在视口上
+        // 自愈：改用 absolute + transform，把按钮钉在视口上
         function applyFallback(item) {
           var el = item.el;
           el.classList.add("is-fixed-fallback");
+          // 切成 absolute 后尺寸可能变，补测一次（仅此一次）
+          item.w = el.offsetWidth;
+          item.h = el.offsetHeight;
           updateFallback(item);
         }
 
         function updateFallback(item) {
           var el = item.el;
           if (!el.classList.contains("is-fixed-fallback")) return;
-          // absolute 定位下 top/left 是相对文档的坐标，
-          // 所以要把「视口右下角」换算成文档坐标，才能始终贴在视口边角。
-          var scrollX = window.pageXOffset || document.documentElement.scrollLeft || 0;
-          var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-          var viewportW = window.innerWidth || document.documentElement.clientWidth;
-
-          // 左边距 20px（与原 CSS 的 right: 20px 保持视觉一致）
-          var left = scrollX + viewportW - 20 - el.offsetWidth;
-          // 底边距 = bottom
-          var top = scrollY + window.innerHeight - item.bottom - el.offsetHeight;
-
-          el.style.left = left + "px";
-          el.style.top = top + "px";
+          // 元素锚在文档 (0,0)（见 notes.css），把「视口右下角」换算成
+          // 文档坐标后交给 transform。transform 走合成层，不触发重排；
+          // 这里每帧读的只有滚动偏移，它不参与布局计算。
+          var scrollX = window.pageXOffset || 0;
+          var scrollY = window.pageYOffset || 0;
+          var x = scrollX + viewport.w - 20 - item.w;
+          var y = scrollY + viewport.h - item.bottom - item.h;
+          el.style.transform = "translate3d(" + x + "px," + y + "px,0)";
         }
 
         function updateAll() {
@@ -108,18 +120,22 @@
           });
         }
 
+        measureAll();
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener("resize", function () {
-          if (!ticking) {
-            ticking = true;
-            window.requestAnimationFrame(function () {
-              ticking = false;
-              updateAll();
-            });
-          }
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(function () {
+            ticking = false;
+            measureAll();   // 尺寸只在 resize 时重读
+            updateAll();
+          });
         }, { passive: true });
 
-        // 兜底启用后，元素从 fixed 切成 absolute，需要按当前滚动位置重算 top
-        window.addEventListener("load", updateAll);
+        // 字体 / 图片加载完可能改变按钮尺寸，重测一次再钉
+        window.addEventListener("load", function () {
+          measureAll();
+          updateAll();
+        });
       })();
     </script>

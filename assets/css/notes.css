@@ -9,6 +9,11 @@
    以免继承主题那套"固定左侧边栏"的骨架。
    ========================================================================== */
 
+/* 全站统一缓动曲线（与 publications.css 里同名变量保持一致）。
+   两个文件各定义一次：notes.css 只在笔记页加载，主页在 auto_dark_mode
+   分支只加载 publications.css，两边都要能独立拿到值。 */
+:root { --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
+
 /* =============================== 全局滚动 ================================ */
 
 /* 原生 CSS 平滑滚动：浏览器在锚点跳转（含左侧 Tocbot 生成的目录链接、
@@ -66,18 +71,22 @@ body {
    这个类由 _includes/fixed-fallback.html 里的脚本在**检测到失效时**才加上，
    正常设备上永远不会出现，所以对桌面浏览器零影响。
 
-   元素从 fixed 切成 absolute 后，它的 top/bottom 变成相对文档的坐标；
-   脚本会在滚动时把 top / left 更新成「视口右下角」对应的文档坐标，
-   于是按钮在视觉上依然牢牢钉在视口右下角。
+   元素锚定在文档 (0,0)，由脚本每帧只写 transform: translate3d(x, y, 0)
+   （合成属性，不触发重排）；left / top 固定为 0，避免与 transform 叠加。
+   视口与按钮尺寸只在 resize / load 时读，滚动帧里没有布局读取。
 
-   注意这里不用 right/bottom：absolute 定位下它们是相对文档而非视口，
-   横向会随文档宽度漂移。改用 left + top 由脚本按视口宽高精确换算。 */
+   必须禁掉 transition：这两个球原本带 transform 过渡，逐帧写 transform
+   会被过渡拖成「追不上滚动」的滞后抖动。 */
 .back-to-top.is-fixed-fallback,
 .toc-mobile-btn.is-fixed-fallback {
   position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
   right: auto !important;
   bottom: auto !important;
   z-index: 9999 !important;
+  transition: none !important;
+  will-change: transform;
 }
 
 /* =============================== 页面骨架 ================================ */
@@ -175,7 +184,7 @@ body {
 }
 
 .btn-return-home .btn-return-circle {
-  transition: width 0.45s cubic-bezier(0.65, 0, 0.076, 1), background-color 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  transition: width 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
   position: relative;
   display: block;
   margin: 0;
@@ -186,7 +195,7 @@ body {
 }
 
 .btn-return-home .btn-return-circle .btn-return-icon {
-  transition: background-color 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  transition: background-color 0.2s var(--ease-out);
   position: absolute;
   top: 0;
   bottom: 0;
@@ -195,7 +204,7 @@ body {
 }
 
 .btn-return-home .btn-return-circle .btn-return-icon.btn-return-arrow {
-  transition: background-color 0.45s cubic-bezier(0.65, 0, 0.076, 1), transform 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  transition: background-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
   left: 0.5rem;
   width: 0.95rem;
   height: 0.1rem;
@@ -215,7 +224,7 @@ body {
 }
 
 .btn-return-home .btn-return-text {
-  transition: color 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  transition: color 0.2s var(--ease-out);
   position: absolute;
   top: 0;
   left: 0;
@@ -305,7 +314,7 @@ html[data-theme="dark"] .btn-return-home:hover .btn-return-text {
   visibility: visible;
   /* 只对透明度做过渡，visibility 用 immediate 切换；
      不对 height / 布局属性做过渡，否则会触发整页重排 */
-  transition: opacity 0.25s ease;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 /* 尊重「减少动态效果」的用户偏好：关掉平滑滚动与内容淡入，避免眩晕 */
@@ -319,10 +328,25 @@ html[data-theme="dark"] .btn-return-home:hover .btn-return-text {
   }
 }
 
-/* ---- Callout 展开/收起：height 过渡由 JS 驱动，这里只保证内容区可裁剪 ---- */
-.callout-content {
-  /* JS 动画期间会临时设置 height / overflow，结束后回落到 auto */
-  will-change: auto;
+/* ---- Callout 展开/收起：grid 行插值（0fr -> 1fr），高度连续变化 ----------
+   外层 .callout-grid 由 note.html 在首次点击时包在 .callout-content 外面。
+   details 本身不适合做 grid 容器：Chrome 131+ 会把非 summary 的子节点收进
+   ::details-content 伪元素，各内核的直接子元素并不一致。
+   内层必须 min-height:0 + overflow:hidden，否则 grid 行的自动最小尺寸会
+   顶到内容高度，0fr 压不下去（这是 0fr 技巧能生效的前提）。
+   老内核不支持 fr 行插值时由 JS 直接切换：宁可无动画，也不要高度跳变。 */
+.callout-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+details.callout[open] > .callout-grid {
+  grid-template-rows: 1fr;
+}
+
+.callout-grid > .callout-content {
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* 笔记标题（原来是侧边栏布局里的 h2） */
@@ -472,9 +496,9 @@ h1, h2, h3, h4, h5, h6 {
   will-change: transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transition: opacity 0.25s ease, transform 0.25s ease, width 0.3s ease,
-    border-radius 0.3s ease, background-color 0.3s ease, color 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out), width 0.25s var(--ease-out),
+    border-radius 0.25s var(--ease-out), background-color 0.25s var(--ease-out), color 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out);
 }
 
 .back-to-top.is-visible {
@@ -485,7 +509,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .back-to-top__icon {
   width: 12px;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s var(--ease-out);
 }
 
 /* 图标跟随按钮文字色（原来写死了 fill: white，亮色模式下会看不见） */
@@ -512,7 +536,7 @@ h1, h2, h3, h4, h5, h6 {
   color: currentColor;
   font-size: 0;
   white-space: nowrap;
-  transition: font-size 0.3s ease, bottom 0.3s ease;
+  transition: font-size 0.25s var(--ease-out), bottom 0.25s var(--ease-out);
 }
 
 .back-to-top:hover::before {
@@ -647,7 +671,7 @@ html[data-theme="light"] .back-to-top {
   line-height: 1.5;
   text-decoration: none !important;
   border-left: 2px solid transparent;
-  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  transition: color 0.15s var(--ease-out), border-color 0.15s var(--ease-out), background-color 0.15s var(--ease-out);
   /* 单行截断：长标题不换行、超出用省略号，避免把 250px 的侧边栏撑爆 */
   white-space: nowrap;
   overflow: hidden;
@@ -778,7 +802,7 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
     overflow-y: auto;
     transform: translateX(100%);
     visibility: hidden;
-    transition: transform 0.3s ease, visibility 0.3s ease;
+    transition: transform 0.25s var(--ease-out), visibility 0.25s var(--ease-out);
   }
 
   .toc-sidebar.is-open {
@@ -799,7 +823,7 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
     z-index: 999;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.25s var(--ease-out);
   }
 
   .toc-overlay.is-open {
@@ -827,7 +851,7 @@ html[data-theme="light"] .js-toc .toc-link.is-active-link {
     /* translate3d 强制 3D 加速（安卓 X5 内核 fixed 失效的解法），
        保留合成层的同时不影响 :active 的缩放动画 */
     transform: translate3d(0, 0, 0);
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
   }
 
   /* ---- 右下角两个悬浮球：强制钉在视口 ------------------------------------

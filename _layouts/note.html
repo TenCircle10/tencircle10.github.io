@@ -57,6 +57,21 @@
   </head>
   <body>
 
+    <!-- 全页共用：JS 主动滚动必须尊重「减少动态效果」。
+         notes.css 里已有 @media (prefers-reduced-motion) 把 scroll-behavior 关成 auto，
+         但 scrollTo({behavior:"smooth"}) 会覆盖 CSS 降级，所以在这里统一收口。 -->
+    <script>
+      (function () {
+        var mq = window.matchMedia
+          ? window.matchMedia("(prefers-reduced-motion: reduce)")
+          : null;
+        window.siteScrollBehavior = function () {
+          // "instant" 生效时立即到位；旧内核不认这个枚举会退回默认 auto，同样是瞬时
+          return mq && mq.matches ? "instant" : "smooth";
+        };
+      })();
+    </script>
+
     <!-- 日夜切换开关：固定右上角，始终可见（样式见 publications.css 的 .note-topbar 规则） -->
     <div class="note-topbar">
       {% include theme-switch.html %}
@@ -189,7 +204,7 @@
         toggleButton();
 
         button.addEventListener("click", function () {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ top: 0, behavior: window.siteScrollBehavior() });
         });
       })();
     </script>
@@ -308,7 +323,7 @@
           if (itemTop < boxTop + margin || itemBottom > boxBottom - margin) {
             var target = active.offsetTop - sidebar.clientHeight / 2 + active.offsetHeight / 2;
             if (target < 0) target = 0;
-            sidebar.scrollTo({ top: target, behavior: "smooth" });
+            sidebar.scrollTo({ top: target, behavior: window.siteScrollBehavior() });
           }
         }
 
@@ -349,23 +364,69 @@
       })();
     </script>
 
-    <!-- ============ Callout 展开/收起过渡动画（WAAPI，可打断） ============ -->
+    <!-- ============ Callout 展开/收起动画（WAAPI + grid 行插值） ============ -->
     <script>
       (function () {
-        var DURATION = 300;   // 保持原时长；缓动统一放到下一批处理
-        var EASING = "ease";
+        var DURATION = 200;   // 与全站 150-250ms 区间对齐
+        // 缓动取 CSS 变量，保证 JS 与 CSS 用同一条曲线；读不到时回退
+        var EASING = (getComputedStyle(document.documentElement)
+          .getPropertyValue("--ease-out") || "").trim() ||
+          "cubic-bezier(0.23, 1, 0.32, 1)";
 
-        // 每个 details 的「当前动画 + 该动画的目标开合状态」。
-        // 用 WeakMap 存状态：不往 DOM 写标记，也没有「动画中」的布尔锁。
+        // 每个 details 的「当前动画 + 目标开合状态 + 展开后的完整高度」。
+        // WeakMap：不往 DOM 写标记，也没有「动画中」的布尔锁。
         var states = new WeakMap();
         var reduceMotion = window.matchMedia
           ? window.matchMedia("(prefers-reduced-motion: reduce)")
           : { matches: false };
 
-        function clearInline(content) {
-          content.style.height = "";
-          content.style.opacity = "";
-          content.style.overflow = "";
+        // 老内核（QQ X5 等）不支持 fr 行插值：直接切换，宁可无动画也不跳。
+        var supportsGridFr = (function () {
+          try {
+            return !!(window.CSS && CSS.supports &&
+              CSS.supports("grid-template-rows", "0fr"));
+          } catch (err) { return false; }
+        })();
+
+        // details 本身不适合当 grid 容器：Chrome 131+ 会把非 summary 的子节点
+        // 收进 ::details-content 伪元素，各内核的直接子元素并不一致。
+        // 所以给 .callout-content 包一层 .callout-grid：外层 0fr -> 1fr，
+        // 内层 min-height:0 + overflow:hidden，高度才能连续收缩。
+        // 只包一次；动态插入的 callout 在首次点击时惰性补上。
+        function wrapContent(content) {
+          var parent = content.parentElement;
+          if (!parent) return null;
+          if (parent.classList && parent.classList.contains("callout-grid")) {
+            return parent;
+          }
+          var grid = document.createElement("div");
+          grid.className = "callout-grid";
+          parent.insertBefore(grid, content);
+          grid.appendChild(content);
+          return grid;
+        }
+
+        function clamp01(v) {
+          return v < 0 ? 0 : (v > 1 ? 1 : v);
+        }
+
+        // 中途反向时读「此刻真正渲染出来的」行位置。
+        // gridTemplateRows 的 resolved value 在 Chrome 是 px，部分内核保留 fr，
+        // 两种都认：px 时除以动画起手量到的一次 fullPx 换算回 fr。
+        // 注意必须在 cancel() 之前读 —— cancel 会让元素瞬间回到基础样式。
+        function currentFr(grid, entry) {
+          if (!entry) return null;
+          var raw = getComputedStyle(grid).gridTemplateRows || "none";
+          var m = /([\d.]+)\s*(fr|px)/.exec(raw);
+          if (!m) return null;
+          var v = parseFloat(m[1]);
+          if (m[2] === "fr") return clamp01(v);
+          return entry.fullPx ? clamp01(v / entry.fullPx) : null;
+        }
+
+        function clearInline(grid) {
+          grid.style.opacity = "";
+          grid.style.willChange = "";
         }
 
         // 事件委托：整页只挂一个监听器，之后动态插入的 callout 同样生效
@@ -383,58 +444,78 @@
           if (target.closest("a")) return;   // 标题里的链接照常跳转
 
           // <details> 默认瞬间切换，这里拦下来自己做动画。
-          // 不能用 toggle 事件 —— 它在 open 变化之后才触发，拦不住闪跳。
           e.preventDefault();
+          var grid = wrapContent(content);
+          if (!grid) return;
 
           var previous = states.get(details);
-          // 方向不能看 details.open：收起动画期间 open 仍为 true
-          // （要等动画结束才置 false，否则内容会瞬间消失），连点两次会判反。
+          // 方向不能看 details.open：收起动画期间 open 仍为 true，连点会判反。
           var targetOpen = previous ? !previous.open : !details.open;
 
-          // 不支持 WAAPI 或用户要求减少动效 -> 直接切换，功能不打折
-          if (typeof content.animate !== "function" || reduceMotion.matches) {
+          // 不支持 fr 插值 / 无 WAAPI / 用户要求减少动效 -> 直接切换，功能不打折
+          if (!supportsGridFr || typeof grid.animate !== "function" ||
+              reduceMotion.matches) {
             if (previous) { previous.animation.cancel(); states.delete(details); }
-            clearInline(content);
+            clearInline(grid);
             details.open = targetOpen;
             return;
           }
 
-          // 1) 先读「此刻真正渲染出来的」高度与透明度。动画进行中这两个值
-          //    就是中间态，从它们起步才能无缝反向；必须在 cancel() 之前读，
-          //    cancel 会让元素瞬间回到基础样式。
-          var fromHeight = content.getBoundingClientRect().height;
-          var fromOpacity = parseFloat(getComputedStyle(content).opacity);
+          // 1) 先读中间态。有动画时 details.open 必为 true（收起期间也保持），
+          //    内容一定可量，不会撞上 details 关闭时子节点被隐藏的情况。
+          var fromFr, fromOpacity;
+          if (previous) {
+            fromFr = currentFr(grid, previous);
+            if (fromFr === null) fromFr = previous.fromFr;
+            fromOpacity = parseFloat(getComputedStyle(grid).opacity);
+          } else {
+            fromFr = details.open ? 1 : 0;
+            fromOpacity = details.open ? 1 : 0;
+          }
           if (isNaN(fromOpacity)) fromOpacity = 1;
-
-          // 2) 撤销上一次动画。不是「吞掉这次点击」，而是让新动画接管。
-          if (previous) { previous.animation.cancel(); states.delete(details); }
-          clearInline(content);
-
-          // 3) 展开要先真的打开 details 才能量到自然高度；
-          //    收起动画期间保持 open=true，动画结束才合上。
-          if (targetOpen) details.open = true;
-          var fullHeight = content.scrollHeight;
-          var toHeight = targetOpen ? fullHeight : 0;
+          var toFr = targetOpen ? 1 : 0;
           var toOpacity = targetOpen ? 1 : 0;
 
-          if (Math.abs(fromHeight - toHeight) < 1 &&
+          // 2) 撤销上一次动画：不是「吞掉这次点击」，而是让新动画接管。
+          if (previous) { previous.animation.cancel(); states.delete(details); }
+          clearInline(grid);
+
+          // 3) 展开要立刻渲染内容；收起期间保持 open，动画结束才合上。
+          if (targetOpen) details.open = true;
+
+          if (Math.abs(fromFr - toFr) < 0.01 &&
               Math.abs(fromOpacity - toOpacity) < 0.01) {
             details.open = targetOpen;   // 已经到位，不必起动画
             return;
           }
 
-          content.style.overflow = "hidden";
+          // 完整高度只量一次：静止态起手时读，中途反向直接复用上一条记录。
+          var fullPx = 0;
+          if (previous && previous.fullPx) {
+            fullPx = previous.fullPx;
+          } else {
+            fullPx = content.scrollHeight;
+            if (!fullPx) {
+              var mm = /([\d.]+)\s*px/.exec(
+                getComputedStyle(grid).gridTemplateRows || "");
+              if (mm) fullPx = parseFloat(mm[1]);
+            }
+          }
 
-          // 4) WAAPI：fill:"both" 顺带替代原来的「transition:none + rAF」起手式，
-          //    不用 setTimeout 钉死时序，onfinish 自己收尾。
-          var animation = content.animate(
+          // 只在动画期间提示，结束后清掉，避免几十个 callout 常驻占内存
+          grid.style.willChange = "grid-template-rows, opacity";
+
+          var animation = grid.animate(
             [
-              { height: fromHeight + "px", opacity: fromOpacity },
-              { height: toHeight + "px", opacity: toOpacity }
+              { gridTemplateRows: fromFr + "fr", opacity: fromOpacity },
+              { gridTemplateRows: toFr + "fr", opacity: toOpacity }
             ],
             { duration: DURATION, easing: EASING, fill: "both" }
           );
-          var entry = { animation: animation, open: targetOpen };
+          var entry = {
+            animation: animation, open: targetOpen,
+            fromFr: fromFr, toFr: toFr, fullPx: fullPx
+          };
           states.set(details, entry);
 
           animation.onfinish = function () {
@@ -442,7 +523,7 @@
             // 先合上再撤销 fill，收起时不会露出基础高度闪一下
             details.open = targetOpen;
             animation.cancel();
-            clearInline(content);
+            clearInline(grid);
             states.delete(details);
           };
         });
