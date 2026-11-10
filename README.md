@@ -16,8 +16,7 @@
 ## 关于这个仓库
 
 这里是站点的源码仓库，基于 Jekyll 与 GitHub Pages，主题衍生自
-[minimal-light](https://github.com/yaoyao-liu/minimal-light)。笔记
-内容以中文为主。
+[minimal-light](https://github.com/yaoyao-liu/minimal-light)。笔记内容以中文为主。
 
 构建方式、发布流程、脚本与前端实现等维护细节都在
 [`TECH_GUIDE.md`](TECH_GUIDE.md) 里。仓库中另外三个 `README_*.md` 是上游主题自带的
