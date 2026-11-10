@@ -3,6 +3,9 @@
 > 本站 = **Jekyll + Minimal Light 主题**，部署在 GitHub Pages。
 > 这份文档是"施工图"：架构、发布流、脚本能力、前端交互、排雷清单。
 > 它本身已加入 `_config.yml` 的 `exclude`，不会被发布成网页。
+>
+> **文档分工**：`README.md` 只写给访客看（站点是什么、有什么、怎么访问、许可证）；
+> 技术内容一律放这里，不要写进 README。
 
 **站点**：https://tencircle10.github.io/
 **仓库**：https://github.com/TenCircle10/tencircle10.github.io
