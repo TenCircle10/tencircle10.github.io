@@ -797,6 +797,18 @@ tocbot.init({
   里残留的 `0.15s`（含 `.15s` 写法）一并清掉，全站生效样式不再有 `0.15s`
   这一历史遗留档位。`html_source_file/` 是原始主题快照，不参与 Jekyll 构建，
   保持原样。
+- **曲线分两类，别再「统一」回一条**：`--ease-out`
+  （`cubic-bezier(0.23, 1, 0.32, 1)`）只给 hover / 颜色 / 小缩放等反馈类动效；
+  它的 85% 位移集中在前 20% 时间，套在高度展开上就是「啪一下弹开 + 后大半程
+  空转」。`_layouts/note.html` 的 Callout 属于大位移，改用字面量
+  `cubic-bezier(0.4, 0, 0.2, 1)`（起止平顺），时长 `250ms` 与全站 `0.25s`
+  对齐 —— 这也是 JS 里最后一个 `200ms` 历史值。`.hidden` 是预留死代码，
+  将来启用时同样应换成这条平顺曲线。
+- Callout 只动画 `grid-template-rows`，不叠加 opacity 淡入淡出（半透明时
+  逐帧重排会发糊、掉帧）；`details.open = true` 与 `animate()` 之间不读任何
+  布局，避免露出一帧全高；反向点击时现场用 `inner.scrollHeight` 换算 fr
+  起点，不缓存会过期的完整高度；`will-change: grid-template-rows` 已删除
+  （它不是可提升合成层的属性，动画开始时才设置也来不及生效）。
 - 两份 CSS 末尾的 `@media (prefers-reduced-motion: reduce)` 把 `.hidden` 的
   过渡也关掉，减少动效时直接开合。
 - 不为老内核加 `@supports` 能力探测：不支持 `fr` 行插值的内核会瞬间开合
