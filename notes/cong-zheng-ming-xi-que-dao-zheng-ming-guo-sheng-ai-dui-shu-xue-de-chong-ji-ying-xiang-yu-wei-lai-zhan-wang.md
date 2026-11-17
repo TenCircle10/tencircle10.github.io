@@ -21,7 +21,7 @@ render_with_liquid: false
 **2024年7月**  
 Google DeepMind的AlphaProof与AlphaGeometry 2联手，在国际数学奥林匹克竞赛（IMO）中解出6道题中的4道，获得28分，达到银牌水平。这是AI首次在这类竞赛中达到奖牌级别。AlphaProof的关键设计在于：它在一个名为Lean的形式化证明环境中运行强化学习，生成的每一个证明步骤都能被Lean内核自动检查——这意味着“看起来像对的”和“确实是对的”之间的模糊地带被大幅压缩了。
 
-[刚刚，DeepMind再登Nature：AlphaProof首夺国际数学奥林匹克银牌-36氪](https://36kr.com/p/3550989555513221)
+[刚刚，DeepMind再登Nature：AlphaProof首夺国际数学奥林匹克银牌-36氪](/notes/刚刚，DeepMind再登Nature：AlphaProof首夺国际数学奥林匹克银牌-36氪/)
 
 **2024年11月7日**  
 非营利研究机构Epoch AI发布FrontierMath基准。该基准的设计初衷就是“抵抗AI刷榜”，发布时顶尖模型只能解决不到2%的问题。
@@ -66,16 +66,16 @@ OpenAI正式宣布，其内部通用推理模型自主推翻了一个悬置近80
 
 证明的关键在于，模型将**代数数论**中的深层工具应用到了一个看似初等的离散几何问题上。这是一般数学家几乎不会尝试的连接方向。菲尔兹奖得主Timothy Gowers在配套论文中将此评价为“AI数学中的重要里程碑”，并判断其质量“达到了最强数学期刊所期望的标准”。证明由外部数学家小组（包括Noga Alon和Tim Gowers）进行了独立验证、简化和背景阐释。OpenAI同步公开了形式化证明全文、外部数学家配套论文和模型思维链节选。
 
-[OpenAI 模型推翻了离散几何领域的核心猜想 ｜ OpenAI](https://openai.com/zh-Hans-CN/index/model-disproves-discrete-geometry-conjecture/)
+[OpenAI 模型推翻了离散几何领域的核心猜想](/notes/OpenAI 模型推翻了离散几何领域的核心猜想/)
 
 **2026年6月2日**  
-《Leiden Declaration on Artificial Intelligence and Mathematics（莱顿人工智能与数学宣言）》正式发布，并获得**国际数学联盟（IMU）** 的正式背书。IMU是主办国际数学家大会、监管菲尔兹奖评选的国际组织。
+《莱顿人工智能与数学宣言》正式发布，并获得**国际数学联盟（IMU）** 的正式背书。IMU是主办国际数学家大会、监管菲尔兹奖评选的国际组织。
 
 宣言由16位来自15所大学的学者起草，历时约八个月。它系统指出了AI对数学研究的五大威胁：似是而非的虚假证明、署名与版权问题、技术依赖与不平等、过度炒作、研究自主权丧失。宣言提出了23条具体建议，分别面向个体数学家、数学组织与资助方、政策制定者。
 
 宣言发布24小时内签名超过1,000人，一周内达到2,000人。
 
-[Leiden Declaration on Artificial Intelligence and Mathematics](https://leidendeclaration.ai/)
+[Leiden Declaration on Artificial Intelligence and Mathematics](/notes/Leiden Declaration on Artificial Intelligence and Mathematics/)莱顿宣言
 
 **2026年8月1日**  
 OpenAI一次性发布十项数学与理论计算机科学成果，其中三项直接涉及埃尔德什问题（#146、#180、#183），每一项都附带了无未证明步骤的Lean 4证书。OpenAI在官方公告中明确提到，5月的埃尔德什猜想推翻“启发”了后续研究。
@@ -105,7 +105,7 @@ Astra完成Lean形式化验证。
 **2026年9月8日**  
 OpenAI正式发布声明，同步公开**166页论文**和**Lean验证代码**。证明针对的是千禧年难题官方表述中的**命题C和D方向**：构造有限且处处光滑的外力，使光滑解在有限时间内形成奇点。OpenAI声明不申领100万美元奖金，将成果定位为“AI进步的快照”。
 
-[关于纳维–斯托克斯千禧年大奖难题 ｜ OpenAI](https://openai.com/zh-Hans-CN/index/navier-stokes-solution/)
+[关于纳维–斯托克斯千禧年大奖难题](/notes/关于纳维–斯托克斯千禧年大奖难题/)
 
 **2026年9月8日—9日**  
 争议爆发。纽约大学数学家**Tristan Buckmaster**公开质疑：他与Anthropic研究员**Levent Alpöge**此前已在相近方向上得到了带光滑外力的欧拉方程有限时间奇点，并完成了Lean验证；由于他曾使用**Codex**处理过相关对话，他质疑OpenAI的模型是否接触了这些会话内容并因此受到了影响。他还称，OpenAI方面曾提议“由他单独发表”。
@@ -125,7 +125,7 @@ TechCrunch发表后续报道，记录争议进一步升级。
 
 声明发布后迅速扩散。据后续报道，全球**7,000余位数学家**开始联署。
 
-[A Severe Misalignment of AI in Mathematics ｜ What's new](https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/)
+[A Severe Misalignment of AI in Mathematics](/notes/A Severe Misalignment of AI in Mathematics/)
 
 **2026年9月13日**  
 《莱顿宣言》签名人数达到**4,013人**。
@@ -145,7 +145,7 @@ Deseret News发表分析文章，指出AI在2025年底至2026年间开始系统�
 > 
 > 作者感谢AI模型，尤其是ChatGPT 6 Astra和Claude Pro，在探索部分证明策略与计算方面提供的宝贵帮助。话虽如此，作者仍对人工验证与阐述承担责任。
 
-[丘成桐论文致谢AI，77岁数学泰斗，也逃不过“真香定律”？](https://www.163.com/dy/article/L80QJMJD05118O92.html)
+[丘成桐论文致谢AI，77岁数学泰斗，也逃不过“真香定律”？](/notes/丘成桐论文致谢AI，77岁数学泰斗，也逃不过“真香定律”？/)
 
 **2026年10月7日**  
 OpenAI在GitHub公开了一批内部模型产生的数学结果。首版目录有722份手稿，归为372个结果家族。本文10月8日核对的目录中，在列手稿变成719份，家族数仍为372。（手稿地址[openai/math](https://github.com/openai/math)）
@@ -159,3 +159,39 @@ OpenAI官方博客公告[分享 AI 在数学领域的进展 ｜ OpenAI](https://
 把三阶段串起来，一个清晰的模式浮现出来：**AI数学能力的每一个跃升，都伴随着验证成本的指数下降，而验证成本的下降正在倒逼学术评价制度做出回应。**
 
 AlphaProof解决的是“生成的证明能不能被自动检查”的问题。埃尔德什猜想的推翻解决的是“AI能不能做出被顶级期刊接受的原创新结果”的问题。而纳维-斯托克斯争议和25位菲尔兹奖得主的声明，暴露的是一个更根本的问题：**当产出证明的速度远远超过人类理解和评估证明的速度时，学术共同体赖以运转的“验证—理解—传播—引用”链条会发生什么？** Buckmaster的指控——无论最终是否成立——之所以能引发如此大的反应，恰恰因为它触及了这个链条中最脆弱的一环：**谁先到达，谁后到达，以及到达的过程是否可以被追溯和信任。** 这不是一个AI技术问题，而是数学作为一门人类集体事业的组织问题。
+
+<div class="mermaid">
+timeline
+    title AI对数学的冲击与影响时间轴
+    
+    section 第一阶段：竞赛突破与形式化工具成熟 (2024-2025)
+        2024年7月 : AlphaProof与AlphaGeometry 2在IMO获银牌 (解出4/6题)
+        2024年11月7日 : Epoch AI发布FrontierMath基准
+        2024年内 : Kevin Buzzard发起Lean形式化费马大定理项目
+        2025年7月 : 多个AI模型在IMO解出5/6题 (Gemini达金牌水平)
+        2025年9月 : Math Inc.完成强素数定理Lean形式化
+        2025年10月 : OpenAI声称GPT-5解决10道埃尔德什难题 (遭公开驳斥)
+        2025年11月12日 : AlphaProof完整技术细节在《Nature》发表
+        2025年12月 : Axiom模型自动完成埃尔德什问题#481和#124的形式化证明
+        
+    section 第二阶段：从竞赛题到真正的研究前沿 (2026年上半年)
+        2026年1月6日 : ChatGPT 5.2 Pro在Lean中完成完整数学问题求解
+        2026年2月 : 举办“首次证明”挑战赛
+        2026年2月12日 : DeepMind发布Gemini在数学研究方向的六篇论文级成果
+        2026年5月20日 : OpenAI模型推翻悬置近80年的埃尔德什猜想 (平面单位距离问题)
+        2026年6月2日 : 《莱顿人工智能与数学宣言》发布 (获IMU国际数学联盟背书)
+        2026年8月1日 : OpenAI一次发布十项数学成果 (含3个埃尔德什问题) ; GPT-6 Astra在FrontierMath Tier 4得分97.6%
+        
+    section 第三阶段：千禧年难题与学术共同体的反弹 (2026年9月起)
+        2026年8月28日起 : OpenAI内部模型开始训练，约50小时做出无外力欧拉方程有限时间奇点证明
+        2026年9月4日 : Anthropic宣布Claude自主运行11天，完成费马大定理首个端到端形式化验证
+        2026年9月5日 : 约万个并发AI智能体协作，在纳维-斯托克斯问题上得到解法
+        2026年9月8日 : OpenAI发布声明解决纳维-斯托克斯千禧年难题 (命题C和D) ，同步公开166页论文和Lean代码
+        2026年9月8日-9日 : 争议爆发 (Tristan Buckmaster质疑OpenAI模型受其代码影响)
+        2026年9月9日 : 陶哲轩发文评论，提出“证明消化不良”概念
+        2026年9月11日 : 25位菲尔兹奖得主联合发表《人工智能在数学中的严重错位》声明
+        2026年9月13日 : 《莱顿宣言》签名人数达到4,013人
+        2026年9月21日 : OpenAI确认模型解决超过100个长期未解的数学开放问题
+        2026年9月24日 : 丘成桐等提交微分几何预印本 (致谢AI模型协助)
+        2026年10月7日 : OpenAI在GitHub公开内部模型数学结果 (719份手稿，372个结果家族)
+</div>
