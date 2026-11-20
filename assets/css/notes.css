@@ -131,11 +131,16 @@ body {
   flex: 0 0 auto;             /* 返回链接永远不被压缩 */
 }
 
-/* 笔记页的日夜开关固定在最右上角，窄屏下会盖住导航栏右侧，
-   所以给"返回主页"留出避让空间（宽屏时开关在导航栏之外，无需让位） */
-@media screen and (max-width: 900px) {
+/* 笔记页的日夜开关 fixed 在视口右上角（right: 20px，宽约 79px）。
+   nav 的 max-width 是 1180px：只有视口 ≥ 约 1360px 时 nav 才真正居中、
+   开关完全落在 nav 右边缘之外；再窄，开关就会压进 nav 的右侧内容区。
+   原来这里只写了 900px 断点，1000~1350px 的常见桌面窗口正好落进死区 ——
+   鼠标移到「返回主页」上时圆形胶囊横向铺满 9rem，直接压在开关底下
+   （截图里文字被遮住的重叠）。
+   所以断点跟到真正的安全宽度，并给足 96px 避让（79px 开关 + 间隙）。 */
+@media screen and (max-width: 1380px) {
   .note-nav-right {
-    padding-right: 60px;
+    padding-right: 96px;
   }
 }
 

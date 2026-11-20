@@ -298,6 +298,7 @@ python sync_notes.py --no-clean                # 跳过清理（调试用，正�
 - **首屏防闪烁**：`_includes/theme-head.html` 放在 `<head>` 里最早执行，读 `localStorage` 并在 `<html>` 上设 `data-theme`
 - **覆盖机制**：主题的暗色是 `@media (prefers-color-scheme: dark)` 写的、无法禁用，所以用 `html[data-theme="dark"]` / `html[data-theme="light"]` + `!important` **双向覆盖**
 - **手绘质感**：开关 CSS 依赖 `filter: url(#sketchy)` / `url(#sketchy-sm)`，这两个 SVG 滤镜定义在 `theme-switch.html` 里（原组件没提供）
+- **笔记页与「返回主页」的避让**：`.note-topbar .theme-switch` 是 `fixed; top: 14px; right: 20px`，宽约 79px；而 `.note-nav` 的 `max-width` 是 1180px —— 只有视口 ≥ 约 1360px 时 nav 才真正居中、开关落在 nav 右边缘之外。所以 `.note-nav-right` 在 `@media (max-width: 1380px)` 下留 `padding-right: 96px`。**不要按 900px 之类的窄屏断点写**：1000~1350px 的桌面窗口会落进死区，「返回主页」hover 时圆形胶囊横向铺满 9rem，直接被开关压住。768px 以下开关隐藏，该避让复位为 0。
 
 ### 4.2 Giscus 评论区
 
